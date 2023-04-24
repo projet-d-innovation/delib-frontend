@@ -10,6 +10,8 @@ import {
 } from "@mantine/core";
 import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import useNavStore from "../store/navStore";
 
 const useStyles = createStyles((theme) => ({
   control: {
@@ -61,6 +63,7 @@ const useStyles = createStyles((theme) => ({
 export interface ILinksGroupProps {
   icon: React.FC<any>;
   permission: string;
+  link?: string;
   label: string;
   links?: {
     label: string;
@@ -73,7 +76,11 @@ export function LinksGroup({
   icon: Icon,
   label,
   links,
+  link
 }: ILinksGroupProps) {
+
+  const navigate = useNavigate();
+  const navStore = useNavStore()
   const { classes, theme } = useStyles();
   const hasLinks = Array.isArray(links);
   const [opened, setOpened] = useState(false);
@@ -84,7 +91,11 @@ export function LinksGroup({
       className={classes.link}
       href={link.link}
       key={link.label}
-      onClick={(event) => event.preventDefault()}
+      onClick={(event) => {
+        event.preventDefault()
+        navStore.close()
+        navigate(link.link)
+      }}
     >
       {link.label}
     </Text>
@@ -96,7 +107,15 @@ export function LinksGroup({
         onClick={() => setOpened((o) => !o)}
         className={classes.control}
       >
-        <Group position="apart" spacing={0}>
+        <Group position="apart" spacing={0}
+
+          onClick={() => {
+            if (link) {
+              navStore.close()
+              navigate(link)
+            }
+          }}
+        >
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <ThemeIcon variant="light" size={30}>
               <Icon size="1.1rem" />

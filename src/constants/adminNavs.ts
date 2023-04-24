@@ -1,4 +1,4 @@
-import { IconGauge, IconNotes, IconCalendarStats, IconPresentationAnalytics, IconFileAnalytics, IconAdjustments, IconLock } from "@tabler/icons-react";
+import { IconGauge, IconCalendarStats, IconPresentationAnalytics, IconFileAnalytics, IconUsers } from "@tabler/icons-react";
 import { ILinksGroupProps } from "../components/LinksGroup";
 
 export const adminNavs: ILinksGroupProps[] = [
@@ -8,55 +8,72 @@ export const adminNavs: ILinksGroupProps[] = [
     permission: "ACCESS_DASHBOARD",
   },
   {
-    label: "Market news",
-    icon: IconNotes,
+    label: "Gestion d'utilisateurs",
+    icon: IconUsers,
     permission: "ACCESS_DASHBOARD",
     links: [
       {
         label: "Overview",
-        link: "/",
+        link: "/admin/gestion-utilisateur",
         permission: "ACCESS_DASHBOARD",
       },
       {
-        label: "Forecasts",
-        link: "/",
+        label: "Administrateurs",
+        link: "/admin/gestion-utilisateur/adminstrateurs",
+        permission: "ACCESS_DASHBOARD",
+      },
+      {
+        label: "Etudiants",
+        link: "/admin/gestion-utilisateur/etudiants",
+        permission: "ACCESS_DASHBOARD",
+
+      },
+      {
+        label: "Professeurs",
+        link: "/admin/gestion-utilisateur/professeurs",
         permission: "ACCESS_DASHBOARD",
 
       },
       {
-        label: "Outlook",
-        link: "/",
-        permission: "NO_ACCESS",
-
-      },
-      {
-        label: "Real time",
-        link: "/",
+        label: "Roles & Permissions",
+        link: "/admin/gestion-utilisateur/permissions",
         permission: "ACCESS_DASHBOARD",
 
-      },
+      }
     ]
   },
   {
-    label: "Releases",
+    label: "Gestion pédagogique",
     icon: IconCalendarStats,
-    permission: "NO_ACCESS",
+    permission: "ACCESS_DASHBOARD",
     links: [
       {
-        label: "Upcoming releases",
-        link: "/",
+        label: "Overview",
+        link: "/admin/gestion-pedagogique",
         permission: "ACCESS_DASHBOARD",
 
       },
       {
-        label: "Previous releases",
-        link: "/",
+        label: "Départements",
+        link: "/admin/gestion-pedagogique/departements",
         permission: "ACCESS_DASHBOARD",
 
       },
       {
-        label: "Releases schedule",
-        link: "/",
+        label: "Filières",
+        link: "/admin/gestion-pedagogique/filieres",
+        permission: "ACCESS_DASHBOARD",
+
+      },
+      {
+        label: "Modules",
+        link: "/admin/gestion-pedagogique/modules",
+        permission: "ACCESS_DASHBOARD",
+
+      },
+      {
+        label: "Elements",
+        link: "/admin/gestion-pedagogique/elements",
         permission: "ACCESS_DASHBOARD",
 
       },
@@ -64,45 +81,31 @@ export const adminNavs: ILinksGroupProps[] = [
 
   },
   {
-    label: "Analytics",
+    label: "Gestion des notes",
     icon: IconPresentationAnalytics,
-    permission: "NO_ACCESS",
-
-  },
-  {
-    label: "Contracts",
-    icon: IconFileAnalytics,
-    permission: "NO_ACCESS",
-
-  },
-  {
-    label: "Settings",
-    icon: IconAdjustments,
     permission: "ACCESS_DASHBOARD",
-
+    link: "/admin/gestion-notes",
   },
   {
-    label: "Security",
-    icon: IconLock,
+    label: "Déliberations",
+    icon: IconFileAnalytics,
     permission: "ACCESS_DASHBOARD",
     links: [
       {
-        label: "Enable 2FA",
-        link: "/",
-        permission: "ACCESS_DASHBOARD"
-
+        label: "Overview",
+        link: "/admin/deliberations",
       },
       {
-        label: "Change password",
-        link: "/",
-        permission: "NO_ACCESS",
-
+        label: "Semestre",
+        link: "/admin/deliberations/semestre",
       },
       {
-        label: "Recovery codes",
-        link: "/",
-
-      },
+        label: "Année",
+        link: "/admin/deliberations/annee",
+      }
     ],
+
+
   },
+
 ];

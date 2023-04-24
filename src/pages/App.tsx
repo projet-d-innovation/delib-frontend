@@ -6,6 +6,20 @@ import Login from "./auth/Login"
 import AuthLayout from "../layouts/AuthLayout"
 import useAuthStore from "../store/authStore"
 import Home from "./student/Home"
+import DepartementPage from "./admin/pedagoqiue/DepartementsPage"
+import FilierePage from "./admin/pedagoqiue/FilierePage"
+import ModulePage from "./admin/pedagoqiue/ModulePage"
+import ElementPage from "./admin/pedagoqiue/ElementPage"
+import ProfesseurPage from "./admin/utilisateurs/ProfesseursPage"
+import EtudiantPage from "./admin/utilisateurs/EtudiantsPage"
+import AdministrateurPage from "./admin/utilisateurs/AdministrateurPage"
+import PermissionPage from "./admin/utilisateurs/PermissionsPage"
+import NotePage from "./admin/NotesPage"
+import DeliberationSemestrePage from "./admin/deliberation/DeliberationSemestrePage"
+import DeliberationAnneePage from "./admin/deliberation/DeliberationAnneePage"
+import GestionUtilisateursPage from "./admin/utilisateurs/GestionUtilisateursPage"
+import GestionDedagogiquePage from "./admin/pedagoqiue/GestionDepagoqique"
+import DeliberationPage from "./admin/deliberation/DeliberationPage"
 
 function App() {
   const authStore = useAuthStore()
@@ -28,6 +42,26 @@ function App() {
         />
       }>
         <Route index element={<Dashboard />} />
+
+        <Route path="gestion-utilisateur" element={<GestionUtilisateursPage />} />
+        <Route path="gestion-utilisateur/adminstrateurs" element={<AdministrateurPage />} />
+        <Route path="gestion-utilisateur/professeurs" element={<ProfesseurPage />} />
+        <Route path="gestion-utilisateur/etudiants" element={<EtudiantPage />} />
+        <Route path="gestion-utilisateur/permissions" element={<PermissionPage />} />
+
+
+        <Route path="gestion-pedagogique" element={<GestionDedagogiquePage />} />
+        <Route path="gestion-pedagogique/departements" element={<DepartementPage />} />
+        <Route path="gestion-pedagogique/filieres" element={<FilierePage />} />
+        <Route path="gestion-pedagogique/modules" element={<ModulePage />} />
+        <Route path="gestion-pedagogique/elements" element={<ElementPage />} />
+
+        <Route path="gestion-notes" element={<NotePage />} />
+
+        <Route path="deliberations" element={<DeliberationPage />} />
+        <Route path="deliberations/semestre" element={<DeliberationSemestrePage />} />
+        <Route path="deliberations/annee" element={<DeliberationAnneePage />} />
+
         <Route path="*" element={<h1>404</h1>} />
       </Route>
 
