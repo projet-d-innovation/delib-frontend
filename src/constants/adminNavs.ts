@@ -36,7 +36,7 @@ export const adminNavs: ILinksGroupProps[] = [
       },
       {
         label: "Roles & Permissions",
-        link: "/admin/gestion-utilisateur/permissions",
+        link: "/admin/gestion-utilisateur/roles",
         permission: "ACCESS_DASHBOARD",
 
       }

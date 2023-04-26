@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { IAuth, IUser } from "../types/interfaces";
 import jwt_decode from "jwt-decode";
+import { login } from "../api/authApi";
 
 export interface AuthState {
   user: IUser | null,
@@ -26,25 +27,9 @@ const useAuthStore = create<AuthState>((set, get) => ({
   mounted: false,
   login: async (email, password) => {
 
-    console.log("login", {
-      email,
-      password
-    })
-
     set((state) => ({ ...state, loading: true }))
 
-
-
-    // for testing
-
-    await new Promise((resolve) => setTimeout(resolve, 500))
-
-    const data: IAuth | null = {
-      accessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwiZW1haWwiOiJhZG1pbkBtYWlsLmNvbSIsIm5hbWUiOiJhZG1pbiIsInJvbGUiOlt7InJvbGVJZCI6IjEiLCJyb2xlTmFtZSI6ImFkbWluIiwicGVybWlzc2lvbnMiOlt7InBlcm1pc3Npb25JZCI6IkFDQ0VTU19EQVNIQk9BUkQiLCJwZXJtaXNzaW9uTmFtZSI6IkFDQ0VTU19EQVNIQk9BUkQiLCJwYXRoIjoiL2Rhc2hib2FyZCJ9XX1dLCJpYXQiOjE1MTYyMzkwMjJ9.9QcOYpzlok_pSRjT2iHjY27eXmVByG7moCex1n7ZBSQ"
-    }
-
-    // end for testing
-
+    const data: IAuth | null = await login(email, password)
 
     if (!data) {
       set({ user: null, error: "Something went wrong", loading: false, isAuthenticated: false })

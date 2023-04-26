@@ -13,13 +13,14 @@ import ElementPage from "./admin/pedagoqiue/ElementPage"
 import ProfesseurPage from "./admin/utilisateurs/ProfesseursPage"
 import EtudiantPage from "./admin/utilisateurs/EtudiantsPage"
 import AdministrateurPage from "./admin/utilisateurs/AdministrateurPage"
-import PermissionPage from "./admin/utilisateurs/PermissionsPage"
+import RolePage from "./admin/utilisateurs/RolesPage"
 import NotePage from "./admin/NotesPage"
 import DeliberationSemestrePage from "./admin/deliberation/DeliberationSemestrePage"
 import DeliberationAnneePage from "./admin/deliberation/DeliberationAnneePage"
 import GestionUtilisateursPage from "./admin/utilisateurs/GestionUtilisateursPage"
 import GestionDedagogiquePage from "./admin/pedagoqiue/GestionDepagoqique"
 import DeliberationPage from "./admin/deliberation/DeliberationPage"
+import PermissionPage from "./admin/utilisateurs/PermissionPage"
 
 function App() {
   const authStore = useAuthStore()
@@ -47,7 +48,8 @@ function App() {
         <Route path="gestion-utilisateur/adminstrateurs" element={<AdministrateurPage />} />
         <Route path="gestion-utilisateur/professeurs" element={<ProfesseurPage />} />
         <Route path="gestion-utilisateur/etudiants" element={<EtudiantPage />} />
-        <Route path="gestion-utilisateur/permissions" element={<PermissionPage />} />
+        <Route path="gestion-utilisateur/roles" element={<RolePage />} />
+        <Route path='gestion-utilisateur/roles/:id' element={<PermissionPage />} />
 
 
         <Route path="gestion-pedagogique" element={<GestionDedagogiquePage />} />
