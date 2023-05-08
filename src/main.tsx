@@ -8,6 +8,8 @@ import { BrowserRouter } from 'react-router-dom'
 import { MantineProvider } from '@mantine/core'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { ReactQueryDevtools } from "react-query/devtools";
+import { Notifications } from '@mantine/notifications'
+import { ModalsProvider } from '@mantine/modals'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -20,11 +22,15 @@ const queryClient = new QueryClient({
 })
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
+
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <MantineProvider withGlobalStyles withNormalizeCSS >
-          <App />
+          <Notifications />
+          <ModalsProvider>
+            <App />
+          </ModalsProvider>
         </MantineProvider>
       </BrowserRouter>
       <ReactQueryDevtools initialIsOpen={false} />

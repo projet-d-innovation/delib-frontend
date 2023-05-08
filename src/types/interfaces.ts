@@ -102,3 +102,10 @@ export interface IUser {
 export interface IAuth {
   accessToken: string;
 }
+
+
+export interface IBusinessException {
+  code: number;
+  status: string;
+  error: string;
+}
