@@ -44,6 +44,7 @@ import useFormState, { FormState } from "../../../../store/formStore";
 import { modals } from "@mantine/modals";
 import { IconCheck } from "@tabler/icons-react";
 import { notifications } from "@mantine/notifications";
+import LoadingError from "../../../../components/LoadingError";
 
 const AdministrateurPage = () => {
   const [page, onChange] = useState(1);
@@ -105,12 +106,10 @@ const AdministrateurPage = () => {
     />
   ));
 
-  if (isLoading) return <Skeleton className="mt-3 min-h-screen" />;
+  if (isLoading) return <Skeleton className="mt-3 min-h-screen" />
 
-  if (isError) {
-    setSearch("");
-    return <Error refetch={refetch} />
-  }
+  if (isError) return <LoadingError refetch={refetch} />
+
 
   return (
     <main className=" min-h-screen py-2">

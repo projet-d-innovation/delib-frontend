@@ -47,13 +47,12 @@ const Breadcrumbs: React.FC = () => {
 
   const location = useLocation();
 
-  let _link = "/admin/"
+  let link = "/admin/"
 
   const crumbs: ICrumb[] = location.pathname.split('/').filter((path) => path !== '' && path !== 'admin').map((path) => {
-    _link = `${_link}${path}/`
-    // const link = `/admin/${path}`
+    link = `${link}${path}/`
     const label = path.charAt(0).toUpperCase() + path.slice(1).replace('-', ' ')
-    return { label, link: _link }
+    return { label, link }
   })
 
   return (

@@ -27,7 +27,6 @@ export const adminNavs: ILinksGroupProps[] = [
         label: "Etudiants",
         link: "/admin/gestion-utilisateur/etudiants",
         permission: "ACCESS_DASHBOARD",
-
       },
       {
         label: "Professeurs",

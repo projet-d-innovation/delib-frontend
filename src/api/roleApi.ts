@@ -16,3 +16,18 @@ export const getRoles = async ({ page, size = 10 }: {
   })
   return data;
 }
+
+
+
+export const getRole = async (roleId: string): Promise<IRole> => {
+  const { data } = await api.get(`${ROLES_BASE_URL}/${roleId}`);
+  return data;
+}
+
+
+export const updateRolePerms = async (roleId: string, permissions: number[]): Promise<IRole> => {
+  const { data } = await api.patch(`${ROLES_BASE_URL}/${roleId}`, {
+    permissions
+  });
+  return data;
+}

@@ -28,7 +28,7 @@ function App() {
 
   if (!authStore.mounted) {
     authStore.loadUser()
-    return <div > loading </div>
+    return <div> loading </div>
   }
 
   return (
@@ -48,7 +48,15 @@ function App() {
         <Route path="gestion-utilisateur" element={<GestionUtilisateursPage />} />
         <Route path="gestion-utilisateur/adminstrateurs" element={<AdministrateurPage />} />
         <Route path="gestion-utilisateur/adminstrateurs/:id" element={<AdministrateurDetailsPage />} />
-        <Route path="gestion-utilisateur/professeurs" element={<ProfesseurPage />} />
+
+        <Route path="gestion-utilisateur/professeurs" element={
+          <ProtectedRoute
+            redirectPath="/admin/not-allowed"
+            children={<ProfesseurPage />}
+            isAllowed={authStore.isPermeted("ACCESS_DASHBOARD")}
+          />
+        } />
+
         <Route path="gestion-utilisateur/etudiants" element={<EtudiantPage />} />
         <Route path="gestion-utilisateur/roles" element={<RolePage />} />
         <Route path='gestion-utilisateur/roles/:id' element={<PermissionPage />} />

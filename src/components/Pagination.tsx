@@ -15,6 +15,7 @@ const Pagination = ({
   }) => {
   return (
     <_Pagination
+      disabled={totalPages === 1}
       className={className}
       total={totalPages}
       value={active}
