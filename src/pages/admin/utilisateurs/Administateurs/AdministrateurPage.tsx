@@ -7,6 +7,8 @@ import { useQuery } from "react-query";
 import { IRoleWithoutPermissions, IUtilisateur } from "../../../../types/interfaces";
 import { getUtilisateurs } from "../../../../api/utilisateurApi";
 import Pagination from "../../../../components/Pagination";
+import LoadingError from "../../../../components/LoadingError";
+import Fetching from "../../../../components/Fetching";
 
 const AdministrateurPage = () => {
   const [page, onChange] = useState(1);
@@ -22,6 +24,8 @@ const AdministrateurPage = () => {
     queryFn: () => getUtilisateurs({ page: pagination.active, size: 10 }),
     keepPreviousData: true,
   })
+
+  console.log(data)
 
 
   const [selection, setSelection] = useState<string[]>([]);
@@ -61,8 +65,7 @@ const AdministrateurPage = () => {
 
   if (isLoading) return <Skeleton className="mt-3 min-h-screen" />
 
-  if (isError) return <Error refetch={refetch} />
-
+  if (isError) return <LoadingError refetch={refetch} />
 
 
   return (
@@ -87,9 +90,7 @@ const AdministrateurPage = () => {
         </div>
       </div>
       <div className="relative">
-        {isFetching && <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10  " >
-          <p className="w-fit px-3 py-1 text-xs font-medium leading-none text-center text-blue-800 bg-blue-200 rounded-full animate-pulse ">loading...</p>
-        </div>}
+        {isFetching && <Fetching />}
         <Table className={
           classNames("border-gray-100 border-2 ", {
             'blur-sm': isFetching

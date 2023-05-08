@@ -1,58 +1,33 @@
-import { IPagination, IPermission, IRole } from '../types/interfaces';
+import { IPagination, IRole } from '../types/interfaces';
 import { api } from './axios';
 
-import { faker } from "@faker-js/faker"
+const ROLES_BASE_URL = '/utilisateurs/roles';
 
 export const getRoles = async ({ page, size = 10 }: {
   page: number,
   size?: number
 }): Promise<IPagination<IRole>> => {
 
-
-  await new Promise((resolve) => setTimeout(resolve, 1000))
-
-  const perms: IPermission[] = Array.from({ length: 60 }, () => ({
-    permissionId: faker.random.word(),
-    permissionName: faker.random.word(),
-    path: faker.system.directoryPath()
-  }))
-
-  const roles = Array.from({ length: 60 }, () => {
-
-    const roleName = faker.random.word()
-    return {
-      roleId: roleName.toUpperCase(),
-      roleName,
-      permissions: perms.slice(0, 5)
+  const { data } = await api.get(ROLES_BASE_URL, {
+    params: {
+      page: page - 1,
+      size
     }
   })
-
-  return {
-    page: page,
-    size: size,
-    totalPages: perms.length / size,
-    totalElements: perms.length,
-    records: roles.slice((page - 1) * size, page * size)
-  }
-  // return api.get('/permissions');
+  return data;
 }
 
 
 
 export const getRole = async (roleId: string): Promise<IRole> => {
-  await new Promise((resolve) => setTimeout(resolve, 1000))
+  const { data } = await api.get(`${ROLES_BASE_URL}/${roleId}`);
+  return data;
+}
 
-  const perms: IPermission[] = Array.from({ length: 60 }, () => ({
-    permissionId: faker.random.word(),
-    permissionName: faker.random.word(),
-    path: faker.system.directoryPath()
-  }))
 
-  const roleName = faker.random.word()
-  return {
-    roleId: roleName.toUpperCase(),
-    roleName,
-    permissions: perms.slice(0, 5)
-  }
-  // return api.get(`/roles/${roleId}`);
+export const updateRolePerms = async (roleId: string, permissions: number[]): Promise<IRole> => {
+  const { data } = await api.patch(`${ROLES_BASE_URL}/${roleId}`, {
+    permissions
+  });
+  return data;
 }
