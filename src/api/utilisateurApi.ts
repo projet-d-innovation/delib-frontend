@@ -1,5 +1,8 @@
-import { IPagination, IPermission, IUtilisateur } from "../types/interfaces";
-import { api, utilisateur_api, role_api } from "./axios";
+import { IPagination, IUtilisateur } from "../types/interfaces";
+import { api } from "./axios";
+
+const ADMINISTRATEURS_BASE_URL = '/administration/utilisateurs';
+
 
 export const getUtilisateurs = async ({
   page,
@@ -9,29 +12,30 @@ export const getUtilisateurs = async ({
   page: number;
   size?: number;
   nom?: string;
-}): Promise<IPagination<IUtilisateur>> =>
-  nom==''?(
-    await utilisateur_api.get(
-      `/utilisateurs?page=${page - 1}&size=${size}&includeRole=true` + ""
-    )
-  ).data : (
-    await utilisateur_api.get(
-      `/utilisateurs/nom?page=${page - 1}&size=${size}&nom=${nom}&includeRole=true` + ""    //TODO: should create getUtilisateurByNom endpoint 
-      )
-  ).data;
+}): Promise<IPagination<IUtilisateur>> => {
+  const { data } = await api.get(ADMINISTRATEURS_BASE_URL, {
+    params: {
+      page: page - 1,
+      size,
+      nom,
+      includeRole: true
+    }
+  });
+  return data;
+}
 
 export const saveUtilisateur = async (
   utilisateur: IUtilisateur
 ): Promise<IUtilisateur> => {
-  const { data } = await utilisateur_api.post(`/utilisateurs`, utilisateur);
+  const { data } = await api.post(ADMINISTRATEURS_BASE_URL, utilisateur);
   return data;
 };
 
 export const updateUtilisateur = async (
   utilisateur: IUtilisateur
 ): Promise<IUtilisateur> => {
-  const { data } = await utilisateur_api.patch(
-    `/utilisateurs/` + utilisateur.code,
+  const { data } = await api.patch(
+    `${ADMINISTRATEURS_BASE_URL}/${utilisateur.code}`,
     utilisateur
   );
   return data;
@@ -39,11 +43,16 @@ export const updateUtilisateur = async (
 
 export const getUtilisateur = async (
   utilisateurId: string
-): Promise<IUtilisateur> =>
-  (await utilisateur_api.get(`/utilisateurs/` + utilisateurId)).data;
+): Promise<IUtilisateur> => {
+  const { data } = await api.get(`${ADMINISTRATEURS_BASE_URL}/${utilisateurId}`);
+  return data;
+}
 
 
 export const deleteUtilisateurs = async (utilisateurIds: string[]): Promise<void> => {
-  let codes = "?codes="+utilisateurIds.join("&codes=");
-  await utilisateur_api.delete(`/utilisateurs/bulk` + codes);
+  await api.delete(`${ADMINISTRATEURS_BASE_URL}/bulk`, {
+    params: {
+      codes: utilisateurIds
+    }
+  });
 }

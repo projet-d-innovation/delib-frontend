@@ -22,15 +22,15 @@ const queryClient = new QueryClient({
 })
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  
+
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-      <Notifications />
         <MantineProvider withGlobalStyles withNormalizeCSS >
-        <ModalsProvider>
-          <App />
-        </ModalsProvider>
+          <Notifications />
+          <ModalsProvider>
+            <App />
+          </ModalsProvider>
         </MantineProvider>
       </BrowserRouter>
       <ReactQueryDevtools initialIsOpen={false} />

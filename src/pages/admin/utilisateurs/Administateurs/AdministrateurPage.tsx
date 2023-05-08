@@ -12,6 +12,7 @@ import {
   Badge,
   Modal,
   useMantineTheme,
+  Alert,
 } from "@mantine/core";
 import { usePagination, useDisclosure, randomId } from "@mantine/hooks";
 import {
@@ -25,6 +26,7 @@ import {
   IconTableExport,
   IconDatabaseExport,
   IconDatabaseImport,
+  IconAlertCircle,
 } from "@tabler/icons-react";
 import classNames from "classnames";
 import { useState } from "react";
@@ -35,7 +37,7 @@ import {
 } from "../../../../types/interfaces";
 import { deleteUtilisateurs, getUtilisateurs } from "../../../../api/utilisateurApi";
 import Pagination from "../../../../components/Pagination";
-import { AdministrateurFrom } from "./AdministrateurFrom";
+import { AdministrateurForm } from "./AdministrateurForm";
 import useModalState, { ModalState } from "../../../../store/modalStore";
 
 import useFormState, { FormState } from "../../../../store/formStore";
@@ -81,6 +83,7 @@ const AdministrateurPage = () => {
 
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    event.preventDefault();
     const { value } = event.currentTarget;
     setSearch(value);
   };
@@ -92,7 +95,7 @@ const AdministrateurPage = () => {
     detailsModalActions.open();
   };
 
-  const rows = data?.records.map((item: IUtilisateur) => (
+  const rows = data?.records?.map((item: IUtilisateur) => (
     <RowItem
       key={item.code}
       selected={selection.includes(item.code)}
@@ -129,38 +132,35 @@ const AdministrateurPage = () => {
           blur: 3,
         }}
       >
-        <AdministrateurFrom formState={formState.state} id={selection[0]} page={page} />
+        <AdministrateurForm formState={formState.state} id={selection[0]} page={page} />
       </Modal>
       <h1 className="text-3xl font-bold mb-3  p-2">Corps administratif</h1>
       <div className="flex flex-col md:flex-row items-center justify-between p-2">
         <div className="w-full flex">
-        <div className="w-full md:w-1/2">
-          <TextInput
-            placeholder="Search by any field"
-            mb="md"
-            icon={<IconSearch size="0.9rem" stroke={1.5} />}
-            value={search}
-            onChange={handleSearchChange}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                refetch();
-                setSearch("");
-              }
-            }}
-          />
-        </div>
-        <Button
+          <div className="w-full md:w-1/2">
+            <TextInput
+              placeholder="Search by any field"
+              mb="md"
+              icon={<IconSearch size="0.9rem" stroke={1.5} />}
+              value={search}
+              onChange={handleSearchChange}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  refetch();
+                }
+              }}
+            />
+          </div>
+          <Button
             className="ml-2"
             variant="default"
             onClick={() => {
               refetch();
-              setSearch("");
             }}
           >
             Search
           </Button>
         </div>
-       
 
         <div className="flex items-center space-x-3 w-full md:w-auto">
           <Button
@@ -178,52 +178,59 @@ const AdministrateurPage = () => {
             formState={formState}
             modalState={modalState}
             selectionIds={selection}
+            setSelectionIds={setSelection}
           />
         </div>
       </div>
-      <div className="relative">
-        {isFetching && (
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10  ">
-            <p className="w-fit px-3 py-1 text-xs font-medium leading-none text-center text-blue-800 bg-blue-200 rounded-full animate-pulse ">
-              loading...
-            </p>
+      {isFetching && (
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10  ">
+          <p className="w-fit px-3 py-1 text-xs font-medium leading-none text-center text-blue-800 bg-blue-200 rounded-full animate-pulse ">
+            loading...
+          </p>
+        </div>
+      )}
+      {
+        data?.records == null || data?.records?.length === 0 ?
+          <Alert className="w-full" icon={<IconAlertCircle size="1rem" />} title="Error!" color="red">
+            Il n'exists aucun utilisateur pour le moment ! Veuillez en créer un.
+          </Alert>
+          :
+          <div className="relative">
+            <Table
+              className={classNames("border-gray-100 border-2 ", {
+                "blur-sm": isFetching,
+              })}
+              verticalSpacing="sm"
+            >
+              <thead className="bg-[#e7f5ff] ">
+                <tr>
+                  <th style={{ width: rem(40) }}>
+                    <Checkbox
+                      onChange={toggleAll}
+                      checked={selection.length === data?.records.length}
+                      indeterminate={
+                        selection.length > 0 &&
+                        selection.length !== data?.records.length
+                      }
+                      transitionDuration={0}
+                    />
+                  </th>
+                  <th className="w-1/4">Nom</th>
+                  <th className="w-1/4">Prenom</th>
+                  <th className="w-1/4">Telephone</th>
+                  <th className="w-1/4">Roles</th>
+                </tr>
+              </thead>
+              <tbody>{rows}</tbody>
+            </Table>
+            <Pagination
+              className="m-5"
+              totalPages={data?.totalPages!}
+              active={pagination.active}
+              onPaginationChange={onPaginationChange}
+            />
           </div>
-        )}
-
-        <Table
-          className={classNames("border-gray-100 border-2 ", {
-            "blur-sm": isFetching,
-          })}
-          verticalSpacing="sm"
-        >
-          <thead className="bg-[#e7f5ff] ">
-            <tr>
-              <th style={{ width: rem(40) }}>
-                <Checkbox
-                  onChange={toggleAll}
-                  checked={selection.length === data?.records.length}
-                  indeterminate={
-                    selection.length > 0 &&
-                    selection.length !== data?.records.length
-                  }
-                  transitionDuration={0}
-                />
-              </th>
-              <th className="w-1/4">Nom</th>
-              <th className="w-1/4">Prenom</th>
-              <th className="w-1/4">Telephone</th>
-              <th className="w-1/4">Roles</th>
-            </tr>
-          </thead>
-          <tbody>{rows}</tbody>
-        </Table>
-        <Pagination
-          className="m-5"
-          totalPages={data?.totalPages!}
-          active={pagination.active}
-          onPaginationChange={onPaginationChange}
-        />
-      </div>
+      }
       <DetailsModal
         detailsModalOpened={detailsModalOpened}
         details={details}
@@ -288,7 +295,7 @@ const RowItem = ({
     <tr
       key={item.code}
       className={classNames({ "bg-blue-200": selected })}
-      // className={cx({ [classes.rowSelected]: selected })}
+    // className={cx({ [classes.rowSelected]: selected })}
     >
       <td>
         <Checkbox
@@ -332,62 +339,91 @@ const ActionsMenu = ({
   selection,
   formState,
   modalState,
-  selectionIds
+  selectionIds,
+  setSelectionIds,
 }: {
   selection: number;
   formState: FormState;
   modalState: ModalState;
   selectionIds: string[];
+  setSelectionIds: (ids: string[]) => void;
 }) => {
   const deleteUtilisateursHandler = () => {
-    if(selectionIds.length === 0) return;
-    mutationDelete(selectionIds);   
-    console.log(selectionIds);
+    if (selectionIds.length === 0) return;
+    mutationDelete(selectionIds);
+    modals.closeAll()
   };
 
   const openDeleteModal = () =>
-    modals.openConfirmModal({
+    modals.open({
       title: `Supprimer Utilisateurs?`,
       centered: true,
       children: (
         <Text size="sm">
           Êtes-vous sûr de vouloir supprimer votre utilisation? Cette action est
           destructrice et vous devrez contacter le support pour restaurer vos
-          données.
+          données. ahmed
+          <Group mt="md" className="justify-end">
+            <Button
+              variant="default"
+              type="submit"
+              className="bg-red-400 text-white hover:bg-red-600"
+              onClick={() => deleteUtilisateursHandler()}
+              color="blue"
+            >
+              Supprimer
+            </Button>
+            <Button
+              variant="default"
+              className="border-gray-400 text-black border:bg-gray-600"
+              onClick={() => modals.closeAll()}
+              color="gray">Annuler</Button>
+          </Group>
         </Text>
       ),
-      labels: { confirm: "Supprimer ", cancel: "Non, ne le supprimez pas" },
-      confirmProps: { color: "red" },
-      onCancel: () => console.log("Cancel"),
-      onConfirm: () => deleteUtilisateursHandler(),
     });
 
-    const queryClient = useQueryClient();
-    const {mutate:mutationDelete} = useMutation(deleteUtilisateurs, {
-      onSuccess: async () => {
-        notifications.show({
-          id: "load-data",
-          color: "teal",
-          title: "Utilisateur a été supprimer avec succès",
-          message:
-            "La notification se terminera en 2 secondes, vous pouvez fermer cette notification maintenant",
-          icon: <IconCheck size="1rem" />,
-          autoClose: 2000,
-        });
-        modalState.close();
-        queryClient.refetchQueries(["utilisateurs"]);
-      },
-      onError: (error) => {
-        console.log(error);
-        notifications.show({
-          title: "Utilisateur n'a pas été supprimer",
-          message:
-            "La notification se terminera en 2 secondes, vous pouvez fermer cette notification maintenant",
-          color: "red",
-        });
-        modalState.close();
-      },
-    });
+  const queryClient = useQueryClient();
+  const { mutate: mutationDelete } = useMutation(deleteUtilisateurs, {
+    onMutate: () => {
+      notifications.show({
+        id: "delete-user",
+        color: "blue",
+        title: "Suppression de l'utilisateur",
+        message: "Veuillez patienter pendant que nous supprimons l'utilisateur",
+        icon: <IconCheck size="1rem" />,
+        autoClose: false,
+      });
+    },
+    onSuccess: async () => {
+      notifications.update({
+        id: "delete-user",
+        color: "green",
+        title: "Utilisateur a été supprimer avec succès",
+        message:
+          "La notification se terminera en 2 secondes, vous pouvez fermer cette notification maintenant",
+        icon: <IconCheck size="1rem" />,
+        autoClose: 3000,
+        withCloseButton: true,
+      });
+      setSelectionIds([]);
+      modalState.close();
+      queryClient.refetchQueries(["utilisateurs"]);
+    },
+    onError: (error) => {
+      console.log(error);
+      notifications.update({
+        id: "delete-user",
+        title: "Utilisateur n'a pas été supprimer",
+        message:
+          "La notification se terminera en 2 secondes, vous pouvez fermer cette notification maintenant",
+        color: "red",
+        autoClose: 3000,
+        withCloseButton: true,
+      });
+      modalState.close();
+    },
+  });
 
   return (
     <div className="flex items-center space-x-3 w-full md:w-auto">

@@ -9,8 +9,8 @@ import {
   FileInput,
   MultiSelect,
 } from "@mantine/core";
-import {  IRole, IUtilisateur } from "../../../../types/interfaces";
-import { getRolesList } from "../../../../api/roleApi";
+import { IBusinessException, IRole, IUtilisateur } from "../../../../types/interfaces";
+import { getRoles } from "../../../../api/roleApi";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
   getUtilisateur,
@@ -22,19 +22,19 @@ import useModalState from "../../../../store/modalStore";
 import { notifications } from "@mantine/notifications";
 import { IconCheck } from "@tabler/icons-react";
 import { IconAdFilled } from "@tabler/icons-react";
+import { AxiosError } from "axios";
 
-export function AdministrateurFrom({
+export function AdministrateurForm({
   formState,
   id,
   page
 }: {
   formState: String;
   id: String;
-  page:number;
+  page: number;
 }) {
   const modalState = useModalState();
-  const loading =
-  useQueryClient()?.getQueryState("utilisateur")?.isFetching || false;
+  const loading = useQueryClient()?.getQueryState("utilisateur")?.isFetching || false;
 
 
   const form = useForm({
@@ -52,13 +52,13 @@ export function AdministrateurFrom({
       nom: hasLength({ min: 2, max: 10 }, "nom must be 2-10 characters long"),
       prenom: hasLength(
         { min: 2, max: 10 },
-        "nom must be 2-10 characters long"
+        "prenom must be 2-10 characters long"
       ),
       telephone: hasLength(
         { min: 10, max: 10 },
-        "nom must be 10 characters long"
+        "must be a valid telephone number"
       ),
-      image: isNotEmpty("image is required"),
+      // image: isNotEmpty("image is required"),
       roles: isNotEmpty("roles is required"),
     },
   });
@@ -66,48 +66,38 @@ export function AdministrateurFrom({
   console.log(form.values);
 
 
-  if (formState === "edit" ) {
+  if (formState === "edit") {
 
-  useQuery({
-    queryKey: ["utilisateur", id],
-    queryFn: () => getUtilisateur(id+""),
+    useQuery({
+      queryKey: ["utilisateur", id],
+      queryFn: () => getUtilisateur(id + ""),
+      keepPreviousData: true,
+      onSuccess(data) {
+        // console.log(data);
+        form.setValues({
+          code: data.code,
+          nom: data.nom,
+          prenom: data.prenom,
+          telephone: data.telephone,
+          image: data.photo,
+          roles: data.roles?.map(role => role.roleId) as [],
+        });
+      }
+    });
+  }
+
+  const { data: rolesList, isLoading, isError } = useQuery({
+    queryKey: ["roles"],
+    queryFn: () => getRoles({ page: 1, size: 10 }),
     keepPreviousData: true,
-    onSuccess(data) {
-      console.log(data);
-      form.setValues({
-        code: data.code,
-        nom: data.nom,
-        prenom: data.prenom,
-        telephone: data.telephone,
-        image: data.photo,
-        roles: data.roles?.map(role => role.roleId) as [],
-      });
-    }
   });
-}
 
-const { data:rolesList, isLoading, isError } = useQuery({
-  queryKey: ["roles"],
-  queryFn: () => getRolesList(),
-  keepPreviousData: true,
-});
-
-const roles = rolesList?.map((role: IRole) => {
-  return { value: role.roleId, label: role.roleName };
-}) as { value: string; label: string }[];
+  const roles = rolesList?.records?.map((role: IRole) => {
+    return { value: role.roleId, label: role.roleName };
+  }) as { value: string; label: string }[];
 
   const saveUtilisateurHnadler = () => {
     if (form.isValid()) {
-      notifications.show({
-        id: "load-data",
-        loading: true,
-        title: "Utilisateur est en cours de sauvegarde",
-        message:
-          "Le chargement des données s'arrêtera après 2 secondes, vous pouvez fermer cette notification maintenant",
-        autoClose: false,
-        withCloseButton: false,
-      });
-
       const data: IUtilisateur = {
         code: form.values.code,
         nom: form.values.nom,
@@ -116,7 +106,7 @@ const roles = rolesList?.map((role: IRole) => {
         photo: form.values.image,
         roles: form.values.roles,
       };
-      mutationSave(data);
+      mutationSave.mutate(data);
     }
   };
 
@@ -124,16 +114,6 @@ const roles = rolesList?.map((role: IRole) => {
 
   const updateUtilisateurHnadler = () => {
     if (form.isValid()) {
-      notifications.show({
-        id: "load-data",
-        loading: true,
-        title: "Utilisateur est en cours de modification",
-        message:
-          "Le chargement des données s'arrêtera après 2 secondes, vous pouvez fermer cette notification maintenant",
-        autoClose: false,
-        withCloseButton: false,
-      });
-
       const data: IUtilisateur = {
         code: form.values.code,
         nom: form.values.nom,
@@ -142,15 +122,27 @@ const roles = rolesList?.map((role: IRole) => {
         photo: form.values.image,
         roles: form.values.roles,
       };
-      mutationUpdate(data);
+      mutationUpdate.mutate(data);
     }
   };
-  
+
   const queryClient = useQueryClient();
-  const {mutate:mutationUpdate} = useMutation(updateUtilisateur, {
+  const mutationUpdate = useMutation(updateUtilisateur, {
+    onMutate: () => {
+      notifications.show({
+        id: "update-user",
+        loading: true,
+        title: "Utilisateur est en cours de modification",
+        message:
+          "Le chargement des données s'arrêtera après 2 secondes, vous pouvez fermer cette notification maintenant",
+        autoClose: false,
+        withCloseButton: false,
+      });
+    },
     onSuccess: async () => {
+      queryClient.invalidateQueries(["utilisateurs", page]);
       notifications.update({
-        id: "load-data",
+        id: "update-user",
         color: "teal",
         title: "Utilisateur a été modifier avec succès",
         message:
@@ -159,59 +151,39 @@ const roles = rolesList?.map((role: IRole) => {
         autoClose: 2000,
       });
       modalState.close();
-      queryClient.setQueryData(["utilisateurs",page],(oldData:any)=>{
-        return {
-          ...oldData,
-          records:oldData.records.map((utilisateur:IUtilisateur)=>{
-            if(utilisateur.code === id){
-              return {
-                ...utilisateur,
-                ...form.values,
-                roles: form.values.roles.map((role:string)=>{
-                  return rolesList?.find((r:IRole)=>r.roleId === role)
-               }),
-              }
-            }
-            return utilisateur;
-          })
-        }
-      })
     },
-    onError: (error) => {
-      console.log(error);
-      modalState.close();
+    onError: (error: AxiosError) => {
+      const excp = error.response?.data as IBusinessException
       notifications.update({
-        id: "load-data",
-        color: "teal",
-        title: "Utilisateur n'a pas été modifier",
-        message:
-          "La notification se terminera en 2 secondes, vous pouvez fermer cette notification maintenant",
+        id: "update-user",
+        color: "red",
+        title: error.message,
+        message: excp.error,
         icon: <IconAdFilled size="1rem" />,
         autoClose: 2000,
       });
+      modalState.close();
     },
   });
 
-  const { mutate:mutationSave } = useMutation(saveUtilisateur, {
-    onSuccess: async () => {
-      modalState.close();
-      queryClient.setQueryData(["utilisateurs", page], (oldData: any) => {
-        return {
-          ...oldData,
-          records: [
-            {
-              ...form.values,
-              roles: form.values.roles.map((role: string) => {
-                return rolesList?.find((r: IRole) => r.roleId === role);
-              }),
-            },
-            ...oldData.records,
-          ],
-        };
+  const mutationSave = useMutation(saveUtilisateur, {
+    onMutate: () => {
+      notifications.show({
+        id: "save-user",
+        loading: true,
+        title: "Utilisateur est en cours de sauvegarde",
+        message:
+          "Le chargement des données s'arrêtera après 2 secondes, vous pouvez fermer cette notification maintenant",
+        autoClose: false,
+        withCloseButton: false,
       });
+    },
+    onSuccess: async () => {
+      queryClient.invalidateQueries(["utilisateurs", page]);
+      modalState.close();
       notifications.update({
-        id: "load-data",
-        color: "teal",
+        id: "save-user",
+        color: "green",
         title: "Utilisateur a été ajouté avec succès",
         message:
           "La notification se terminera en 2 secondes, vous pouvez fermer cette notification maintenant",
@@ -219,24 +191,23 @@ const roles = rolesList?.map((role: IRole) => {
         autoClose: 2000,
       });
     },
-    onError: (error) => {
-      console.log(error);
+    onError: (error: AxiosError) => {
+      const excp = error.response?.data as IBusinessException
       modalState.close();
       notifications.update({
-        id: "load-data",
-        color: "teal",
-        title: "Utilisateur n'a pas été ajouter",
-        message:
-          "La notification se terminera en 2 secondes, vous pouvez fermer cette notification maintenant",
+        id: "save-user",
+        color: "red",
+        title: error.message,
+        message: excp.error,
         icon: <IconAdFilled size="1rem" />,
         autoClose: 2000,
       });
     },
   });
 
- 
 
-  if (isLoading||loading) return <Skeleton className="mt-3 min-h-screen" />;
+
+  if (isLoading || loading) return <Skeleton className="mt-3 min-h-screen" />;
 
   if (isError) return <div>Something went wrong ...</div>;
 
@@ -245,9 +216,9 @@ const roles = rolesList?.map((role: IRole) => {
       component="form"
       maw={400}
       mx="auto"
-      onSubmit={form.onSubmit(() => {})}
+      onSubmit={form.onSubmit(() => { })}
     >
-    
+
       {(formState === "create") && (
         <TextInput
           label="Code"
@@ -256,7 +227,7 @@ const roles = rolesList?.map((role: IRole) => {
           mt="md"
           {...form.getInputProps("code")}
         />
-      ) }
+      )}
       <div className="flex items-center ">
         <TextInput
           className="pr-2"
@@ -283,17 +254,6 @@ const roles = rolesList?.map((role: IRole) => {
         mt="md"
         {...form.getInputProps("telephone")}
       />
-      <FileInput
-        label="image"
-        placeholder="Entrez votre image"
-        icon={<IconUpload size={rem(14)} />}
-        withAsterisk
-        mt="md"
-        required
-        onChange={(file) => {
-          form.getInputProps("image").onChange(file?.name);
-        }}
-      />
       <MultiSelect
         data={roles}
         label="Roles"
@@ -303,19 +263,34 @@ const roles = rolesList?.map((role: IRole) => {
         required
         {...form.getInputProps("roles")}
       />
+      <FileInput
+        label="image"
+        placeholder="Entrez votre image"
+        icon={<IconUpload size={rem(14)} />}
+        // withAsterisk
+        mt="md"
+        // required
+        onChange={(file) => {
+          form.getInputProps("image").onChange(file?.name);
+        }}
+      />
+
 
       <Group position="right" mt="md">
         <Button
-      onClick={()=>modalState.close()}
-      color="gray">Fermer</Button>
-        <Button
+          variant="default"
           type="submit"
-          disabled={!form.isValid()}
-          onClick={formState =='create'? saveUtilisateurHnadler:updateUtilisateurHnadler}
+          className="bg-blue-400 text-white hover:bg-blue-600"
+          onClick={formState == 'create' ? saveUtilisateurHnadler : updateUtilisateurHnadler}
           color="blue"
         >
           {formState === "edit" ? "Modifier" : "Enregistrer"}
         </Button>
+        <Button
+          variant="default"
+          className="border-gray-400 text-black border:bg-gray-600"
+          onClick={() => modalState.close()}
+          color="gray">Fermer</Button>
       </Group>
     </Box>
   );
