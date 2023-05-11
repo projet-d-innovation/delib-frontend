@@ -1,138 +1,156 @@
 import { useForm, isNotEmpty, hasLength } from "@mantine/form";
+
 import {
-  Button,
-  Group,
-  TextInput,
   Box,
-  Skeleton,
-  rem,
+  Button,
   FileInput,
+  Group,
   MultiSelect,
+  Skeleton,
+  TextInput,
+  rem,
 } from "@mantine/core";
-import { IBusinessException, IRole, IUtilisateur } from "../../../../types/interfaces";
-import { getRoles } from "../../../../api/roleApi";
+import { IBusinessException, IEtudiant } from "../../../../types/interfaces";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
-  getUtilisateur,
-  saveUtilisateur,
-  updateUtilisateur,
+  getEtudiant,
+  saveEtudiant,
+  updateEtudiant,
 } from "../../../../api/utilisateurApi";
-import { IconUpload } from "@tabler/icons-react";
 import useModalState from "../../../../store/modalStore";
 import { notifications } from "@mantine/notifications";
-import { IconCheck } from "@tabler/icons-react";
+import { IconCheck, IconUpload } from "@tabler/icons-react";
 import { IconAdFilled } from "@tabler/icons-react";
 import { AxiosError } from "axios";
+import { DateInput } from "@mantine/dates";
+import { useState } from "react";
 
-export function AdministrateurForm({
+export function EtudiantForm({
   formState,
   id,
-  page
+  page,
 }: {
   formState: String;
-  id: String;
+  id: string;
   page: number;
 }) {
   const modalState = useModalState();
-  const loading = useQueryClient()?.getQueryState("utilisateur")?.isFetching || false;
-
-
+  const loading =
+    useQueryClient()?.getQueryState("etudiant")?.isFetching || false;
   const form = useForm({
     initialValues: {
       code: "",
+      cin: "",
+      cne: "",
       nom: "",
       prenom: "",
+      dateNaissance: new Date(),
       telephone: "",
+      adresse: "",
+      ville: "",
+      pay: "",
       image: "",
-      roles: [],
     },
 
     validate: {
-      code: isNotEmpty("code is required"),
-      nom: hasLength({ min: 2, max: 10 }, "nom must be 2-10 characters long"),
-      prenom: hasLength(
-        { min: 2, max: 10 },
-        "prenom must be 2-10 characters long"
-      ),
-      telephone: hasLength(
-        { min: 10, max: 10 },
-        "must be a valid telephone number"
-      ),
-      // image: isNotEmpty("image is required"),
-      roles: isNotEmpty("roles is required"),
+      // code: isNotEmpty("code is required"),
+      // cin: hasLength({ min: 8, max: 8 }, "must be a valid cin"),
+      // cne: hasLength({ min: 8, max: 8 }, "must be a valid cne"),
+      // nom: hasLength({ min: 2, max: 10 }, "nom must be 2-10 characters long"),
+      // prenom: hasLength(
+      //   { min: 2, max: 10 },
+      //   "prenom must be 2-10 characters long"
+      // ),
+      // telephone: hasLength(
+      //   { min: 10, max: 10 },
+      //   "must be a valid telephone number"
+      // ),
+      // adresse: hasLength(
+      //   { min: 3, max: 20 },
+      //   "adresse must be 3-20 characters long"
+      // ),
+      // ville: hasLength(
+      //   { min: 2, max: 10 },
+      //   "ville must be 2-10 characters long"
+      // ),
+      // pay: hasLength({ min: 2, max: 10 }, "pay must be 2-10 characters long"),
+      // // image: isNotEmpty("image is required"),
     },
   });
 
   console.log(form.values);
 
-
   if (formState === "edit") {
-
     useQuery({
-      queryKey: ["utilisateur", id],
-      queryFn: () => getUtilisateur(id + ""),
+      queryKey: ["etudiant", id],
+      queryFn: () => getEtudiant(id),
       keepPreviousData: true,
       onSuccess(data) {
         // console.log(data);
         form.setValues({
           code: data.code,
+          cin: data.cin,
+          cne: data.cne,
           nom: data.nom,
           prenom: data.prenom,
+          dateNaissance: new Date(data.dateNaissance),
           telephone: data.telephone,
-          image: data.photo,
-          roles: data.roles?.map(role => role.roleId) as [],
+          adresse: data.adresse,
+          ville: data.ville,
+          pay: data.pays,
         });
-      }
+      },
     });
   }
 
-  const { data: rolesList, isLoading, isError } = useQuery({
-    queryKey: ["roles"],
-    queryFn: () => getRoles({ page: 1, size: 10 }),
-    keepPreviousData: true,
-  });
-
-  const roles = rolesList?.records?.map((role: IRole) => {
-    return { value: role.roleId, label: role.roleName };
-  }) as { value: string; label: string }[];
-
-  const saveUtilisateurHnadler = () => {
+  const saveEtudiantsHnadler = () => {
     if (form.isValid()) {
-      const data: IUtilisateur = {
+      const data: IEtudiant = {
         code: form.values.code,
         nom: form.values.nom,
         prenom: form.values.prenom,
         telephone: form.values.telephone,
         photo: form.values.image,
-        roles: form.values.roles,
+        cin: form.values.cin,
+        cne: form.values.cne,
+        dateNaissance: form.values.dateNaissance,
+        adresse: form.values.adresse,
+        ville: form.values.ville,
+        pays: form.values.pay,
       };
+
       mutationSave.mutate(data);
     }
   };
 
-
-
-  const updateUtilisateurHnadler = () => {
+  const updateEtudiantHnadler = () => {
     if (form.isValid()) {
-      const data: IUtilisateur = {
+      const data: IEtudiant = {
+        id: id,
         code: form.values.code,
         nom: form.values.nom,
         prenom: form.values.prenom,
         telephone: form.values.telephone,
         photo: form.values.image,
-        roles: form.values.roles,
+        cin: form.values.cin,
+        cne: form.values.cne,
+        dateNaissance: form.values.dateNaissance,
+        adresse: form.values.adresse,
+        ville: form.values.ville,
+        pays: form.values.pay,
       };
+
       mutationUpdate.mutate(data);
     }
   };
 
   const queryClient = useQueryClient();
-  const mutationUpdate = useMutation(updateUtilisateur, {
+  const mutationUpdate = useMutation(updateEtudiant, {
     onMutate: () => {
       notifications.show({
         id: "update-user",
         loading: true,
-        title: "Utilisateur est en cours de modification",
+        title: "Etudinat est en cours de modification",
         message:
           "Le chargement des données s'arrêtera après 2 secondes, vous pouvez fermer cette notification maintenant",
         autoClose: false,
@@ -140,11 +158,11 @@ export function AdministrateurForm({
       });
     },
     onSuccess: async () => {
-      queryClient.invalidateQueries(["utilisateurs", page]);
+      queryClient.invalidateQueries(["etudiants", page]);
       notifications.update({
         id: "update-user",
         color: "teal",
-        title: "Utilisateur a été modifier avec succès",
+        title: "Etudiant a été modifier avec succès",
         message:
           "La notification se terminera en 2 secondes, vous pouvez fermer cette notification maintenant",
         icon: <IconCheck size="1rem" />,
@@ -153,7 +171,7 @@ export function AdministrateurForm({
       modalState.close();
     },
     onError: (error: AxiosError) => {
-      const excp = error.response?.data as IBusinessException
+      const excp = error.response?.data as IBusinessException;
       notifications.update({
         id: "update-user",
         color: "red",
@@ -166,12 +184,12 @@ export function AdministrateurForm({
     },
   });
 
-  const mutationSave = useMutation(saveUtilisateur, {
+  const mutationSave = useMutation(saveEtudiant, {
     onMutate: () => {
       notifications.show({
         id: "save-user",
         loading: true,
-        title: "Utilisateur est en cours de sauvegarde",
+        title: "Etudiant est en cours de sauvegarde",
         message:
           "Le chargement des données s'arrêtera après 2 secondes, vous pouvez fermer cette notification maintenant",
         autoClose: false,
@@ -179,12 +197,12 @@ export function AdministrateurForm({
       });
     },
     onSuccess: async () => {
-      queryClient.invalidateQueries(["utilisateurs", page]);
+      queryClient.invalidateQueries(["etudiants", page]);
       modalState.close();
       notifications.update({
         id: "save-user",
         color: "green",
-        title: "Utilisateur a été ajouté avec succès",
+        title: "Etudiant a été ajouté avec succès",
         message:
           "La notification se terminera en 2 secondes, vous pouvez fermer cette notification maintenant",
         icon: <IconCheck size="1rem" />,
@@ -192,7 +210,7 @@ export function AdministrateurForm({
       });
     },
     onError: (error: AxiosError) => {
-      const excp = error.response?.data as IBusinessException
+      const excp = error.response?.data as IBusinessException;
       modalState.close();
       notifications.update({
         id: "save-user",
@@ -205,19 +223,15 @@ export function AdministrateurForm({
     },
   });
 
-  if (isLoading || loading) return <Skeleton className="mt-3 min-h-screen" />;
-
-  if (isError) return <div>Something went wrong ...</div>;
+  if (loading) return <Skeleton className="mt-3 min-h-screen" />;
 
   return (
     <Box
       component="form"
-      maw={400}
-      mx="auto"
-      onSubmit={form.onSubmit(() => { })}
+      mt="md"
+      onSubmit={form.onSubmit(() => {})}
     >
-
-      {(formState === "create") && (
+      {formState === "create" && (
         <TextInput
           label="Code"
           placeholder="Entrez votre Code"
@@ -226,9 +240,28 @@ export function AdministrateurForm({
           {...form.getInputProps("code")}
         />
       )}
+      <div className="flex items-center">
+        <TextInput
+          className="pr-2 w-1/2"
+          label="CIN"
+          placeholder="Entrez votre CIN"
+          withAsterisk
+          mt="md"
+          width={1 / 2}
+          {...form.getInputProps("cin")}
+        />
+        <TextInput
+          className="pl-2 w-1/2"
+          label="CNE"
+          placeholder="Entrez votre CNE"
+          withAsterisk
+          mt="md"
+          {...form.getInputProps("cne")}
+        />
+      </div>
       <div className="flex items-center ">
         <TextInput
-          className="pr-2"
+          className="pr-2 w-1/2"
           label="Nom"
           placeholder="Entrez votre Nom"
           mt="md"
@@ -236,7 +269,7 @@ export function AdministrateurForm({
           {...form.getInputProps("nom")}
         />
         <TextInput
-          className="pl-2"
+          className="pl-2 w-1/2"
           label="Prenom"
           placeholder="Entrez votre Prenom"
           withAsterisk
@@ -245,6 +278,13 @@ export function AdministrateurForm({
         />
       </div>
 
+    
+      <DateInput
+        label="Date input"
+        placeholder="Date input"
+        mt="md"
+        {...form.getInputProps("dateNaissance")}
+      />
       <TextInput
         label="Telephone"
         placeholder="Entrez votre Telephone"
@@ -252,15 +292,29 @@ export function AdministrateurForm({
         mt="md"
         {...form.getInputProps("telephone")}
       />
-      <MultiSelect
-        data={roles}
-        label="Roles"
-        placeholder="Choisissez vos rôles"
+
+      <TextInput
+        label="adresse"
+        placeholder="Entrez votre Adresse"
         withAsterisk
         mt="md"
-        required
-        {...form.getInputProps("roles")}
+        {...form.getInputProps("adresse")}
       />
+      <TextInput
+        label="Ville"
+        placeholder="Entrez votre Ville"
+        withAsterisk
+        mt="md"
+        {...form.getInputProps("ville")}
+      />
+      <TextInput
+        label="Pay"
+        placeholder="Entrez votre Pay"
+        withAsterisk
+        mt="md"
+        {...form.getInputProps("pay")}
+      />
+
       <FileInput
         label="image"
         placeholder="Entrez votre image"
@@ -273,13 +327,14 @@ export function AdministrateurForm({
         }}
       />
 
-
       <Group position="right" mt="md">
         <Button
           variant="default"
           type="submit"
           className="bg-blue-400 text-white hover:bg-blue-600"
-          onClick={formState == 'create' ? saveUtilisateurHnadler : updateUtilisateurHnadler}
+          onClick={
+            formState == "create" ? saveEtudiantsHnadler : updateEtudiantHnadler
+          }
           color="blue"
         >
           {formState === "edit" ? "Modifier" : "Enregistrer"}
@@ -288,7 +343,10 @@ export function AdministrateurForm({
           variant="default"
           className="border-gray-400 text-black border:bg-gray-600"
           onClick={() => modalState.close()}
-          color="gray">Fermer</Button>
+          color="gray"
+        >
+          Fermer
+        </Button>
       </Group>
     </Box>
   );

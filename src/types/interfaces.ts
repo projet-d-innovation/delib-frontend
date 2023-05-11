@@ -1,5 +1,6 @@
 
 export interface IEtudiant {
+  id?: string,
   code: string,
   cin: string,
   cne: string,
@@ -14,13 +15,14 @@ export interface IEtudiant {
 }
 
 export interface IProfesseur {
+  id?: string,     //TODO: should delete id when the backend is ready
   code: string,
   nom: string,
   prenom: string,
   telephone: string,
   photo: string,
   codeDepartement: string,
-  departement: IDepartement,
+  departement?: IDepartement, //TODO: should delete ? when the backend is ready
   elements?: IElement[]
 }
 
@@ -32,6 +34,7 @@ export interface IUtilisateur {
   photo?: string,
   roles?: IRoleWithoutPermissions[]
 }
+
 
 export interface IDepartement {
   codeDepartement: string,
@@ -56,6 +59,7 @@ export interface IModule {
 
 
 export interface IElement {
+  id?: string,
   codeElement: string,
   intituleElement: string,
   coefficientElement: number,

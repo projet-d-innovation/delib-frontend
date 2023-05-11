@@ -9,8 +9,8 @@ import DepartementPage from "./admin/pedagoqiue/DepartementsPage"
 import FilierePage from "./admin/pedagoqiue/FilierePage"
 import ModulePage from "./admin/pedagoqiue/ModulePage"
 import ElementPage from "./admin/pedagoqiue/ElementPage"
-import ProfesseurPage from "./admin/utilisateurs/ProfesseursPage"
-import EtudiantPage from "./admin/utilisateurs/EtudiantsPage"
+import ProfesseurPage from "./admin/utilisateurs/Professeurs/ProfesseursPage"
+import EtudiantPage from "./admin/utilisateurs/Etudiants/EtudiantsPage"
 import AdministrateurPage from "./admin/utilisateurs/Administateurs/AdministrateurPage"
 import RolePage from "./admin/utilisateurs/RolesPage"
 import NotePage from "./admin/NotesPage"
@@ -22,6 +22,7 @@ import DeliberationPage from "./admin/deliberation/DeliberationPage"
 import PermissionPage from "./admin/utilisateurs/PermissionPage"
 import AdministrateurDetailsPage from "./admin/utilisateurs/Administateurs/AdministrateurDetailsPage"
 import Home from "./student/Home"
+import ElementsPage from "./admin/utilisateurs/Professeurs/ElementsPage"
 
 function App() {
   const authStore = useAuthStore()
@@ -56,11 +57,12 @@ function App() {
             isAllowed={authStore.isPermeted("ACCESS_DASHBOARD")}
           />
         } />
+        <Route path='gestion-utilisateur/professeurs/:id/elements' element={<ElementsPage />} />
 
         <Route path="gestion-utilisateur/etudiants" element={<EtudiantPage />} />
         <Route path="gestion-utilisateur/roles" element={<RolePage />} />
         <Route path='gestion-utilisateur/roles/:id' element={<PermissionPage />} />
-
+        
 
         <Route path="gestion-pedagogique" element={<GestionDedagogiquePage />} />
         <Route path="gestion-pedagogique/departements" element={<DepartementPage />} />

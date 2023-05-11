@@ -1,41 +1,43 @@
 import { useForm, isNotEmpty, hasLength } from "@mantine/form";
 import {
-  Button,
-  Group,
-  TextInput,
   Box,
-  Skeleton,
-  rem,
+  Button,
   FileInput,
+  Group,
   MultiSelect,
+  Select,
+  Skeleton,
+  TextInput,
+  rem,
 } from "@mantine/core";
-import { IBusinessException, IRole, IUtilisateur } from "../../../../types/interfaces";
-import { getRoles } from "../../../../api/roleApi";
+import { IBusinessException, IProfesseur } from "../../../../types/interfaces";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import {
-  getUtilisateur,
-  saveUtilisateur,
-  updateUtilisateur,
-} from "../../../../api/utilisateurApi";
-import { IconUpload } from "@tabler/icons-react";
+
 import useModalState from "../../../../store/modalStore";
 import { notifications } from "@mantine/notifications";
-import { IconCheck } from "@tabler/icons-react";
+import { IconCheck, IconUpload } from "@tabler/icons-react";
 import { IconAdFilled } from "@tabler/icons-react";
 import { AxiosError } from "axios";
+import {
+  getProfesseur,
+  saveProfesseur,
+  updateProfesseur,
+} from "../../../../api/utilisateurApi";
+import { getDepartements } from "../../../../api/departementApi";
+// import { DateTimePicker } from '@mantine/dates';
 
-export function AdministrateurForm({
+export function ProfesseurForm({
   formState,
   id,
-  page
+  page,
 }: {
   formState: String;
-  id: String;
+  id: string;
   page: number;
 }) {
   const modalState = useModalState();
-  const loading = useQueryClient()?.getQueryState("utilisateur")?.isFetching || false;
-
+  const loading =
+    useQueryClient()?.getQueryState("professeur")?.isFetching || false;
 
   const form = useForm({
     initialValues: {
@@ -43,8 +45,8 @@ export function AdministrateurForm({
       nom: "",
       prenom: "",
       telephone: "",
-      image: "",
-      roles: [],
+      photo: "",
+      Departement: "",
     },
 
     validate: {
@@ -58,81 +60,91 @@ export function AdministrateurForm({
         { min: 10, max: 10 },
         "must be a valid telephone number"
       ),
-      // image: isNotEmpty("image is required"),
-      roles: isNotEmpty("roles is required"),
+      Departement: isNotEmpty("codeDepartement is required"),
     },
   });
 
-  console.log(form.values);
+  const {
+    data: departements,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["departements"],
+    queryFn: () => getDepartements({ page: 1, size: 10 }),
+    keepPreviousData: true,
+  });
 
+  const departementNames = departements?.records.map(
+    (d) => d.intituleDepartement
+  ) as string[];
 
   if (formState === "edit") {
-
     useQuery({
-      queryKey: ["utilisateur", id],
-      queryFn: () => getUtilisateur(id + ""),
+      queryKey: ["professeur", id],
+      queryFn: () => getProfesseur(id),
       keepPreviousData: true,
       onSuccess(data) {
-        // console.log(data);
         form.setValues({
           code: data.code,
           nom: data.nom,
           prenom: data.prenom,
           telephone: data.telephone,
-          image: data.photo,
-          roles: data.roles?.map(role => role.roleId) as [],
+          photo: data.photo,
+          Departement: departements?.records.find(
+            (d) => d.codeDepartement === data.codeDepartement
+            )?.intituleDepartement as string,
         });
-      }
+      },
     });
   }
 
-  const { data: rolesList, isLoading, isError } = useQuery({
-    queryKey: ["roles"],
-    queryFn: () => getRoles({ page: 1, size: 10 }),
-    keepPreviousData: true,
-  });
-
-  const roles = rolesList?.records?.map((role: IRole) => {
-    return { value: role.roleId, label: role.roleName };
-  }) as { value: string; label: string }[];
-
-  const saveUtilisateurHnadler = () => {
+  const saveProfesseursHnadler = () => {
     if (form.isValid()) {
-      const data: IUtilisateur = {
+      const data: IProfesseur = {
         code: form.values.code,
         nom: form.values.nom,
         prenom: form.values.prenom,
         telephone: form.values.telephone,
-        photo: form.values.image,
-        roles: form.values.roles,
+        photo: form.values.photo,
+        codeDepartement: departements?.records.find(
+          (d) => d.intituleDepartement === form.values.Departement
+        )?.codeDepartement as string,
+        departement: departements?.records.find(    //TODO: this attrebute should be removed when the backend is ready
+          (d) => d.intituleDepartement === form.values.Departement
+        )
       };
+
       mutationSave.mutate(data);
     }
   };
 
-
-
-  const updateUtilisateurHnadler = () => {
+  const updateProfesseurHnadler = () => {
     if (form.isValid()) {
-      const data: IUtilisateur = {
+      const data: IProfesseur = {
+        id: id,
         code: form.values.code,
         nom: form.values.nom,
         prenom: form.values.prenom,
         telephone: form.values.telephone,
-        photo: form.values.image,
-        roles: form.values.roles,
+        photo: form.values.photo,
+        codeDepartement: departements?.records.find(
+          (d) => d.intituleDepartement === form.values.Departement
+        )?.codeDepartement as string,
+        departement: departements?.records.find(    //TODO: this attrebute should be removed when the backend is ready
+          (d) => d.intituleDepartement === form.values.Departement
+        )
       };
       mutationUpdate.mutate(data);
     }
   };
 
   const queryClient = useQueryClient();
-  const mutationUpdate = useMutation(updateUtilisateur, {
+  const mutationUpdate = useMutation(updateProfesseur, {
     onMutate: () => {
       notifications.show({
         id: "update-user",
         loading: true,
-        title: "Utilisateur est en cours de modification",
+        title: "Etudinat est en cours de modification",
         message:
           "Le chargement des données s'arrêtera après 2 secondes, vous pouvez fermer cette notification maintenant",
         autoClose: false,
@@ -140,11 +152,11 @@ export function AdministrateurForm({
       });
     },
     onSuccess: async () => {
-      queryClient.invalidateQueries(["utilisateurs", page]);
+      queryClient.invalidateQueries(["professeurs", page]);
       notifications.update({
         id: "update-user",
         color: "teal",
-        title: "Utilisateur a été modifier avec succès",
+        title: "Professeur a été modifier avec succès",
         message:
           "La notification se terminera en 2 secondes, vous pouvez fermer cette notification maintenant",
         icon: <IconCheck size="1rem" />,
@@ -153,7 +165,7 @@ export function AdministrateurForm({
       modalState.close();
     },
     onError: (error: AxiosError) => {
-      const excp = error.response?.data as IBusinessException
+      const excp = error.response?.data as IBusinessException;
       notifications.update({
         id: "update-user",
         color: "red",
@@ -166,12 +178,12 @@ export function AdministrateurForm({
     },
   });
 
-  const mutationSave = useMutation(saveUtilisateur, {
+  const mutationSave = useMutation(saveProfesseur, {
     onMutate: () => {
       notifications.show({
         id: "save-user",
         loading: true,
-        title: "Utilisateur est en cours de sauvegarde",
+        title: "Professeur est en cours de sauvegarde",
         message:
           "Le chargement des données s'arrêtera après 2 secondes, vous pouvez fermer cette notification maintenant",
         autoClose: false,
@@ -179,12 +191,12 @@ export function AdministrateurForm({
       });
     },
     onSuccess: async () => {
-      queryClient.invalidateQueries(["utilisateurs", page]);
+      queryClient.invalidateQueries(["professeurs", page]);
       modalState.close();
       notifications.update({
         id: "save-user",
         color: "green",
-        title: "Utilisateur a été ajouté avec succès",
+        title: "Professeur a été ajouté avec succès",
         message:
           "La notification se terminera en 2 secondes, vous pouvez fermer cette notification maintenant",
         icon: <IconCheck size="1rem" />,
@@ -192,7 +204,7 @@ export function AdministrateurForm({
       });
     },
     onError: (error: AxiosError) => {
-      const excp = error.response?.data as IBusinessException
+      const excp = error.response?.data as IBusinessException;
       modalState.close();
       notifications.update({
         id: "save-user",
@@ -205,19 +217,18 @@ export function AdministrateurForm({
     },
   });
 
-  if (isLoading || loading) return <Skeleton className="mt-3 min-h-screen" />;
+  if (loading || isLoading) return <Skeleton className="mt-3 min-h-screen" />;
 
-  if (isError) return <div>Something went wrong ...</div>;
+  if (isError) return <div>error</div>;
 
   return (
     <Box
       component="form"
       maw={400}
       mx="auto"
-      onSubmit={form.onSubmit(() => { })}
+      onSubmit={form.onSubmit(() => {})}
     >
-
-      {(formState === "create") && (
+      {formState === "create" && (
         <TextInput
           label="Code"
           placeholder="Entrez votre Code"
@@ -252,34 +263,40 @@ export function AdministrateurForm({
         mt="md"
         {...form.getInputProps("telephone")}
       />
-      <MultiSelect
-        data={roles}
-        label="Roles"
-        placeholder="Choisissez vos rôles"
-        withAsterisk
-        mt="md"
-        required
-        {...form.getInputProps("roles")}
-      />
+
       <FileInput
         label="image"
         placeholder="Entrez votre image"
         icon={<IconUpload size={rem(14)} />}
-        // withAsterisk
         mt="md"
-        // required
         onChange={(file) => {
           form.getInputProps("image").onChange(file?.name);
         }}
       />
-
+      <Select
+        className="pt-4 pb-3"
+        label="Departement"
+        placeholder="choisir un departement"
+        data={departementNames}
+        transitionProps={{
+          transition: "pop-top-left",
+          duration: 80,
+          timingFunction: "ease",
+        }}
+        {...form.getInputProps("Departement")}
+        withinPortal
+      />
 
       <Group position="right" mt="md">
         <Button
           variant="default"
           type="submit"
           className="bg-blue-400 text-white hover:bg-blue-600"
-          onClick={formState == 'create' ? saveUtilisateurHnadler : updateUtilisateurHnadler}
+          onClick={
+            formState == "create"
+              ? saveProfesseursHnadler
+              : updateProfesseurHnadler
+          }
           color="blue"
         >
           {formState === "edit" ? "Modifier" : "Enregistrer"}
@@ -288,7 +305,10 @@ export function AdministrateurForm({
           variant="default"
           className="border-gray-400 text-black border:bg-gray-600"
           onClick={() => modalState.close()}
-          color="gray">Fermer</Button>
+          color="gray"
+        >
+          Fermer
+        </Button>
       </Group>
     </Box>
   );

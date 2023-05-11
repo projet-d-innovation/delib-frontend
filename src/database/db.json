@@ -1,0 +1,325 @@
+{
+  "etudiants": [
+    {
+      "id": "2",
+      "code": "1",
+      "cin": "BB12312",
+      "cne": "RR21312",
+      "nom": "zakria",
+      "prenom": "koko",
+      "telephone": "2213213321",
+      "adresse": "barnoussi casa",
+      "dateNaissance": "2012-04-23T18:25:43.511Z",
+      "ville": "casa",
+      "pays": "morocco",
+      "photo": "https://media.licdn.com/dms/image/D4D08AQE0CXu4hnoe7g/croft-frontend-shrinkToFit1024/0/1646754728586?e=2147483647&v=beta&t=ADkOVwOwmP-4rCH4y0g2_OBFlsszl01TpQPhCgt5SSc"
+    },
+    {
+      "id": "4",
+      "code": "123",
+      "cin": "BB12312",
+      "cne": "RR21312",
+      "nom": "zakria",
+      "prenom": "koko",
+      "telephone": "2213213321",
+      "adresse": "barnoussi casa",
+      "dateNaissance": "2023-05-01T00:00:00.000Z",
+      "ville": "casa",
+      "pays": "morocco",
+      "photo": ""
+    },
+    {
+      "code": "1234",
+      "cin": "BB12312",
+      "cne": "RR21312",
+      "nom": "zakria",
+      "prenom": "koko",
+      "telephone": "2213213321",
+      "adresse": "barnoussi casa",
+      "dateNaissance": "2012-04-23T18:25:43.511Z",
+      "ville": "casa",
+      "pays": "morocco",
+      "photo": "https://expertphotography.b-cdn.net/wp-content/uploads/2018/10/cool-profile-pictures-retouching-1.jpg",
+      "id": "j_atX5X"
+    },
+    {
+      "code": "12342",
+      "cin": "BB12312",
+      "cne": "RR21312",
+      "nom": "kawtar",
+      "prenom": "koko",
+      "telephone": "2213213321",
+      "adresse": "barnoussi casa",
+      "dateNaissance": "2012-04-23T18:25:43.511Z",
+      "ville": "casa",
+      "pays": "morocco",
+      "photo": "https://expertphotography.b-cdn.net/wp-content/uploads/2018/10/cool-profile-pictures-retouching-1.jpg",
+      "id": "j_atX5eX"
+    },
+    {
+      "code": "213",
+      "nom": "3243",
+      "prenom": "3423",
+      "telephone": "24342",
+      "photo": "wallpaperflare.com_wallpaper(7).jpg",
+      "cin": "2423",
+      "cne": "423",
+      "dateNaissance": "2023-05-11T21:51:06.682Z",
+      "adresse": "324",
+      "ville": "423",
+      "pays": "424",
+      "id": "lc6fnK_"
+    },
+    {
+      "code": "2131",
+      "nom": "324",
+      "prenom": "432",
+      "telephone": "132",
+      "photo": "wallpaperflare.com_wallpaper(7).jpg",
+      "cin": "23423",
+      "cne": "324",
+      "dateNaissance": "2023-05-11T21:52:33.333Z",
+      "adresse": "442",
+      "ville": "242",
+      "pays": "324",
+      "id": "zNQd_wH"
+    },
+    {
+      "code": "65675",
+      "nom": "765",
+      "prenom": "765",
+      "telephone": "6565765765",
+      "photo": "wallpaperflare.com_wallpaper(12).jpg",
+      "cin": "765",
+      "cne": "765",
+      "dateNaissance": "2023-05-11T22:01:10.717Z",
+      "adresse": "65",
+      "ville": "76576",
+      "pays": "5",
+      "id": "QAbXDwA"
+    },
+    {
+      "code": "65765",
+      "nom": "57",
+      "prenom": "65",
+      "telephone": "66",
+      "photo": "wallpaperflare.com_wallpaper(12).jpg",
+      "cin": "6576",
+      "cne": "56",
+      "dateNaissance": "7656-07-01T00:00:00.000Z",
+      "adresse": "5",
+      "ville": "5765",
+      "pays": "765",
+      "id": "ohKl80c"
+    }
+  ],
+  "professeurs": [
+    {
+      "code": "1",
+      "nom": "kawtar",
+      "prenom": "koko",
+      "telephone": "2213213321",
+      "photo": "https://expertphotography.b-cdn.net/wp-content/uploads/2020/08/social-media-profile-photos-3.jpg",
+      "codeDepartement": "1m",
+      "departement": {
+        "id": "1m",
+        "codeDepartement": "1m",
+        "intituleDepartement": "informatique",
+        "codeChefDepartement": "2m"
+      },
+      "elements": [
+        {
+          "id": "1",
+          "codeElement": "1",
+          "intituleElement": "java",
+          "coefficientElement": "0.5",
+          "codeModule": "12331",
+          "codeProfesseur": "13213"
+        },
+        {
+          "id": "2",
+          "codeElement": "2",
+          "intituleElement": "jee",
+          "coefficientElement": "0.5",
+          "codeModule": "12331",
+          "codeProfesseur": "13213"
+        },
+        {
+          "id": "3",
+          "codeElement": "3",
+          "intituleElement": "C++",
+          "coefficientElement": "0.5",
+          "codeModule": "12331",
+          "codeProfesseur": "13213"
+        }
+      ],
+      "id": "1"
+    },
+    {
+      "code": "2",
+      "nom": "zakria",
+      "prenom": "kawkaw",
+      "telephone": "2213213321",
+      "photo": "https://expertphotography.b-cdn.net/wp-content/uploads/2020/08/social-media-profile-photos-3.jpg",
+      "codeDepartement": "2m",
+      "departement": {
+        "id": "2m",
+        "codeDepartement": "2m",
+        "intituleDepartement": "mathematique",
+        "codeChefDepartement": "1m"
+      },
+      "elements": [
+        {
+          "id": "2",
+          "codeElement": "2",
+          "intituleElement": "jee",
+          "coefficientElement": "0.5",
+          "codeModule": "12331",
+          "codeProfesseur": "13213"
+        },
+        {
+          "id": "3",
+          "codeElement": "3",
+          "intituleElement": "C++",
+          "coefficientElement": "0.5",
+          "codeModule": "12331",
+          "codeProfesseur": "13213"
+        },
+        {
+          "id": "4",
+          "codeElement": "4",
+          "intituleElement": "AI",
+          "coefficientElement": "0.5",
+          "codeModule": "12331",
+          "codeProfesseur": "13213"
+        }
+      ],
+      "id": "2"
+    },
+    {
+      "code": "3",
+      "nom": "kawtar",
+      "prenom": "koko",
+      "telephone": "2213213321",
+      "photo": "https://expertphotography.b-cdn.net/wp-content/uploads/2020/08/social-media-profile-photos-3.jpg",
+      "codeDepartement": "1m",
+      "id": "KJULvfF",
+      "departement": {
+        "id": "1m",
+        "codeDepartement": "1m",
+        "intituleDepartement": "informatique",
+        "codeChefDepartement": "2m"
+      }
+    },
+    {
+      "code": "12341",
+      "nom": "sad",
+      "prenom": "dsada",
+      "telephone": "2131233222",
+      "photo": "",
+      "codeDepartement": "2m",
+      "id": "1PpxBp-",
+      "departement": {
+        "id": "2m",
+        "codeDepartement": "2m",
+        "intituleDepartement": "mathematique",
+        "codeChefDepartement": "1m"
+      }
+    },
+    {
+      "code": "0009",
+      "nom": "adsd",
+      "prenom": "dasdas",
+      "telephone": "1322132121",
+      "photo": "",
+      "codeDepartement": "1m",
+      "departement": {
+        "id": "1m",
+        "codeDepartement": "1m",
+        "intituleDepartement": "informatique",
+        "codeChefDepartement": "2m"
+      },
+      "id": "8TWfKga"
+    }
+  ],
+  "departements": [
+    {
+      "id": "1m",
+      "codeDepartement": "1m",
+      "intituleDepartement": "informatique",
+      "codeChefDepartement": "2m"
+    },
+    {
+      "id": "2m",
+      "codeDepartement": "2m",
+      "intituleDepartement": "mathematique",
+      "codeChefDepartement": "1m"
+    }
+  ],
+  "elements": [
+    {
+      "id": "1",
+      "codeElement": "1",
+      "intituleElement": "java",
+      "coefficientElement": "0.5",
+      "codeModule": "12331",
+      "codeProfesseur": "13213"
+    },
+    {
+      "id": "2",
+      "codeElement": "2",
+      "intituleElement": "jee",
+      "coefficientElement": "0.5",
+      "codeModule": "12331",
+      "codeProfesseur": "13213"
+    },
+    {
+      "id": "3",
+      "codeElement": "3",
+      "intituleElement": "C++",
+      "coefficientElement": "0.5",
+      "codeModule": "12331",
+      "codeProfesseur": "13213"
+    },
+    {
+      "id": "4",
+      "codeElement": "4",
+      "intituleElement": "AI",
+      "coefficientElement": "0.5",
+      "codeModule": "12331",
+      "codeProfesseur": "13213"
+    },
+    {
+      "id": "5",
+      "codeElement": "5",
+      "intituleElement": "Oracle",
+      "coefficientElement": "0.5",
+      "codeModule": "12331",
+      "codeProfesseur": "13213"
+    },
+    {
+      "id": "6",
+      "codeElement": "6",
+      "intituleElement": "SQL",
+      "coefficientElement": "0.5",
+      "codeModule": "12331",
+      "codeProfesseur": "13213"
+    },
+    {
+      "id": "7",
+      "codeElement": "7",
+      "intituleElement": "HTML",
+      "coefficientElement": "0.5",
+      "codeModule": "12331",
+      "codeProfesseur": "13213"
+    },
+    {
+      "id": "8",
+      "codeElement": "8",
+      "intituleElement": "CSS",
+      "coefficientElement": "0.5",
+      "codeModule": "12331",
+      "codeProfesseur": "13213"
+    }
+  ]
+}
