@@ -22,6 +22,7 @@ import DeliberationPage from "./admin/deliberation/DeliberationPage"
 import PermissionPage from "./admin/utilisateurs/PermissionPage"
 import AdministrateurDetailsPage from "./admin/utilisateurs/Administateurs/AdministrateurDetailsPage"
 import SemestrePage from "./admin/pedagoqiue/SemestrePage"
+import Home from "./student/Home"
 // import Home from "./student/Home"
 
 function App() {
@@ -35,9 +36,9 @@ function App() {
   return (
     <Routes>
 
-      {/* <Route path="/" element={<Home />} /> */}
-      <Route path="/" element={<Navigate to='/admin' />} />
 
+      <Route path="/" element={<Navigate to="/admin" />}/>
+      <Route path="/home" element={<Home />}  />
       <Route path="admin" element={
         <ProtectedRoute
           isSignedIn={authStore.isAuthenticated}
@@ -92,6 +93,9 @@ function App() {
           />
         }
       />
+
+
+
       <Route path="*" element={<h1>404</h1>} />
 
     </Routes>
