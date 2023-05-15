@@ -142,7 +142,7 @@ const EtudiantsPage = () => {
 
         formState={formState.state} id={selection[0]} page={page} />
       </Modal>
-      <h1 className="text-3xl font-bold mb-3  p-2">Corps administratif</h1>
+      <h1 className="text-3xl font-bold mb-3  p-2">Etudiants</h1>
       <div className="flex flex-col md:flex-row items-center justify-between p-2">
         <div className="w-full flex">
           <div className="w-full md:w-1/2">
@@ -225,12 +225,12 @@ const EtudiantsPage = () => {
                   </th>
                   <th className="w-1/9">Nom</th>
                   <th className="w-1/9">Prenom</th>
-                  <th className="w-1/9">Cin</th>
-                  <th className="w-1/9">Cne</th>
+                  <th className="w-1/9">CIN</th>
+                  <th className="w-1/9">CNE</th>
                   <th className="w-1/9">Date</th>
                   <th className="w-1/9">Telephone</th>
                   <th className="w-1/9">Address</th>
-                  <th className="w-1/9">ville</th>
+                  <th className="w-1/9">Ville</th>
                   <th className="w-1/9">Pay</th>
                 </tr>
               </thead>

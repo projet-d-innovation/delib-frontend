@@ -14,6 +14,7 @@ import {
   useMantineTheme,
   Alert,
   ActionIcon,
+  Accordion,
 } from "@mantine/core";
 import { usePagination, useDisclosure, randomId } from "@mantine/hooks";
 import {
@@ -140,7 +141,7 @@ const ProfesseursPage = () => {
           page={page}
         />
       </Modal>
-      <h1 className="text-3xl font-bold mb-3  p-2">Corps administratif</h1>
+      <h1 className="text-3xl font-bold mb-3  p-2">Professeurs</h1>
       <div className="flex flex-col md:flex-row items-center justify-between p-2">
         <div className="w-full flex">
           <div className="w-full md:w-1/2">
@@ -225,12 +226,11 @@ const ProfesseursPage = () => {
                     transitionDuration={0}
                   />
                 </th>
-                <th className="w-1/6">Nom</th>
-                <th className="w-1/6">Prenom</th>
-                <th className="w-1/6">Telephone</th>
-                <th className="w-1/6">Departement</th>
-                <th className="w-1/6">Elements</th>
-                <th className="w-1/6">Details</th>
+                <th className="w-1/5">Nom</th>
+                <th className="w-1/5">Prenom</th>
+                <th className="w-1/5">Telephone</th>
+                <th className="w-1/5">Departement</th>
+                <th className="w-1/5">Elements</th>
               </tr>
             </thead>
             <tbody>{rows}</tbody>
@@ -336,6 +336,7 @@ const RowItem = ({
       <td>
         <Text size="sm">{item.telephone}</Text>
       </td>
+    
       <td>
         <Text size="sm">{item.departement?.intituleDepartement}</Text>
       </td>
@@ -343,21 +344,7 @@ const RowItem = ({
         <Badge key={item.code}>
           {item?.elements ? item?.elements?.length : 0} elements
         </Badge>
-      </td>
-      <td>
-        <Link
-          to={
-            item.id + "/elements"
-          }
-          className="px-4  hover:text-blue-600"
-        >      
-        <div className="flex">
-        <ActionIcon variant="transparent"><IconSettings size="1rem" /></ActionIcon>
-          Voir elements
-        </div>
-        
-        </Link>
-      </td>
+      </td> 
     </tr>
   );
 };
@@ -539,14 +526,22 @@ const DetailsModal = ({
             {details?.nom} {details?.prenom}
           </h3>
           <p className="text-sm text-gray-500 text-center">
+            Departement {details?.departement?.intituleDepartement}
+          </p>
+          <p className="text-sm text-gray-500 text-center">
             {details?.telephone}
           </p>
-          <p className="text-sm text-gray-500 text-center">
-            {details?.departement?.intituleDepartement}
-          </p>
-          <p className="text-sm text-gray-500 text-center">
+          {/* <p className="text-sm text-gray-500 text-center">
             {details?.elements ? details?.elements.length : 0} elements
-          </p>
+          </p> */}
+          <div className="w-full flex justify-center space-x-2 p-2">
+          {details?.elements?.map((element) => (
+          <Badge key={details.code + randomId()}>
+            {element.intituleElement}
+          </Badge>
+        ))}
+          </div>
+          
         </div>
       </div>
     </Modal>
