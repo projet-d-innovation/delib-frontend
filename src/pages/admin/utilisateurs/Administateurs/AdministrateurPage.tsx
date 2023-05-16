@@ -310,7 +310,7 @@ const RowItem = ({
           className="hover:cursor-pointer"
           onClick={() => handleDetailsModalOpen(item)}
         >
-          <Avatar size={26} src={item.photo} radius={26} />
+          <Avatar className="rounded-full  shadow-lg"   size={26} src={item.photo} radius={26} />
           <Text size="sm" weight={500}>
             {item.nom}
           </Text>
@@ -501,16 +501,31 @@ const DetailsModal = ({
       title="User details"
       centered
     >
-      <div className="flex flex-col space-y-3 items-center  ">
-        <Avatar radius="xl" size="xl" src={details?.photo} />
-        <div className="flex flex-col items-center ">
-          <h3 className="text-lg font-medium text-center">
-            {details?.nom} {details?.prenom}
-          </h3>
-          <p className="text-sm text-gray-500 text-center">
-            {details?.telephone}
-          </p>
-          <div className="flex flex-row mt-3">
+      <div className="flex flex-col space-y-3 items-left ">
+        <div className="flex flex-col items-left ">
+          <div className="flex space-x-3  space-y-2">
+            {" "}
+            <Avatar
+              className="rounded-md"
+              radius="xl"
+              size="xl"
+              src={details?.photo}
+            />
+            <div className="">
+              {" "}
+              <h3 className="text-2xl font-medium text-left">
+                {details?.nom} {details?.prenom}
+              </h3>
+              <p className="text-sm text-gray-500 text-left">
+                Tel - {details?.telephone}
+              </p>
+            </div>
+          </div>
+
+          <div className="w-4/5 flex items-center h-0.5 my-3  bg-slate-300"></div>
+          <div className="w-full flex justify-left space-x-2 p-2">
+            <p className="text-sm text-gray-500 text-left mr-2">Roles</p>
+
             {details?.roles?.map((role, index) => (
               <Badge
                 key={index + randomId()}

@@ -1,4 +1,3 @@
-
 import {
   Checkbox,
   Skeleton,
@@ -37,7 +36,12 @@ import {
   IRoleWithoutPermissions,
   IUtilisateur,
 } from "../../../../types/interfaces";
-import { deleteEtudiant, deleteUtilisateurs, getEtudiants, getUtilisateurs } from "../../../../api/utilisateurApi";
+import {
+  deleteEtudiant,
+  deleteUtilisateurs,
+  getEtudiants,
+  getUtilisateurs,
+} from "../../../../api/utilisateurApi";
 import Pagination from "../../../../components/Pagination";
 import { EtudiantForm } from "./EtudiantForm";
 import useModalState, { ModalState } from "../../../../store/modalStore";
@@ -57,7 +61,6 @@ const EtudiantsPage = () => {
   const [selection, setSelection] = useState<string[]>([]);
   const [search, setSearch] = useState("");
 
-
   const onPaginationChange = (page: number) => {
     setSelection([]);
     onChange(page);
@@ -66,7 +69,7 @@ const EtudiantsPage = () => {
   const { data, isLoading, isError, refetch, isFetching } = useQuery({
     queryKey: ["etudiants", page],
     queryFn: () =>
-      getEtudiants({ page: pagination.active, size: 10, nom: search })
+      getEtudiants({ page: pagination.active, size: 10, nom: search }),
   });
 
   // console.log(pagination.active);
@@ -78,18 +81,17 @@ const EtudiantsPage = () => {
         : [...current, id]
     );
   const toggleAll = () =>
-    setSelection((current) =>
-      current.length === data?.records.length
-        ? []
-        : (data?.records.map((item) => item.id) as string[]) //TODO: should replace id with code when backend is ready
+    setSelection(
+      (current) =>
+        current.length === data?.records.length
+          ? []
+          : (data?.records.map((item) => item.id) as string[]) //TODO: should replace id with code when backend is ready
     );
-
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     const { value } = event.currentTarget;
     setSearch(value);
-    
   };
 
   const [detailsModalOpened, detailsModalActions] = useDisclosure(false);
@@ -102,25 +104,23 @@ const EtudiantsPage = () => {
   const rows = data?.records?.map((item: IEtudiant) => (
     <RowItem
       key={item.code}
-      selected={selection.includes(item.id||"")} //TODO: should replace id with code when backend is ready
+      selected={selection.includes(item.id || "")} //TODO: should replace id with code when backend is ready
       item={item}
       toggleRow={toggleRow}
       handleDetailsModalOpen={handleDetailsModalOpen}
     />
   ));
 
-  if (isLoading) return <Skeleton className="mt-3 min-h-screen" />
+  if (isLoading) return <Skeleton className="mt-3 min-h-screen" />;
 
-  if (isError) return <LoadingError refetch={refetch} />
-
+  if (isError) return <LoadingError refetch={refetch} />;
 
   console.log(selection);
-  
 
   return (
     <main className=" min-h-screen py-2">
       <Modal
-      size={"lg"}
+        size={"lg"}
         opened={modalState.opened}
         onClose={modalState.close}
         title={
@@ -139,8 +139,10 @@ const EtudiantsPage = () => {
         }}
       >
         <EtudiantForm
-
-        formState={formState.state} id={selection[0]} page={page} />
+          formState={formState.state}
+          id={selection[0]}
+          page={page}
+        />
       </Modal>
       <h1 className="text-3xl font-bold mb-3  p-2">Etudiants</h1>
       <div className="flex flex-col md:flex-row items-center justify-between p-2">
@@ -197,53 +199,57 @@ const EtudiantsPage = () => {
           </p>
         </div>
       )}
-      {
-        data?.records == null || data?.records?.length === 0 ?
-          <Alert className="w-full" icon={<IconAlertCircle size="1rem" />} title="Error!" color="red">
-            Il n'exists aucun Etudiant pour le moment ! Veuillez en créer un.
-          </Alert>
-          :
-          <div className="relative">
-            <Table
-              className={classNames("border-gray-100 border-2 ", {
-                "blur-sm": isFetching,
-              })}
-              verticalSpacing="sm"
-            >
-              <thead className="bg-[#e7f5ff] ">
-                <tr>
-                  <th style={{ width: rem(40) }}>
-                    <Checkbox
-                      onChange={toggleAll}
-                      checked={selection.length === data?.records.length}
-                      indeterminate={
-                        selection.length > 0 &&
-                        selection.length !== data?.records.length
-                      }
-                      transitionDuration={0}
-                    />
-                  </th>
-                  <th className="w-1/9">Nom</th>
-                  <th className="w-1/9">Prenom</th>
-                  <th className="w-1/9">CIN</th>
-                  <th className="w-1/9">CNE</th>
-                  <th className="w-1/9">Date</th>
-                  <th className="w-1/9">Telephone</th>
-                  <th className="w-1/9">Address</th>
-                  <th className="w-1/9">Ville</th>
-                  <th className="w-1/9">Pay</th>
-                </tr>
-              </thead>
-              <tbody>{rows}</tbody>
-            </Table>
-            <Pagination
-              className="m-5"
-              totalPages={data?.totalPages!}
-              active={pagination.active}
-              onPaginationChange={onPaginationChange}
-            />
-          </div>
-      }
+      {data?.records == null || data?.records?.length === 0 ? (
+        <Alert
+          className="w-full"
+          icon={<IconAlertCircle size="1rem" />}
+          title="Error!"
+          color="red"
+        >
+          Il n'exists aucun Etudiant pour le moment ! Veuillez en créer un.
+        </Alert>
+      ) : (
+        <div className="relative">
+          <Table
+            className={classNames("border-gray-100 border-2 ", {
+              "blur-sm": isFetching,
+            })}
+            verticalSpacing="sm"
+          >
+            <thead className="bg-[#e7f5ff] ">
+              <tr>
+                <th style={{ width: rem(40) }}>
+                  <Checkbox
+                    onChange={toggleAll}
+                    checked={selection.length === data?.records.length}
+                    indeterminate={
+                      selection.length > 0 &&
+                      selection.length !== data?.records.length
+                    }
+                    transitionDuration={0}
+                  />
+                </th>
+                <th className="w-1/9">Nom</th>
+                <th className="w-1/9">Prenom</th>
+                <th className="w-1/9">CIN</th>
+                <th className="w-1/9">CNE</th>
+                <th className="w-1/9">Date</th>
+                <th className="w-1/9">Telephone</th>
+                <th className="w-1/9">Address</th>
+                <th className="w-1/9">Ville</th>
+                <th className="w-1/9">Pay</th>
+              </tr>
+            </thead>
+            <tbody>{rows}</tbody>
+          </Table>
+          <Pagination
+            className="m-5"
+            totalPages={data?.totalPages!}
+            active={pagination.active}
+            onPaginationChange={onPaginationChange}
+          />
+        </div>
+      )}
       <DetailsModal
         detailsModalOpened={detailsModalOpened}
         details={details}
@@ -308,12 +314,12 @@ const RowItem = ({
     <tr
       key={item.id}
       className={classNames({ "bg-blue-200": selected })}
-    // className={cx({ [classes.rowSelected]: selected })}
+      // className={cx({ [classes.rowSelected]: selected })}
     >
       <td>
         <Checkbox
           checked={selected}
-          onChange={() => toggleRow(item.id||"")}
+          onChange={() => toggleRow(item.id || "")}
           transitionDuration={0}
         />
       </td>
@@ -341,7 +347,7 @@ const RowItem = ({
         <Text size="sm">{item.cne}</Text>
       </td>
       <td>
-        <Text size="sm">{(item.dateNaissance+"").substring(0,10)}</Text>
+        <Text size="sm">{(item.dateNaissance + "").substring(0, 10)}</Text>
       </td>
       <td>
         <Text size="sm">{item.telephone}</Text>
@@ -349,7 +355,7 @@ const RowItem = ({
       <td>
         <Text size="sm">{item.adresse}</Text>
       </td>
-      
+
       <td>
         <Text size="sm">{item.ville}</Text>
       </td>
@@ -376,7 +382,7 @@ const ActionsMenu = ({
   const deleteEtudiantsHandler = () => {
     if (selectionIds.length === 0) return;
     mutationDelete(selectionIds);
-    modals.closeAll()
+    modals.closeAll();
   };
 
   const openDeleteModal = () =>
@@ -402,7 +408,10 @@ const ActionsMenu = ({
               variant="default"
               className="border-gray-400 text-black border:bg-gray-600"
               onClick={() => modals.closeAll()}
-              color="gray">Annuler</Button>
+              color="gray"
+            >
+              Annuler
+            </Button>
           </Group>
         </Text>
       ),
@@ -527,21 +536,75 @@ const DetailsModal = ({
       title="Details de l'etudiant"
       centered
     >
-      <div className="flex flex-col space-y-3 items-center  ">
-        <Avatar radius="xl" size="xl" src={details?.photo} />
-        <div className="flex flex-col items-center ">
-          <h3 className="text-lg font-medium text-center">
-            {details?.nom} {details?.prenom}
-          </h3>
-          <p className="text-sm text-gray-500 text-center">
-            {details?.telephone}
-          </p>
-          <p className="text-sm text-gray-500 text-center">
-            {details?.adresse}
-          </p>
-          <p className="text-sm text-gray-500 text-center">
-            {details?.pays}
-          </p>
+
+      <div className="flex flex-col space-y-3 items-left ">
+        <div className="flex flex-col items-left ">
+          <div className="flex space-x-3 ">
+            {" "}
+            <Avatar
+              className="rounded-md "
+              radius="xl"
+              size="xl"
+              src={details?.photo}
+            />
+            <div className="">
+              {" "}
+              <h3 className="text-2xl font-medium text-left">
+                {details?.nom} {details?.prenom}
+              </h3>
+              <p className="text-sm text-gray-500 text-left italic">
+                CIN - {details?.cin}
+              </p>
+              <p className="text-sm text-gray-500 text-left italic">
+                CNE - {details?.cne}
+              </p>
+            </div>
+          </div>
+
+          <div className="w-4/5 flex items-center h-0.5 my-3  bg-slate-300"></div>
+          <div className="p-2 flex-1 space-y-2">
+            <div className="">
+              <p className="text-sm text-gray-500 text-left mr-2 block italic">
+                Date de naissance{" "}
+              </p>
+              <p className="text-md text-gray-800  font-semibold bold text-left">
+                {(details?.dateNaissance + "").substring(0, 10)}
+              </p>
+            </div>
+            <div className="">
+              <p className="text-sm text-gray-500 text-left mr-2 block italic">
+                Telephone{" "}
+              </p>
+
+              <p className="text-md text-gray-800 font-semibold bold text-left">
+                {details?.telephone}
+              </p>
+            </div>
+            <div className="">
+              <p className="text-sm text-gray-500 text-left mr-2 block italic">
+                Adress{" "}
+              </p>
+
+              <p className="text-md text-gray-800  font-semibold bold text-left">
+                {details?.adresse}
+              </p>
+            </div>
+            <div className="">
+              {" "}
+              <p className="text-sm text-gray-500 text-left mr-2 block italic">
+                Ville{" "}
+              </p>
+              <p className="text-md text-gray-800 font-semibold text-left">
+                {details?.ville}
+              </p>
+            </div>
+            <div className="">
+              <p className="text-sm text-gray-500 text-left mr-2 block italic">Pay </p>
+              <p className="text-md text-gray-700 font-semibold text-left">
+                {details?.pays}
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </Modal>
