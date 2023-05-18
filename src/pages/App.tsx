@@ -67,7 +67,7 @@ function App() {
         <Route path="gestion-pedagogique/departements" element={<DepartementPage />} />
         <Route path="gestion-pedagogique/filieres" element={<FilierePage />} />
         <Route path="gestion-pedagogique/modules" element={<ModulePage />} />
-        <Route path="gestion-pedagogique/elements" element={<ElementPage />} />
+        <Route path="gestion-pedagogique/elements" element={<ElementPage  />} />
 
         <Route path="gestion-notes" element={<NotePage />} />
 

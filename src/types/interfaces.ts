@@ -1,6 +1,12 @@
 
-export interface IEtudiant {
-  code: string,
+// common ancestor for most of models with code attributes used for creating generic services 
+// for now used for IEtudiant and IModule
+export interface IEntity {
+  code : string;
+}
+
+
+export interface IEtudiant extends IEntity {
   cin: string,
   cne: string,
   nom: string,
@@ -48,14 +54,14 @@ export interface ISemestre {
 }
 
 export interface IModule {
-  codeModule: string,
+  code: string,
   intituleModule: string,
   coefficientModule: number,
   codeSemestre: string
 }
 
 
-export interface IElement {
+export interface IElement extends IEntity{
   codeElement: string,
   intituleElement: string,
   coefficientElement: number,
