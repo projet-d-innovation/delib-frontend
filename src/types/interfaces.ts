@@ -1,33 +1,36 @@
 
-// common ancestor for most of models with code attributes used for creating generic services 
-// for now used for IEtudiant and IModule
-export interface IEntity {
-  code : string;
+export class Etudiant {
+  code!: string;
+  cin!: string;
+  cne!: string;
+  nom!: string;
+  prenom!: string;
+  telephone!: string;
+  adresse!: string;
+  dateNaissance!: Date;
+  ville!: string;
+  pays!: string;
+  photo!: string;
+
+  get id(): string {
+    return this.code;
+  }
+  
 }
 
+export class Professeur {
+  code!: string;
+  nom!: string;
+  prenom!: string;
+  telephone!: string;
+  photo!: string;
+  codeDepartement!: string;
+  departement!: Departement;
+  elements?: IElement[];
 
-export interface IEtudiant extends IEntity {
-  cin: string,
-  cne: string,
-  nom: string,
-  prenom: string,
-  telephone: string,
-  adresse: string,
-  dateNaissance: Date,
-  ville: string,
-  pays: string,
-  photo: string
-}
-
-export interface IProfesseur {
-  code: string,
-  nom: string,
-  prenom: string,
-  telephone: string,
-  photo: string,
-  codeDepartement: string,
-  departement: IDepartement,
-  elements?: IElement[]
+  get id(): string {
+    return this.code;
+  }
 }
 
 export interface IUtilisateur {
@@ -39,11 +42,31 @@ export interface IUtilisateur {
   roles?: IRoleWithoutPermissions[]
 }
 
-export interface IDepartement {
-  codeDepartement: string,
-  intituleDepartement: string,
-  codeChefDepartement: string
-  chefDepartement?: IUtilisateur,
+export class Utilisateur {
+  code!: string;
+  nom!: string;
+  prenom!: string;
+  telephone!: string;
+  photo?: string
+  roles?: IRoleWithoutPermissions[]
+
+  get id(): string {
+    return this.code;
+  }
+  
+}
+
+export class Departement {
+  codeDepartement!: string;
+  intituleDepartement!: string;
+  codeChefDepartement!: string;
+  chefDepartement?: Utilisateur
+
+
+
+  get id() : string {
+    return this.codeDepartement;
+  }
 }
 
 
@@ -61,7 +84,7 @@ export interface IModule {
 }
 
 
-export interface IElement extends IEntity{
+export interface IElement {
   codeElement: string,
   intituleElement: string,
   coefficientElement: number,
@@ -114,4 +137,13 @@ export interface IBusinessException {
   code: number;
   status: string;
   error: string;
+}
+
+
+export type ResponseApi<Type> = {
+  page: number,
+  size: number,
+  totalPages: number,
+  totalElements: number,
+  records: Array<Type> | null
 }

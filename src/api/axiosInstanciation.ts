@@ -1,16 +1,23 @@
 import axios from 'axios';
 
-// TODO: Remove this and use axios instanciation as soon as Adiministrateur Page is adapted 
 
-const baseURL = import.meta.env.VITE_BACKEND_URL as string
 
-const api = axios.create({
+axios.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('access_token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  }
+);
+
+const api = (baseURL : string) => axios.create({
   baseURL: baseURL,
   headers: {
     'Content-Type': 'application/json',
   },
   paramsSerializer: (params) => {
-    console.log(baseURL)
     const searchParams = new URLSearchParams();
     for (const key in params) {
       if (params.hasOwnProperty(key)) {
@@ -25,29 +32,15 @@ const api = axios.create({
       }
     }
     return searchParams.toString();
-  }
-});
-
-const auth_api = axios.create({
-  baseURL: baseURL,
-  headers: {
-    'Content-Type': 'application/json',
   },
+
+  
 });
 
 
-api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('access_token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  }
-);
+
 
 export {
   api,
-  auth_api,
 };
 

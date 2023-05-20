@@ -13,6 +13,8 @@ export const getUtilisateurs = async ({
   size?: number;
   nom?: string;
 }): Promise<IPagination<IUtilisateur>> => {
+  console.log(ADMINISTRATEURS_BASE_URL);
+
   const { data } = await api.get(ADMINISTRATEURS_BASE_URL, {
     params: {
       page: page - 1,
