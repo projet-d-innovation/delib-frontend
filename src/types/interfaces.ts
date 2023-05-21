@@ -62,6 +62,15 @@ export class Departement {
   codeChefDepartement!: string;
   chefDepartement?: Utilisateur
 
+  constructor(departement?: Departement) {
+    if (departement) {
+      this.codeDepartement = departement.codeDepartement;
+      this.intituleDepartement = departement.intituleDepartement;
+      this.codeChefDepartement = departement.codeChefDepartement;
+      this.chefDepartement = departement.chefDepartement
+
+    }
+  }
 
 
   get id() : string {
