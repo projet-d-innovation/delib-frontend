@@ -54,11 +54,9 @@ export class CRUDService<T extends { id?: string }> {
     return data;
   }
 
-  public async delete(ids: string[]): Promise<void> {
+  public async delete(requestParams: Object): Promise<void> {
     await this.api.delete(`${this.baseUrl}/bulk`, {
-      params: {
-        codes: ids
-      }
+      params: requestParams
     });
   }
 }
