@@ -10,13 +10,9 @@ import {
   TextInput,
   rem,
 } from "@mantine/core";
-import { IBusinessException, IEtudiant } from "../../../../types/interfaces";
+import { IBusinessException, IPagination, IRole, IUtilisateur,  } from "../../../../types/interfaces";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import {
-  getEtudiant,
-  saveEtudiant,
-  updateEtudiant,
-} from "../../../../api/utilisateurApi";
+import { getUtilisateur, getUtilisaturs, saveUtilisateur, updateUtilisateur } from "../../../../api/utilisateurApi";
 import useModalState from "../../../../store/modalStore";
 import { notifications } from "@mantine/notifications";
 import { IconCheck, IconUpload } from "@tabler/icons-react";
@@ -24,6 +20,8 @@ import { IconAdFilled } from "@tabler/icons-react";
 import { AxiosError } from "axios";
 import { DateInput } from "@mantine/dates";
 import { useState } from "react";
+import { getRoles } from "../../../../api/roleApi";
+import LoadingError from "../../../../components/LoadingError";
 
 export function EtudiantForm({
   formState,
@@ -53,37 +51,52 @@ export function EtudiantForm({
     },
 
     validate: {
-      // code: isNotEmpty("code is required"),
-      // cin: hasLength({ min: 8, max: 8 }, "must be a valid cin"),
-      // cne: hasLength({ min: 8, max: 8 }, "must be a valid cne"),
-      // nom: hasLength({ min: 2, max: 10 }, "nom must be 2-10 characters long"),
-      // prenom: hasLength(
-      //   { min: 2, max: 10 },
-      //   "prenom must be 2-10 characters long"
-      // ),
-      // telephone: hasLength(
-      //   { min: 10, max: 10 },
-      //   "must be a valid telephone number"
-      // ),
-      // adresse: hasLength(
-      //   { min: 3, max: 20 },
-      //   "adresse must be 3-20 characters long"
-      // ),
-      // ville: hasLength(
-      //   { min: 2, max: 10 },
-      //   "ville must be 2-10 characters long"
-      // ),
-      // pay: hasLength({ min: 2, max: 10 }, "pay must be 2-10 characters long"),
+      code: isNotEmpty("code is required"),
+      cin: hasLength({ min: 8, max: 8 }, "must be a valid cin"),
+      cne: hasLength({ min: 8, max: 8 }, "must be a valid cne"),
+      nom: hasLength({ min: 2, max: 10 }, "nom must be 2-10 characters long"),
+      prenom: hasLength(
+        { min: 2, max: 10 },
+        "prenom must be 2-10 characters long"
+      ),
+      telephone: hasLength(
+        { min: 10, max: 10 },
+        "must be a valid telephone number"
+      ),
+      adresse: hasLength(
+        { min: 3, max: 20 },
+        "adresse must be 3-20 characters long"
+      ),
+      ville: hasLength(
+        { min: 2, max: 10 },
+        "ville must be 2-10 characters long"
+      ),
+      pay: hasLength({ min: 2, max: 10 }, "pay must be 2-10 characters long"),
       // // image: isNotEmpty("image is required"),
     },
   });
 
-  console.log(form.values);
+  const fetchData =(queryKey: any, queryFn: any) => {
+    const { data, isLoading, isError, refetch, isFetching } = useQuery<IPagination<any>>({
+      queryKey,
+      queryFn,
+    });
+    return { data, isLoading, isError, refetch, isFetching };
+  };
+
+  const {
+    data:rolesQuery ,
+    isLoading: isRoleLoading,
+    isError: isRoleError,
+    refetch: refetchRole,
+    isFetching: isRoleFetching,
+  } = fetchData(["roles", page], () => getRoles({ page: 0, size: 10 }));
+
 
   if (formState === "edit") {
     useQuery({
       queryKey: ["etudiant", id],
-      queryFn: () => getEtudiant(id),
+      queryFn: () => getUtilisateur(id),
       keepPreviousData: true,
       onSuccess(data) {
         // console.log(data);
@@ -105,7 +118,7 @@ export function EtudiantForm({
 
   const saveEtudiantsHnadler = () => {
     if (form.isValid()) {
-      const data: IEtudiant = {
+      const data: IUtilisateur = {
         code: form.values.code,
         nom: form.values.nom,
         prenom: form.values.prenom,
@@ -117,6 +130,7 @@ export function EtudiantForm({
         adresse: form.values.adresse,
         ville: form.values.ville,
         pays: form.values.pay,
+        roles: rolesQuery?.records?.filter((role:IRole) => role.roleName === "ROLE_ETUDIANT"),
       };
 
       mutationSave.mutate(data);
@@ -125,7 +139,7 @@ export function EtudiantForm({
 
   const updateEtudiantHnadler = () => {
     if (form.isValid()) {
-      const data: IEtudiant = {
+      const data: IUtilisateur = {
         id: id,
         code: form.values.code,
         nom: form.values.nom,
@@ -138,6 +152,7 @@ export function EtudiantForm({
         adresse: form.values.adresse,
         ville: form.values.ville,
         pays: form.values.pay,
+        roles: rolesQuery?.records?.filter((role:IRole) => role.roleName === "ROLE_ETUDIANT"),
       };
 
       mutationUpdate.mutate(data);
@@ -145,7 +160,7 @@ export function EtudiantForm({
   };
 
   const queryClient = useQueryClient();
-  const mutationUpdate = useMutation(updateEtudiant, {
+  const mutationUpdate = useMutation(updateUtilisateur, {
     onMutate: () => {
       notifications.show({
         id: "update-user",
@@ -184,7 +199,7 @@ export function EtudiantForm({
     },
   });
 
-  const mutationSave = useMutation(saveEtudiant, {
+  const mutationSave = useMutation(saveUtilisateur, {
     onMutate: () => {
       notifications.show({
         id: "save-user",
@@ -223,8 +238,8 @@ export function EtudiantForm({
     },
   });
 
-  if (loading) return <Skeleton className="mt-3 min-h-screen" />;
-
+  if (loading||isRoleLoading) return <Skeleton className="mt-3 min-h-screen" />;
+  if ( isRoleError) return <div>error</div>;
   return (
     <Box
       component="form"

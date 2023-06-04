@@ -10,7 +10,7 @@ import {
   TextInput,
   rem,
 } from "@mantine/core";
-import { IBusinessException, IProfesseur } from "../../../../types/interfaces";
+import { IBusinessException, IPagination, IProfesseur, IRole, IUtilisateur } from "../../../../types/interfaces";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 
 import useModalState from "../../../../store/modalStore";
@@ -20,10 +20,14 @@ import { IconAdFilled } from "@tabler/icons-react";
 import { AxiosError } from "axios";
 import {
   getProfesseur,
+  getUtilisateur,
   saveProfesseur,
+  saveUtilisateur,
   updateProfesseur,
+  updateUtilisateur,
 } from "../../../../api/utilisateurApi";
 import { getDepartements } from "../../../../api/departementApi";
+import { getRoles } from "../../../../api/roleApi";
 // import { DateTimePicker } from '@mantine/dates';
 
 export function ProfesseurForm({
@@ -42,9 +46,15 @@ export function ProfesseurForm({
   const form = useForm({
     initialValues: {
       code: "",
+      cin: "",
+      cne: "",
       nom: "",
       prenom: "",
+      dateNaissance: new Date(),
       telephone: "",
+      adresse: "",
+      ville: "",
+      pay: "",
       photo: "",
       Departement: "",
     },
@@ -64,6 +74,23 @@ export function ProfesseurForm({
     },
   });
 
+  const fetchData =(queryKey: any, queryFn: any) => {
+    const { data, isLoading, isError, refetch, isFetching } = useQuery<IPagination<any>>({
+      queryKey,
+      queryFn,
+    });
+    return { data, isLoading, isError, refetch, isFetching };
+  };
+
+  const {
+    data:rolesQuery ,
+    isLoading: isRoleLoading,
+    isError: isRoleError,
+    refetch: refetchRole,
+    isFetching: isRoleFetching,
+  } = fetchData(["roles", page], () => getRoles({ page: 0, size: 10 }));
+
+
   const {
     data: departements,
     isLoading,
@@ -81,14 +108,20 @@ export function ProfesseurForm({
   if (formState === "edit") {
     useQuery({
       queryKey: ["professeur", id],
-      queryFn: () => getProfesseur(id),
+      queryFn: () => getUtilisateur(id),
       keepPreviousData: true,
       onSuccess(data) {
         form.setValues({
           code: data.code,
+          cin: data.cin,
+          cne: data.cne,
           nom: data.nom,
           prenom: data.prenom,
+          dateNaissance: new Date(data.dateNaissance),
           telephone: data.telephone,
+          adresse: data.adresse,
+          ville: data.ville,
+          pay: data.pays,
           photo: data.photo,
           Departement: departements?.records.find(
             (d) => d.codeDepartement === data.codeDepartement
@@ -100,12 +133,19 @@ export function ProfesseurForm({
 
   const saveProfesseursHnadler = () => {
     if (form.isValid()) {
-      const data: IProfesseur = {
+      const data: IUtilisateur = {
         code: form.values.code,
         nom: form.values.nom,
         prenom: form.values.prenom,
         telephone: form.values.telephone,
         photo: form.values.photo,
+        cin: form.values.cin,
+        cne: form.values.cne,
+        dateNaissance: form.values.dateNaissance,
+        adresse: form.values.adresse,
+        ville: form.values.ville,
+        pays: form.values.pay,
+        roles: rolesQuery?.records?.filter((r:IRole) => r.roleName === "ROLE_PROF"),
         codeDepartement: departements?.records.find(
           (d) => d.intituleDepartement === form.values.Departement
         )?.codeDepartement as string,
@@ -120,13 +160,20 @@ export function ProfesseurForm({
 
   const updateProfesseurHnadler = () => {
     if (form.isValid()) {
-      const data: IProfesseur = {
-        id: id,
+      const data: IUtilisateur = {
+        id: id, //TODO: this attrebute should be removed when the backend is ready
         code: form.values.code,
         nom: form.values.nom,
         prenom: form.values.prenom,
         telephone: form.values.telephone,
         photo: form.values.photo,
+        cin: form.values.cin,
+        cne: form.values.cne,
+        dateNaissance: form.values.dateNaissance,
+        adresse: form.values.adresse,
+        ville: form.values.ville,
+        pays: form.values.pay,
+        roles: rolesQuery?.records?.filter((r:IRole) => r.roleName === "ROLE_PROF"),
         codeDepartement: departements?.records.find(
           (d) => d.intituleDepartement === form.values.Departement
         )?.codeDepartement as string,
@@ -139,7 +186,7 @@ export function ProfesseurForm({
   };
 
   const queryClient = useQueryClient();
-  const mutationUpdate = useMutation(updateProfesseur, {
+  const mutationUpdate = useMutation(updateUtilisateur, {
     onMutate: () => {
       notifications.show({
         id: "update-user",
@@ -178,7 +225,7 @@ export function ProfesseurForm({
     },
   });
 
-  const mutationSave = useMutation(saveProfesseur, {
+  const mutationSave = useMutation(saveUtilisateur, {
     onMutate: () => {
       notifications.show({
         id: "save-user",
@@ -217,9 +264,9 @@ export function ProfesseurForm({
     },
   });
 
-  if (loading || isLoading) return <Skeleton className="mt-3 min-h-screen" />;
+  if (loading || isLoading||isRoleLoading) return <Skeleton className="mt-3 min-h-screen" />;
 
-  if (isError) return <div>error</div>;
+  if (isError || isRoleError) return <div>error</div>;
 
   return (
     <Box

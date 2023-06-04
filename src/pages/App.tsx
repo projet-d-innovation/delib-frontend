@@ -22,6 +22,8 @@ import DeliberationPage from "./admin/deliberation/DeliberationPage"
 import PermissionPage from "./admin/utilisateurs/PermissionPage"
 import AdministrateurDetailsPage from "./admin/utilisateurs/Administateurs/AdministrateurDetailsPage"
 import Home from "./student/Home"
+import ProfesseurDetailsPage from "./admin/utilisateurs/Professeurs/ProfesseurDetailsPage"
+import EtudiantDetailsPage from "./admin/utilisateurs/Etudiants/EtudiantDetailsPage"
 
 function App() {
   const authStore = useAuthStore()
@@ -56,8 +58,12 @@ function App() {
             isAllowed={authStore.isPermeted("ACCESS_DASHBOARD")}
           />
         } />
+        <Route path="gestion-utilisateur/professeurs/:id" element={<ProfesseurDetailsPage />} />
+
 
         <Route path="gestion-utilisateur/etudiants" element={<EtudiantPage />} />
+        <Route path="gestion-utilisateur/etudiants/:id" element={<EtudiantDetailsPage />} />
+
         <Route path="gestion-utilisateur/roles" element={<RolePage />} />
         <Route path='gestion-utilisateur/roles/:id' element={<PermissionPage />} />
         

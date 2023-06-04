@@ -1,5 +1,52 @@
 {
-  "etudiants": [
+  "roles": [
+    {
+      "id": "2",
+      "roleId": "12443",
+      "roleName": "ROLE_PROF",
+      "groupe": null,
+      "permissions": [
+        {
+          "permissionId": 2,
+          "permissionName": "update",
+          "path": "string",
+          "method": "string",
+          "groupe": null
+        }
+      ]
+    },
+    {
+      "id": "1",
+      "roleId": "12442",
+      "roleName": "ROLE_ETUDIANT",
+      "groupe": null,
+      "permissions": [
+        {
+          "permissionId": 2,
+          "permissionName": "update",
+          "path": "string",
+          "method": "string",
+          "groupe": null
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "roleId": "12444",
+      "roleName": "ROLE_ADMIN",
+      "groupe": "ADMIN",
+      "permissions": [
+        {
+          "permissionId": 2,
+          "permissionName": "update",
+          "path": "string",
+          "method": "string",
+          "groupe": null
+        }
+      ]
+    }
+  ],
+  "utilisateurs": [
     {
       "id": "2",
       "code": "1",
@@ -12,24 +59,4783 @@
       "dateNaissance": "2012-04-23T18:25:43.511Z",
       "ville": "casa",
       "pays": "morocco",
-      "photo": "https://media.licdn.com/dms/image/D4D08AQE0CXu4hnoe7g/croft-frontend-shrinkToFit1024/0/1646754728586?e=2147483647&v=beta&t=ADkOVwOwmP-4rCH4y0g2_OBFlsszl01TpQPhCgt5SSc"
+      "photo": "https://media.licdn.com/dms/image/D4D08AQE0CXu4hnoe7g/croft-frontend-shrinkToFit1024/0/1646754728586?e=2147483647&v=beta&t=ADkOVwOwmP-4rCH4y0g2_OBFlsszl01TpQPhCgt5SSc",
+      "codeAnneUniversitaire": "1",
+      "anneUniversitaire": [
+        {
+          "id": "1",
+          "annee": "2020/2021",
+          "resultat": "VALIDE",
+          "note": "12",
+          "codeSessionUniversitaire": "1",
+          "sessionUniversitaire": {
+            "id": "1",
+            "code": "1",
+            "from": "2020-09-01T00:00:00.000Z",
+            "to": "2021-06-30T00:00:00.000Z",
+            "etats": "VALIDE"
+          },
+          "sessions": [
+            {
+              "id": "1",
+              "type": "s1",
+              "note": "12",
+              "resultat": "VALIDE",
+              "codeSemester": "1",
+              "semester": {
+                "id": "1",
+                "code": "1",
+                "intituleSemestre": "s1",
+                "codeFiliere": "1",
+                "filiere": {
+                  "id": "1",
+                  "code": "1",
+                  "intitule": "GLSID",
+                  "codeDepartement": "1m"
+                },
+                "modules": [
+                  {
+                    "id": "1",
+                    "codeModule": "1",
+                    "intituleModule": "java",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "2",
+                    "codeModule": "2",
+                    "intituleModule": "c++",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "3",
+                    "codeModule": "3",
+                    "intituleModule": "Entreprenaria",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "4",
+                    "codeModule": "4",
+                    "intituleModule": "IA",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "5",
+                    "codeModule": "4",
+                    "intituleModule": "Administration system",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "6",
+                    "codeModule": "6",
+                    "intituleModule": "Ethique",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "noteSemester": {
+                "id": "1",
+                "note": "12",
+                "codeSemester": "1"
+              },
+              "notesElements": [
+                {
+                  "id": "1",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "1",
+                  "element": {
+                    "id": "1",
+                    "codeElement": "1",
+                    "intituleElement": "java",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12331",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "2",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "jee",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12331",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "3",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "jee",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12332",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "4",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "jee",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12332",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "5",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "python",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12333",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "6",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "POO",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12333",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "7",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "python",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12334",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "8",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "POO",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12334",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "8",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "python",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12335",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "9",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "POO",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12335",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "9",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "python",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12336",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "10",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "POO",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12336",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                }
+              ],
+              "notesModules": [
+                {
+                  "id": "1",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "redoublant": false,
+                  "rattrapage": false,
+                  "codeModule": "12331",
+                  "module": {
+                    "id": "1",
+                    "codeModule": "1",
+                    "intituleModule": "java",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      }
+                    ],
+                    "codeSession": "1"
+                  }
+                },
+                {
+                  "id": "2",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "redoublant": false,
+                  "rattrapage": false,
+                  "codeModule": "12332",
+                  "module": {
+                    "id": "1",
+                    "codeModule": "1",
+                    "intituleModule": "POO",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      }
+                    ],
+                    "codeSession": "1"
+                  }
+                },
+                {
+                  "id": "3",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "redoublant": false,
+                  "rattrapage": false,
+                  "codeModule": "12333",
+                  "module": {
+                    "id": "1",
+                    "codeModule": "1",
+                    "intituleModule": "IA",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      }
+                    ],
+                    "codeSession": "1"
+                  }
+                },
+                {
+                  "id": "4",
+                  "note": "14",
+                  "resultat": "VALIDE",
+                  "redoublant": false,
+                  "rattrapage": false,
+                  "codeModule": "12334",
+                  "module": {
+                    "id": "1",
+                    "codeModule": "1",
+                    "intituleModule": "Ethique",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      }
+                    ],
+                    "codeSession": "1"
+                  }
+                },
+                {
+                  "id": "5",
+                  "note": "14",
+                  "resultat": "VALIDE",
+                  "redoublant": false,
+                  "rattrapage": false,
+                  "codeModule": "12335",
+                  "module": {
+                    "id": "1",
+                    "codeModule": "1",
+                    "intituleModule": "C++",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      }
+                    ],
+                    "codeSession": "1"
+                  }
+                },
+                {
+                  "id": "6",
+                  "note": "14",
+                  "resultat": "VALIDE",
+                  "redoublant": false,
+                  "rattrapage": false,
+                  "codeModule": "12336",
+                  "module": {
+                    "id": "1",
+                    "codeModule": "1",
+                    "intituleModule": "Python",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      }
+                    ],
+                    "codeSession": "1"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "1",
+              "type": "s2",
+              "note": "15",
+              "resultat": "VALIDE",
+              "codeSemester": "1",
+              "semester": {
+                "id": "1",
+                "code": "1",
+                "intituleSemestre": "s1",
+                "codeFiliere": "1",
+                "filiere": {
+                  "id": "1",
+                  "code": "1",
+                  "intitule": "GLSID",
+                  "codeDepartement": "1m"
+                },
+                "modules": [
+                  {
+                    "id": "1",
+                    "codeModule": "1",
+                    "intituleModule": "java",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "2",
+                    "codeModule": "2",
+                    "intituleModule": "c++",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "3",
+                    "codeModule": "3",
+                    "intituleModule": "Entreprenaria",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "4",
+                    "codeModule": "4",
+                    "intituleModule": "IA",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "5",
+                    "codeModule": "4",
+                    "intituleModule": "Administration system",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "6",
+                    "codeModule": "6",
+                    "intituleModule": "Ethique",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "noteSemester": {
+                "id": "1",
+                "note": "13",
+                "codeSemester": "1"
+              },
+              "notesElements": [
+                {
+                  "id": "1",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "1",
+                  "element": {
+                    "id": "1",
+                    "codeElement": "1",
+                    "intituleElement": "java",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12331",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "2",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "jee",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12331",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "3",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "jee",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12332",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "4",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "C++",
+                    "coefficientElement": "0.5",
+                    "codeModule": "1232",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "5",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "python",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12333",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "6",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "POO",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12333",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "7",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "python",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12334",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "8",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "POO",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12334",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "8",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "python",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12335",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "9",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "POO",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12335",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "9",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "python",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12336",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "10",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "POO",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12336",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                }
+              ],
+              "notesModules": [
+                {
+                  "id": "1",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "redoublant": false,
+                  "rattrapage": false,
+                  "codeModule": "1",
+                  "module": {
+                    "id": "1",
+                    "codeModule": "1",
+                    "intituleModule": "java",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      }
+                    ],
+                    "codeSession": "1"
+                  }
+                },
+                {
+                  "id": "2",
+                  "note": "13",
+                  "resultat": "VALIDE",
+                  "redoublant": false,
+                  "rattrapage": false,
+                  "codeModule": "12332",
+                  "module": {
+                    "id": "1",
+                    "codeModule": "1",
+                    "intituleModule": "POO",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "c++",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      }
+                    ],
+                    "codeSession": "1"
+                  }
+                },
+                {
+                  "id": "3",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "redoublant": false,
+                  "rattrapage": false,
+                  "codeModule": "12333",
+                  "module": {
+                    "id": "1",
+                    "codeModule": "1",
+                    "intituleModule": "IA",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      }
+                    ],
+                    "codeSession": "1"
+                  }
+                },
+                {
+                  "id": "4",
+                  "note": "14",
+                  "resultat": "VALIDE",
+                  "redoublant": false,
+                  "rattrapage": false,
+                  "codeModule": "12334",
+                  "module": {
+                    "id": "1",
+                    "codeModule": "1",
+                    "intituleModule": "java",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      }
+                    ],
+                    "codeSession": "1"
+                  }
+                },
+                {
+                  "id": "5",
+                  "note": "14",
+                  "resultat": "VALIDE",
+                  "redoublant": false,
+                  "rattrapage": false,
+                  "codeModule": "12335",
+                  "module": {
+                    "id": "1",
+                    "codeModule": "1",
+                    "intituleModule": "java",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      }
+                    ],
+                    "codeSession": "1"
+                  }
+                },
+                {
+                  "id": "6",
+                  "note": "14",
+                  "resultat": "VALIDE",
+                  "redoublant": false,
+                  "rattrapage": false,
+                  "codeModule": "12336",
+                  "module": {
+                    "id": "1",
+                    "codeModule": "1",
+                    "intituleModule": "java",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      }
+                    ],
+                    "codeSession": "1"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "1",
+              "type": "s2",
+              "note": "12",
+              "resultat": "VALIDE",
+              "codeSemester": "1",
+              "semester": {
+                "id": "1",
+                "code": "1",
+                "intituleSemestre": "s2",
+                "codeFiliere": "1",
+                "filiere": {
+                  "id": "1",
+                  "code": "1",
+                  "intitule": "GLSID",
+                  "codeDepartement": "1m"
+                },
+                "modules": [
+                  {
+                    "id": "1",
+                    "codeModule": "1",
+                    "intituleModule": "java",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "2",
+                    "codeModule": "2",
+                    "intituleModule": "c++",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "3",
+                    "codeModule": "3",
+                    "intituleModule": "Entreprenaria",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "4",
+                    "codeModule": "4",
+                    "intituleModule": "IA",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "5",
+                    "codeModule": "4",
+                    "intituleModule": "Administration system",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "6",
+                    "codeModule": "6",
+                    "intituleModule": "Ethique",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "noteSemester": {
+                "id": "1",
+                "note": "11",
+                "codeSemester": "1"
+              },
+              "notesElements": [
+                {
+                  "id": "1",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "1",
+                  "element": {
+                    "id": "1",
+                    "codeElement": "1",
+                    "intituleElement": "java",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12331",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "2",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "jee",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12331",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "3",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "jee",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12332",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "4",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "jee",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12332",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "5",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "python",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12333",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "6",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "POO",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12333",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "7",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "python",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12334",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "8",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "POO",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12334",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "8",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "python",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12335",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "9",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "POO",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12335",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "9",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "python",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12336",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "10",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "POO",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12336",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                }
+              ],
+              "notesModules": [
+                {
+                  "id": "1",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "redoublant": false,
+                  "rattrapage": false,
+                  "codeModule": "12331",
+                  "module": {
+                    "id": "1",
+                    "codeModule": "1",
+                    "intituleModule": "java",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      }
+                    ],
+                    "codeSession": "1"
+                  }
+                },
+                {
+                  "id": "2",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "redoublant": false,
+                  "rattrapage": false,
+                  "codeModule": "12332",
+                  "module": {
+                    "id": "1",
+                    "codeModule": "1",
+                    "intituleModule": "POO",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      }
+                    ],
+                    "codeSession": "1"
+                  }
+                },
+                {
+                  "id": "3",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "redoublant": false,
+                  "rattrapage": false,
+                  "codeModule": "12333",
+                  "module": {
+                    "id": "1",
+                    "codeModule": "1",
+                    "intituleModule": "IA",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      }
+                    ],
+                    "codeSession": "1"
+                  }
+                },
+                {
+                  "id": "4",
+                  "note": "14",
+                  "resultat": "VALIDE",
+                  "redoublant": false,
+                  "rattrapage": false,
+                  "codeModule": "12334",
+                  "module": {
+                    "id": "1",
+                    "codeModule": "1",
+                    "intituleModule": "Ethique",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      }
+                    ],
+                    "codeSession": "1"
+                  }
+                },
+                {
+                  "id": "5",
+                  "note": "14",
+                  "resultat": "VALIDE",
+                  "redoublant": false,
+                  "rattrapage": false,
+                  "codeModule": "12335",
+                  "module": {
+                    "id": "1",
+                    "codeModule": "1",
+                    "intituleModule": "C++",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      }
+                    ],
+                    "codeSession": "1"
+                  }
+                },
+                {
+                  "id": "6",
+                  "note": "14",
+                  "resultat": "VALIDE",
+                  "redoublant": false,
+                  "rattrapage": false,
+                  "codeModule": "12336",
+                  "module": {
+                    "id": "1",
+                    "codeModule": "1",
+                    "intituleModule": "Python",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      }
+                    ],
+                    "codeSession": "1"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "1",
+              "type": "s2",
+              "note": "15",
+              "resultat": "VALIDE",
+              "codeSemester": "1",
+              "semester": {
+                "id": "1",
+                "code": "1",
+                "intituleSemestre": "s1",
+                "codeFiliere": "1",
+                "filiere": {
+                  "id": "1",
+                  "code": "1",
+                  "intitule": "GLSID",
+                  "codeDepartement": "1m"
+                },
+                "modules": [
+                  {
+                    "id": "1",
+                    "codeModule": "1",
+                    "intituleModule": "java",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "2",
+                    "codeModule": "2",
+                    "intituleModule": "c++",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "3",
+                    "codeModule": "3",
+                    "intituleModule": "Entreprenaria",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "4",
+                    "codeModule": "4",
+                    "intituleModule": "IA",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "5",
+                    "codeModule": "4",
+                    "intituleModule": "Administration system",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "6",
+                    "codeModule": "6",
+                    "intituleModule": "Ethique",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "noteSemester": {
+                "id": "1",
+                "note": "12,5",
+                "codeSemester": "1"
+              },
+              "notesElements": [
+                {
+                  "id": "1",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "1",
+                  "element": {
+                    "id": "1",
+                    "codeElement": "1",
+                    "intituleElement": "java",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12331",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "2",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "jee",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12331",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "3",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "jee",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12332",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "4",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "jee",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12332",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "5",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "python",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12333",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "6",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "POO",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12333",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "7",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "python",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12334",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "8",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "POO",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12334",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "8",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "python",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12335",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "9",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "POO",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12335",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "9",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "python",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12336",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "10",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "POO",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12336",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                }
+              ],
+              "notesModules": [
+                {
+                  "id": "1",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "redoublant": false,
+                  "rattrapage": false,
+                  "codeModule": "12331",
+                  "module": {
+                    "id": "1",
+                    "codeModule": "1",
+                    "intituleModule": "java",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      }
+                    ],
+                    "codeSession": "1"
+                  }
+                },
+                {
+                  "id": "2",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "redoublant": false,
+                  "rattrapage": false,
+                  "codeModule": "12332",
+                  "module": {
+                    "id": "1",
+                    "codeModule": "1",
+                    "intituleModule": "POO",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      }
+                    ],
+                    "codeSession": "1"
+                  }
+                },
+                {
+                  "id": "3",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "redoublant": false,
+                  "rattrapage": false,
+                  "codeModule": "12333",
+                  "module": {
+                    "id": "1",
+                    "codeModule": "1",
+                    "intituleModule": "IA",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      }
+                    ],
+                    "codeSession": "1"
+                  }
+                },
+                {
+                  "id": "4",
+                  "note": "14",
+                  "resultat": "VALIDE",
+                  "redoublant": false,
+                  "rattrapage": false,
+                  "codeModule": "12334",
+                  "module": {
+                    "id": "1",
+                    "codeModule": "1",
+                    "intituleModule": "Ethique",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      }
+                    ],
+                    "codeSession": "1"
+                  }
+                },
+                {
+                  "id": "5",
+                  "note": "14",
+                  "resultat": "VALIDE",
+                  "redoublant": false,
+                  "rattrapage": false,
+                  "codeModule": "12335",
+                  "module": {
+                    "id": "1",
+                    "codeModule": "1",
+                    "intituleModule": "C++",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      }
+                    ],
+                    "codeSession": "1"
+                  }
+                },
+                {
+                  "id": "6",
+                  "note": "14",
+                  "resultat": "VALIDE",
+                  "redoublant": false,
+                  "rattrapage": false,
+                  "codeModule": "12336",
+                  "module": {
+                    "id": "1",
+                    "codeModule": "1",
+                    "intituleModule": "Python",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      }
+                    ],
+                    "codeSession": "1"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "2",
+          "annee": "2021/2022",
+          "resultat": "VALIDE",
+          "note": "12",
+          "codeSessionUniversitaire": "1",
+          "sessionUniversitaire": {
+            "id": "1",
+            "code": "1",
+            "from": "2020-09-01T00:00:00.000Z",
+            "to": "2021-06-30T00:00:00.000Z",
+            "etats": "VALIDE"
+          },
+          "sessions": [
+            {
+              "id": "1",
+              "type": "s1",
+              "note": "12",
+              "resultat": "VALIDE",
+              "codeSemester": "1",
+              "semester": {
+                "id": "1",
+                "code": "1",
+                "intituleSemestre": "s1",
+                "codeFiliere": "1",
+                "filiere": {
+                  "id": "1",
+                  "code": "1",
+                  "intitule": "GLSID",
+                  "codeDepartement": "1m"
+                },
+                "modules": [
+                  {
+                    "id": "1",
+                    "codeModule": "1",
+                    "intituleModule": "java",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "2",
+                    "codeModule": "2",
+                    "intituleModule": "c++",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "3",
+                    "codeModule": "3",
+                    "intituleModule": "Entreprenaria",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "4",
+                    "codeModule": "4",
+                    "intituleModule": "IA",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "5",
+                    "codeModule": "4",
+                    "intituleModule": "Administration system",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "6",
+                    "codeModule": "6",
+                    "intituleModule": "Ethique",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "noteSemester": {
+                "id": "1",
+                "note": "12",
+                "codeSemester": "1"
+              },
+              "notesElements": [
+                {
+                  "id": "1",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "1",
+                  "element": {
+                    "id": "1",
+                    "codeElement": "1",
+                    "intituleElement": "java",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12331",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "2",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "jee",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12331",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "3",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "jee",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12332",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "4",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "jee",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12332",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "5",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "python",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12333",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "6",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "POO",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12333",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "7",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "python",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12334",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "8",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "POO",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12334",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "8",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "python",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12335",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "9",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "POO",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12335",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "9",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "python",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12336",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "10",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "POO",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12336",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                }
+              ],
+              "notesModules": [
+                {
+                  "id": "1",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "redoublant": false,
+                  "rattrapage": false,
+                  "codeModule": "12331",
+                  "module": {
+                    "id": "1",
+                    "codeModule": "1",
+                    "intituleModule": "java",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      }
+                    ],
+                    "codeSession": "1"
+                  }
+                },
+                {
+                  "id": "2",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "redoublant": false,
+                  "rattrapage": false,
+                  "codeModule": "12332",
+                  "module": {
+                    "id": "1",
+                    "codeModule": "1",
+                    "intituleModule": "POO",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      }
+                    ],
+                    "codeSession": "1"
+                  }
+                },
+                {
+                  "id": "3",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "redoublant": false,
+                  "rattrapage": false,
+                  "codeModule": "12333",
+                  "module": {
+                    "id": "1",
+                    "codeModule": "1",
+                    "intituleModule": "IA",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      }
+                    ],
+                    "codeSession": "1"
+                  }
+                },
+                {
+                  "id": "4",
+                  "note": "14",
+                  "resultat": "VALIDE",
+                  "redoublant": false,
+                  "rattrapage": false,
+                  "codeModule": "12334",
+                  "module": {
+                    "id": "1",
+                    "codeModule": "1",
+                    "intituleModule": "Ethique",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      }
+                    ],
+                    "codeSession": "1"
+                  }
+                },
+                {
+                  "id": "5",
+                  "note": "14",
+                  "resultat": "VALIDE",
+                  "redoublant": false,
+                  "rattrapage": false,
+                  "codeModule": "12335",
+                  "module": {
+                    "id": "1",
+                    "codeModule": "1",
+                    "intituleModule": "C++",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      }
+                    ],
+                    "codeSession": "1"
+                  }
+                },
+                {
+                  "id": "6",
+                  "note": "14",
+                  "resultat": "VALIDE",
+                  "redoublant": false,
+                  "rattrapage": false,
+                  "codeModule": "12336",
+                  "module": {
+                    "id": "1",
+                    "codeModule": "1",
+                    "intituleModule": "Python",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      }
+                    ],
+                    "codeSession": "1"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "1",
+              "type": "s2",
+              "note": "15",
+              "resultat": "VALIDE",
+              "codeSemester": "1",
+              "semester": {
+                "id": "1",
+                "code": "1",
+                "intituleSemestre": "s1",
+                "codeFiliere": "1",
+                "filiere": {
+                  "id": "1",
+                  "code": "1",
+                  "intitule": "GLSID",
+                  "codeDepartement": "1m"
+                },
+                "modules": [
+                  {
+                    "id": "1",
+                    "codeModule": "1",
+                    "intituleModule": "java",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "2",
+                    "codeModule": "2",
+                    "intituleModule": "c++",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "3",
+                    "codeModule": "3",
+                    "intituleModule": "Entreprenaria",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "4",
+                    "codeModule": "4",
+                    "intituleModule": "IA",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "5",
+                    "codeModule": "4",
+                    "intituleModule": "Administration system",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "6",
+                    "codeModule": "6",
+                    "intituleModule": "Ethique",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "noteSemester": {
+                "id": "1",
+                "note": "13",
+                "codeSemester": "1"
+              },
+              "notesElements": [
+                {
+                  "id": "1",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "1",
+                  "element": {
+                    "id": "1",
+                    "codeElement": "1",
+                    "intituleElement": "java",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12331",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "2",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "jee",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12331",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "3",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "jee",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12332",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "4",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "C++",
+                    "coefficientElement": "0.5",
+                    "codeModule": "1232",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "5",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "python",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12333",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "6",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "POO",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12333",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "7",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "python",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12334",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "8",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "POO",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12334",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "8",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "python",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12335",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "9",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "POO",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12335",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "9",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "python",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12336",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "10",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "POO",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12336",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                }
+              ],
+              "notesModules": [
+                {
+                  "id": "1",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "redoublant": false,
+                  "rattrapage": false,
+                  "codeModule": "1",
+                  "module": {
+                    "id": "1",
+                    "codeModule": "1",
+                    "intituleModule": "java",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      }
+                    ],
+                    "codeSession": "1"
+                  }
+                },
+                {
+                  "id": "2",
+                  "note": "13",
+                  "resultat": "VALIDE",
+                  "redoublant": false,
+                  "rattrapage": false,
+                  "codeModule": "12332",
+                  "module": {
+                    "id": "1",
+                    "codeModule": "1",
+                    "intituleModule": "POO",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "c++",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      }
+                    ],
+                    "codeSession": "1"
+                  }
+                },
+                {
+                  "id": "3",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "redoublant": false,
+                  "rattrapage": false,
+                  "codeModule": "12333",
+                  "module": {
+                    "id": "1",
+                    "codeModule": "1",
+                    "intituleModule": "IA",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      }
+                    ],
+                    "codeSession": "1"
+                  }
+                },
+                {
+                  "id": "4",
+                  "note": "14",
+                  "resultat": "VALIDE",
+                  "redoublant": false,
+                  "rattrapage": false,
+                  "codeModule": "12334",
+                  "module": {
+                    "id": "1",
+                    "codeModule": "1",
+                    "intituleModule": "java",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      }
+                    ],
+                    "codeSession": "1"
+                  }
+                },
+                {
+                  "id": "5",
+                  "note": "14",
+                  "resultat": "VALIDE",
+                  "redoublant": false,
+                  "rattrapage": false,
+                  "codeModule": "12335",
+                  "module": {
+                    "id": "1",
+                    "codeModule": "1",
+                    "intituleModule": "java",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      }
+                    ],
+                    "codeSession": "1"
+                  }
+                },
+                {
+                  "id": "6",
+                  "note": "14",
+                  "resultat": "VALIDE",
+                  "redoublant": false,
+                  "rattrapage": false,
+                  "codeModule": "12336",
+                  "module": {
+                    "id": "1",
+                    "codeModule": "1",
+                    "intituleModule": "java",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      }
+                    ],
+                    "codeSession": "1"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "1",
+              "type": "s2",
+              "note": "12",
+              "resultat": "VALIDE",
+              "codeSemester": "1",
+              "semester": {
+                "id": "1",
+                "code": "1",
+                "intituleSemestre": "s2",
+                "codeFiliere": "1",
+                "filiere": {
+                  "id": "1",
+                  "code": "1",
+                  "intitule": "GLSID",
+                  "codeDepartement": "1m"
+                },
+                "modules": [
+                  {
+                    "id": "1",
+                    "codeModule": "1",
+                    "intituleModule": "java",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "2",
+                    "codeModule": "2",
+                    "intituleModule": "c++",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "3",
+                    "codeModule": "3",
+                    "intituleModule": "Entreprenaria",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "4",
+                    "codeModule": "4",
+                    "intituleModule": "IA",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "5",
+                    "codeModule": "4",
+                    "intituleModule": "Administration system",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "6",
+                    "codeModule": "6",
+                    "intituleModule": "Ethique",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "noteSemester": {
+                "id": "1",
+                "note": "11",
+                "codeSemester": "1"
+              },
+              "notesElements": [
+                {
+                  "id": "1",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "1",
+                  "element": {
+                    "id": "1",
+                    "codeElement": "1",
+                    "intituleElement": "java",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12331",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "2",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "jee",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12331",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "3",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "jee",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12332",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "4",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "jee",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12332",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "5",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "python",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12333",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "6",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "POO",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12333",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "7",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "python",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12334",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "8",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "POO",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12334",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "8",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "python",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12335",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "9",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "POO",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12335",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "9",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "python",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12336",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "10",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "POO",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12336",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                }
+              ],
+              "notesModules": [
+                {
+                  "id": "1",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "redoublant": false,
+                  "rattrapage": false,
+                  "codeModule": "12331",
+                  "module": {
+                    "id": "1",
+                    "codeModule": "1",
+                    "intituleModule": "java",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      }
+                    ],
+                    "codeSession": "1"
+                  }
+                },
+                {
+                  "id": "2",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "redoublant": false,
+                  "rattrapage": false,
+                  "codeModule": "12332",
+                  "module": {
+                    "id": "1",
+                    "codeModule": "1",
+                    "intituleModule": "POO",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      }
+                    ],
+                    "codeSession": "1"
+                  }
+                },
+                {
+                  "id": "3",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "redoublant": false,
+                  "rattrapage": false,
+                  "codeModule": "12333",
+                  "module": {
+                    "id": "1",
+                    "codeModule": "1",
+                    "intituleModule": "IA",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      }
+                    ],
+                    "codeSession": "1"
+                  }
+                },
+                {
+                  "id": "4",
+                  "note": "14",
+                  "resultat": "VALIDE",
+                  "redoublant": false,
+                  "rattrapage": false,
+                  "codeModule": "12334",
+                  "module": {
+                    "id": "1",
+                    "codeModule": "1",
+                    "intituleModule": "Ethique",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      }
+                    ],
+                    "codeSession": "1"
+                  }
+                },
+                {
+                  "id": "5",
+                  "note": "14",
+                  "resultat": "VALIDE",
+                  "redoublant": false,
+                  "rattrapage": false,
+                  "codeModule": "12335",
+                  "module": {
+                    "id": "1",
+                    "codeModule": "1",
+                    "intituleModule": "C++",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      }
+                    ],
+                    "codeSession": "1"
+                  }
+                },
+                {
+                  "id": "6",
+                  "note": "14",
+                  "resultat": "VALIDE",
+                  "redoublant": false,
+                  "rattrapage": false,
+                  "codeModule": "12336",
+                  "module": {
+                    "id": "1",
+                    "codeModule": "1",
+                    "intituleModule": "Python",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      }
+                    ],
+                    "codeSession": "1"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "1",
+              "type": "s2",
+              "note": "15",
+              "resultat": "VALIDE",
+              "codeSemester": "1",
+              "semester": {
+                "id": "1",
+                "code": "1",
+                "intituleSemestre": "s1",
+                "codeFiliere": "1",
+                "filiere": {
+                  "id": "1",
+                  "code": "1",
+                  "intitule": "GLSID",
+                  "codeDepartement": "1m"
+                },
+                "modules": [
+                  {
+                    "id": "1",
+                    "codeModule": "1",
+                    "intituleModule": "java",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "2",
+                    "codeModule": "2",
+                    "intituleModule": "c++",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "3",
+                    "codeModule": "3",
+                    "intituleModule": "Entreprenaria",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "4",
+                    "codeModule": "4",
+                    "intituleModule": "IA",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "5",
+                    "codeModule": "4",
+                    "intituleModule": "Administration system",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "6",
+                    "codeModule": "6",
+                    "intituleModule": "Ethique",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "noteSemester": {
+                "id": "1",
+                "note": "12,5",
+                "codeSemester": "1"
+              },
+              "notesElements": [
+                {
+                  "id": "1",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "1",
+                  "element": {
+                    "id": "1",
+                    "codeElement": "1",
+                    "intituleElement": "java",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12331",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "2",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "jee",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12331",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "3",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "jee",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12332",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "4",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "jee",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12332",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "5",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "python",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12333",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "6",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "POO",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12333",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "7",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "python",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12334",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "8",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "POO",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12334",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "8",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "python",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12335",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "9",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "POO",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12335",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "9",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "python",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12336",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                },
+                {
+                  "id": "10",
+                  "type": "ds",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "codeElement": "2",
+                  "element": {
+                    "id": "2",
+                    "codeElement": "2",
+                    "intituleElement": "POO",
+                    "coefficientElement": "0.5",
+                    "codeModule": "12336",
+                    "codeProfesseur": "13213"
+                  },
+                  "codeSession": "1"
+                }
+              ],
+              "notesModules": [
+                {
+                  "id": "1",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "redoublant": false,
+                  "rattrapage": false,
+                  "codeModule": "12331",
+                  "module": {
+                    "id": "1",
+                    "codeModule": "1",
+                    "intituleModule": "java",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12331",
+                        "codeProfesseur": "13213"
+                      }
+                    ],
+                    "codeSession": "1"
+                  }
+                },
+                {
+                  "id": "2",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "redoublant": false,
+                  "rattrapage": false,
+                  "codeModule": "12332",
+                  "module": {
+                    "id": "1",
+                    "codeModule": "1",
+                    "intituleModule": "POO",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      }
+                    ],
+                    "codeSession": "1"
+                  }
+                },
+                {
+                  "id": "3",
+                  "note": "12",
+                  "resultat": "VALIDE",
+                  "redoublant": false,
+                  "rattrapage": false,
+                  "codeModule": "12333",
+                  "module": {
+                    "id": "1",
+                    "codeModule": "1",
+                    "intituleModule": "IA",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      }
+                    ],
+                    "codeSession": "1"
+                  }
+                },
+                {
+                  "id": "4",
+                  "note": "14",
+                  "resultat": "VALIDE",
+                  "redoublant": false,
+                  "rattrapage": false,
+                  "codeModule": "12334",
+                  "module": {
+                    "id": "1",
+                    "codeModule": "1",
+                    "intituleModule": "Ethique",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      }
+                    ],
+                    "codeSession": "1"
+                  }
+                },
+                {
+                  "id": "5",
+                  "note": "14",
+                  "resultat": "VALIDE",
+                  "redoublant": false,
+                  "rattrapage": false,
+                  "codeModule": "12335",
+                  "module": {
+                    "id": "1",
+                    "codeModule": "1",
+                    "intituleModule": "C++",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      }
+                    ],
+                    "codeSession": "1"
+                  }
+                },
+                {
+                  "id": "6",
+                  "note": "14",
+                  "resultat": "VALIDE",
+                  "redoublant": false,
+                  "rattrapage": false,
+                  "codeModule": "12336",
+                  "module": {
+                    "id": "1",
+                    "codeModule": "1",
+                    "intituleModule": "Python",
+                    "coefficientModule": "0.5",
+                    "codeSemestre": "12331",
+                    "codeProfesseur": "13213",
+                    "elements": [
+                      {
+                        "id": "1",
+                        "codeElement": "1",
+                        "intituleElement": "java",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      },
+                      {
+                        "id": "2",
+                        "codeElement": "2",
+                        "intituleElement": "jee",
+                        "coefficientElement": "0.5",
+                        "codeModule": "12332",
+                        "codeProfesseur": "13213"
+                      }
+                    ],
+                    "codeSession": "1"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "codeFiliere": "1",
+      "filiere": {
+        "id": "1",
+        "code": "2",
+        "intitule": "GLSID",
+        "codeDepartement": "1m"
+      },
+      "roles": [
+        {
+          "id": "1",
+          "roleId": "12442",
+          "roleName": "ROLE_ETUDIANT",
+          "groupe": null,
+          "permissions": [
+            {
+              "permissionId": 2,
+              "permissionName": "update",
+              "path": "string",
+              "method": "string",
+              "groupe": null
+            }
+          ]
+        }
+      ],
+      "permissions": [
+        {
+          "permissionId": 2,
+          "permissionName": "update",
+          "path": "string",
+          "method": "string",
+          "groupe": null
+        }
+      ]
     },
     {
-      "id": "4",
-      "code": "123",
-      "cin": "BB12312",
-      "cne": "RR21312",
-      "nom": "zakria",
-      "prenom": "koko",
-      "telephone": "2213213321",
-      "adresse": "barnoussi casa",
-      "dateNaissance": "2023-05-01T00:00:00.000Z",
-      "ville": "casa",
-      "pays": "morocco",
-      "photo": ""
-    },
-    {
-      "code": "1234",
+      "id": "8",
+      "code": "10",
       "cin": "BB12312",
       "cne": "RR21312",
       "nom": "zakria",
@@ -39,87 +4845,40 @@
       "dateNaissance": "2012-04-23T18:25:43.511Z",
       "ville": "casa",
       "pays": "morocco",
-      "photo": "https://expertphotography.b-cdn.net/wp-content/uploads/2018/10/cool-profile-pictures-retouching-1.jpg",
-      "id": "j_atX5X"
-    },
-    {
-      "code": "12342",
-      "cin": "BB12312",
-      "cne": "RR21312",
-      "nom": "kawtar",
-      "prenom": "koko",
-      "telephone": "2213213321",
-      "adresse": "barnoussi casa",
-      "dateNaissance": "2012-04-23T18:25:43.511Z",
-      "ville": "casa",
-      "pays": "morocco",
-      "photo": "https://expertphotography.b-cdn.net/wp-content/uploads/2018/10/cool-profile-pictures-retouching-1.jpg",
-      "id": "j_atX5eX"
-    },
-    {
-      "code": "213",
-      "nom": "3243",
-      "prenom": "3423",
-      "telephone": "24342",
-      "photo": "wallpaperflare.com_wallpaper(7).jpg",
-      "cin": "2423",
-      "cne": "423",
-      "dateNaissance": "2023-05-11T21:51:06.682Z",
-      "adresse": "324",
-      "ville": "423",
-      "pays": "424",
-      "id": "lc6fnK_"
-    },
-    {
-      "code": "2131",
-      "nom": "324",
-      "prenom": "432",
-      "telephone": "132",
-      "photo": "wallpaperflare.com_wallpaper(7).jpg",
-      "cin": "23423",
-      "cne": "324",
-      "dateNaissance": "2023-05-11T21:52:33.333Z",
-      "adresse": "442",
-      "ville": "242",
-      "pays": "324",
-      "id": "zNQd_wH"
-    },
-    {
-      "code": "65675",
-      "nom": "765",
-      "prenom": "765",
-      "telephone": "6565765765",
-      "photo": "wallpaperflare.com_wallpaper(12).jpg",
-      "cin": "765",
-      "cne": "765",
-      "dateNaissance": "2023-05-11T22:01:10.717Z",
-      "adresse": "65",
-      "ville": "76576",
-      "pays": "5",
-      "id": "QAbXDwA"
-    },
-    {
-      "code": "65765",
-      "nom": "57",
-      "prenom": "65",
-      "telephone": "66",
-      "photo": "wallpaperflare.com_wallpaper(12).jpg",
-      "cin": "6576",
-      "cne": "56",
-      "dateNaissance": "7656-07-01T00:00:00.000Z",
-      "adresse": "5",
-      "ville": "5765",
-      "pays": "765",
-      "id": "ohKl80c"
-    }
-  ],
-  "professeurs": [
-    {
-      "code": "1",
-      "nom": "kawtar",
-      "prenom": "koko",
-      "telephone": "2213213321",
-      "photo": "https://expertphotography.b-cdn.net/wp-content/uploads/2020/08/social-media-profile-photos-3.jpg",
+      "photo": "https://media.licdn.com/dms/image/D4D08AQE0CXu4hnoe7g/croft-frontend-shrinkToFit1024/0/1646754728586?e=2147483647&v=beta&t=ADkOVwOwmP-4rCH4y0g2_OBFlsszl01TpQPhCgt5SSc",
+      "codeFiliere": "1",
+      "filiere": {
+        "id": "1",
+        "code": "1",
+        "intitule": "GLSID",
+        "codeDepartement": "1m"
+      },
+      "roles": [
+        {
+          "id": "1",
+          "roleId": "12443",
+          "roleName": "ROLE_PORF",
+          "groupe": null,
+          "permissions": [
+            {
+              "permissionId": 2,
+              "permissionName": "update",
+              "path": "string",
+              "method": "string",
+              "groupe": null
+            }
+          ]
+        }
+      ],
+      "permissions": [
+        {
+          "permissionId": 2,
+          "permissionName": "update",
+          "path": "string",
+          "method": "string",
+          "groupe": null
+        }
+      ],
       "codeDepartement": "1m",
       "departement": {
         "id": "1m",
@@ -152,94 +4911,221 @@
           "codeModule": "12331",
           "codeProfesseur": "13213"
         }
-      ],
-      "id": "1"
+      ]
     },
     {
-      "code": "2",
-      "nom": "zakria",
-      "prenom": "kawkaw",
-      "telephone": "2213213321",
-      "photo": "https://expertphotography.b-cdn.net/wp-content/uploads/2020/08/social-media-profile-photos-3.jpg",
-      "codeDepartement": "2m",
-      "departement": {
-        "id": "2m",
-        "codeDepartement": "2m",
-        "intituleDepartement": "mathematique",
-        "codeChefDepartement": "1m"
-      },
-      "elements": [
+      "code": "21421",
+      "nom": "zakaria",
+      "prenom": "dsdas",
+      "telephone": "2342423223",
+      "photo": "6270772.jpg",
+      "cin": "dsada222",
+      "cne": "dsad1222",
+      "dateNaissance": "2023-06-07T12:47:16.907Z",
+      "adresse": "sfdsf",
+      "ville": "ffsdf",
+      "pays": "fdsf",
+      "roles": [
         {
-          "id": "2",
-          "codeElement": "2",
-          "intituleElement": "jee",
-          "coefficientElement": "0.5",
-          "codeModule": "12331",
-          "codeProfesseur": "13213"
-        },
-        {
-          "id": "3",
-          "codeElement": "3",
-          "intituleElement": "C++",
-          "coefficientElement": "0.5",
-          "codeModule": "12331",
-          "codeProfesseur": "13213"
-        },
-        {
-          "id": "4",
-          "codeElement": "4",
-          "intituleElement": "AI",
-          "coefficientElement": "0.5",
-          "codeModule": "12331",
-          "codeProfesseur": "13213"
+          "id": "1",
+          "roleId": "12442",
+          "roleName": "ROLE_ETUDIANT",
+          "groupe": null,
+          "permissions": [
+            {
+              "permissionId": 2,
+              "permissionName": "update",
+              "path": "string",
+              "method": "string",
+              "groupe": null
+            }
+          ]
         }
       ],
-      "id": "2"
+      "id": "cD8AC65"
     },
     {
-      "code": "3",
+      "code": "w21321",
       "nom": "kawtar",
-      "prenom": "koko",
-      "telephone": "2213213321",
-      "photo": "https://expertphotography.b-cdn.net/wp-content/uploads/2020/08/social-media-profile-photos-3.jpg",
-      "codeDepartement": "1m",
-      "id": "KJULvfF",
-      "departement": {
-        "id": "1m",
-        "codeDepartement": "1m",
-        "intituleDepartement": "informatique",
-        "codeChefDepartement": "2m"
-      }
-    },
-    {
-      "code": "12341",
-      "nom": "sad",
-      "prenom": "dsada",
-      "telephone": "2131233222",
+      "prenom": "wqewqe",
+      "telephone": "1234567891",
       "photo": "",
+      "cin": "",
+      "cne": "",
+      "dateNaissance": "2023-06-04T12:55:29.737Z",
+      "adresse": "",
+      "ville": "",
+      "pays": "",
+      "roles": [
+        {
+          "id": "2",
+          "roleId": "12443",
+          "roleName": "ROLE_PROF",
+          "groupe": null,
+          "permissions": [
+            {
+              "permissionId": 2,
+              "permissionName": "update",
+              "path": "string",
+              "method": "string",
+              "groupe": null
+            }
+          ]
+        }
+      ],
       "codeDepartement": "2m",
-      "id": "1PpxBp-",
       "departement": {
         "id": "2m",
         "codeDepartement": "2m",
         "intituleDepartement": "mathematique",
         "codeChefDepartement": "1m"
-      }
+      },
+      "id": "JsUS34h"
     },
     {
-      "code": "0009",
-      "nom": "adsd",
-      "prenom": "dasdas",
-      "telephone": "1322132121",
+      "code": "w213221",
+      "nom": "kawtar",
+      "prenom": "wqewqe",
+      "telephone": "1234567891",
       "photo": "",
-      "codeDepartement": "1m",
+      "cin": "",
+      "cne": "",
+      "dateNaissance": "2023-06-04T12:55:29.737Z",
+      "adresse": "",
+      "ville": "",
+      "pays": "",
+      "roles": [
+        {
+          "id": "2",
+          "roleId": "12443",
+          "roleName": "ROLE_PROF",
+          "groupe": "ADMIN",
+          "permissions": [
+            {
+              "permissionId": 2,
+              "permissionName": "update",
+              "path": "string",
+              "method": "string",
+              "groupe": null
+            }
+          ]
+        }
+      ],
+      "codeDepartement": "2m",
       "departement": {
-        "id": "1m",
-        "codeDepartement": "1m",
-        "intituleDepartement": "informatique",
-        "codeChefDepartement": "2m"
+        "id": "2m",
+        "codeDepartement": "2m",
+        "intituleDepartement": "mathematique",
+        "codeChefDepartement": "1m"
       },
-      "id": "8TWfKga"
+      "codeFiliere": "1",
+      "filiere": {
+        "id": "1",
+        "code": "1",
+        "intitule": "GLSID",
+        "codeDepartement": "1m"
+      },
+      "id": "JsUS3493h"
+    },
+    {
+      "id": "mantine-zbggm1n08",
+      "code": "3",
+      "nom": "ziko",
+      "prenom": "koko",
+      "cne": "RR21312",
+      "cin": "BB12312",
+      "dateNaissance": "2012-04-23T18:25:43.511Z",
+      "telephone": "2213213321",
+      "adresse": "barnoussi casa",
+      "ville": "casa",
+      "pays": "morocco",
+      "photo": "https://media.licdn.com/dms/image/D4D08AQE0CXu4hnoe7g/croft-frontend-shrinkToFit1024/0/1646754728586?e=2147483647&v=beta&t=ADkOVwOwmP-4rCH4y0g2_OBFlsszl01TpQPhCgt5SSc",
+      "roles": [
+        {
+          "id": "1",
+          "roleId": "12442",
+          "roleName": "ROLE_ETUDIANT",
+          "groupe": null,
+          "permissions": [
+            {
+              "permissionId": 2,
+              "permissionName": "update",
+              "path": "string",
+              "method": "string",
+              "groupe": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mantine-2mqmj86dn",
+      "code": "1121",
+      "nom": "zakaria",
+      "prenom": "dsdas",
+      "cne": "dsad1222",
+      "cin": "dsada222",
+      "dateNaissance": "2023-06-07T12:47:16.907Z",
+      "telephone": "2342423223",
+      "adresse": "sfdsf",
+      "ville": "ffsdf",
+      "pays": "fdsf",
+      "photo": "6270772.jpg",
+      "roles": [
+        {
+          "id": "1",
+          "roleId": "12442",
+          "roleName": "ROLE_ETUDIANT",
+          "groupe": null,
+          "permissions": [
+            {
+              "permissionId": 2,
+              "permissionName": "update",
+              "path": "string",
+              "method": "string",
+              "groupe": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mantine-s0rsb8e1d",
+      "code": "w213221",
+      "nom": "kawtar",
+      "prenom": "wqewqe",
+      "cne": "",
+      "cin": "",
+      "dateNaissance": "",
+      "telephone": "1234567891",
+      "adresse": "",
+      "ville": "",
+      "pays": "",
+      "photo": "",
+      "codeDepartement": "2m",
+      "departements": {
+        "id": "2m",
+        "codeDepartement": "2m",
+        "intituleDepartement": "mathematique",
+        "codeChefDepartement": "1m"
+      },
+      "roles": [
+        {
+          "id": "3",
+          "roleId": "12444",
+          "roleName": "ROLE_ADMIN",
+          "groupe": "ADMIN",
+          "permissions": [
+            {
+              "permissionId": 2,
+              "permissionName": "update",
+              "path": "string",
+              "method": "string",
+              "groupe": null
+            }
+          ]
+        }
+      ]
     }
   ],
   "departements": [
@@ -320,6 +5206,68 @@
       "coefficientElement": "0.5",
       "codeModule": "12331",
       "codeProfesseur": "13213"
+    }
+  ],
+  "anne universitaieres": [
+    {
+      "id": "1",
+      "annee": "2020/2021",
+      "resultat": "VALIDE",
+      "codeSessionUniversitaire": "1",
+      "sessionUniversitaire": {
+        "id": "1",
+        "code": "1",
+        "from": "2020-09-01T00:00:00.000Z",
+        "to": "2021-06-30T00:00:00.000Z",
+        "etats": "VALIDE"
+      }
+    },
+    {
+      "id": "2",
+      "annee": "2020/2021",
+      "resultat": "VALIDE",
+      "sessionUniversitaire": {
+        "id": "1",
+        "code": "1",
+        "from": "2020-09-01T00:00:00.000Z",
+        "to": "2021-06-30T00:00:00.000Z",
+        "etats": "VALIDE"
+      }
+    }
+  ],
+  "modules": [
+    {
+      "id": "1",
+      "codeModule": "1",
+      "intituleModule": "java",
+      "coefficientModule": "0.5",
+      "codeSemestre": "12331",
+      "codeProfesseur": "13213",
+      "elements": [
+        {
+          "id": "1",
+          "codeElement": "1",
+          "intituleElement": "java",
+          "coefficientElement": "0.5",
+          "codeModule": "12331",
+          "codeProfesseur": "13213"
+        },
+        {
+          "id": "2",
+          "codeElement": "2",
+          "intituleElement": "jee",
+          "coefficientElement": "0.5",
+          "codeModule": "12331",
+          "codeProfesseur": "13213"
+        }
+      ]
+    }
+  ],
+  "sessions": [
+    {
+      "id": "1",
+      "annee": "2020/2021",
+      "resultat": "VALIDE"
     }
   ]
 }

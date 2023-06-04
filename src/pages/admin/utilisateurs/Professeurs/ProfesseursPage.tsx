@@ -15,8 +15,15 @@ import {
   Alert,
   ActionIcon,
   Accordion,
+  FileButton,
+  FileInput,
 } from "@mantine/core";
 import { usePagination, useDisclosure, randomId } from "@mantine/hooks";
+// @ts-ignore
+import { CSVLink } from "react-csv";
+// @ts-ignore
+import Papa from "papaparse";
+
 import {
   IconReload,
   IconSearch,
@@ -29,15 +36,24 @@ import {
   IconDatabaseExport,
   IconDatabaseImport,
   IconAlertCircle,
+  IconAdFilled,
 } from "@tabler/icons-react";
 import classNames from "classnames";
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { IElement, IProfesseur } from "../../../../types/interfaces";
 import {
-  deleteEtudiant,
+  IBusinessException,
+  IElement,
+  IPagination,
+  IProfesseur,
+  IRole,
+} from "../../../../types/interfaces";
+import {
   deleteProfesseur,
+  deleteUtilisateur,
   getProfesseurs,
+  getUtilisaturs,
+  saveProfesseur,
 } from "../../../../api/utilisateurApi";
 import Pagination from "../../../../components/Pagination";
 import useModalState, { ModalState } from "../../../../store/modalStore";
@@ -48,7 +64,10 @@ import { IconCheck } from "@tabler/icons-react";
 import { notifications } from "@mantine/notifications";
 import LoadingError from "../../../../components/LoadingError";
 import { ProfesseurForm } from "./ProfesseurForm";
-import { Link } from "react-router-dom";
+import { Link, Route, Router, Routes, useRoutes } from "react-router-dom";
+import { AxiosError } from "axios";
+import { getRoles } from "../../../../api/roleApi";
+import { getDepartements } from "../../../../api/departementApi";
 
 const ProfesseursPage = () => {
   const [page, onChange] = useState(1);
@@ -64,10 +83,43 @@ const ProfesseursPage = () => {
     onChange(page);
   };
 
-  const { data, isLoading, isError, refetch, isFetching } = useQuery({
-    queryKey: ["professeurs", page],
-    queryFn: () =>
-      getProfesseurs({ page: pagination.active, size: 10, nom: search }),
+  const fetchData = (queryKey: any, queryFn: any) => {
+    const { data, isLoading, isError, refetch, isFetching } = useQuery<
+      IPagination<any>
+    >({
+      queryKey,
+      queryFn,
+    });
+    return { data, isLoading, isError, refetch, isFetching };
+  };
+
+  const {
+    data: rolesQuery,
+    isLoading: isRoleLoading,
+    isError: isRoleError,
+    refetch: refetchRole,
+    isFetching: isRoleFetching,
+  } = fetchData(["roles", page], () => getRoles({ page: 0, size: 10 }));
+
+  console.log(rolesQuery);
+
+  const {
+    data: professeurQuery,
+    isLoading: isProfesseurLoading,
+    isError: isProfesseurError,
+    refetch: refetchProfesseur,
+    isFetching: isProfesseurFetching,
+  } = fetchData(["professeurs", page], () => {
+    if (rolesQuery == null) return;
+    const roleId = rolesQuery?.records?.filter(
+      (role) => role.roleName === "ROLE_PROF"
+    )[0].roleId;
+    return getUtilisaturs({
+      page: pagination.active,
+      size: 10,
+      nom: search,
+      roleId: roleId,
+    });
   });
 
   // console.log(pagination.active);
@@ -81,9 +133,9 @@ const ProfesseursPage = () => {
   const toggleAll = () =>
     setSelection(
       (current) =>
-        current.length === data?.records.length
+        current.length === professeurQuery?.records.length
           ? []
-          : (data?.records.map((item) => item.id) as string[]) //TODO: should replace id with code when backend is ready
+          : (professeurQuery?.records.map((item) => item.id) as string[]) //TODO: should replace id with code when backend is ready
     );
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -99,7 +151,7 @@ const ProfesseursPage = () => {
     detailsModalActions.open();
   };
 
-  const rows = data?.records?.map((item: IProfesseur) => (
+  const rows = professeurQuery?.records?.map((item: IProfesseur) => (
     <RowItem
       key={item.code}
       selected={selection.includes(item.id || "")} //TODO: should replace id with code when backend is ready
@@ -109,10 +161,11 @@ const ProfesseursPage = () => {
     />
   ));
 
-  if (isLoading) return <Skeleton className="mt-3 min-h-screen" />;
+  if (isProfesseurLoading || isRoleError)
+    return <Skeleton className="mt-3 min-h-screen" />;
 
-  if (isError) return <LoadingError refetch={refetch} />;
-
+  if (isRoleError) return <LoadingError refetch={refetchRole} />;
+  if (isProfesseurError) return <LoadingError refetch={refetchProfesseur} />;
   console.log(selection);
 
   return (
@@ -153,7 +206,7 @@ const ProfesseursPage = () => {
               onChange={handleSearchChange}
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
-                  refetch();
+                  refetchProfesseur();
                 }
               }}
             />
@@ -162,7 +215,7 @@ const ProfesseursPage = () => {
             className="ml-2"
             variant="default"
             onClick={() => {
-              refetch();
+              refetchProfesseur();
             }}
           >
             Search
@@ -186,17 +239,20 @@ const ProfesseursPage = () => {
             modalState={modalState}
             selectionIds={selection}
             setSelectionIds={setSelection}
+            professeurs={professeurQuery?.records}
+            page={page}
           />
         </div>
       </div>
-      {isFetching && (
+      {isProfesseurFetching && (
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10  ">
           <p className="w-fit px-3 py-1 text-xs font-medium leading-none text-center text-blue-800 bg-blue-200 rounded-full animate-pulse ">
             loading...
           </p>
         </div>
       )}
-      {data?.records == null || data?.records?.length === 0 ? (
+      {professeurQuery?.records == null ||
+      professeurQuery?.records?.length === 0 ? (
         <Alert
           className="w-full"
           icon={<IconAlertCircle size="1rem" />}
@@ -209,7 +265,7 @@ const ProfesseursPage = () => {
         <div className="relative">
           <Table
             className={classNames("border-gray-100 border-2 ", {
-              "blur-sm": isFetching,
+              "blur-sm": isProfesseurFetching,
             })}
             verticalSpacing="sm"
           >
@@ -218,10 +274,12 @@ const ProfesseursPage = () => {
                 <th style={{ width: rem(40) }}>
                   <Checkbox
                     onChange={toggleAll}
-                    checked={selection.length === data?.records.length}
+                    checked={
+                      selection.length === professeurQuery?.records.length
+                    }
                     indeterminate={
                       selection.length > 0 &&
-                      selection.length !== data?.records.length
+                      selection.length !== professeurQuery?.records.length
                     }
                     transitionDuration={0}
                   />
@@ -237,7 +295,7 @@ const ProfesseursPage = () => {
           </Table>
           <Pagination
             className="m-5"
-            totalPages={data?.totalPages!}
+            totalPages={professeurQuery?.totalPages!}
             active={pagination.active}
             onPaginationChange={onPaginationChange}
           />
@@ -330,6 +388,7 @@ const RowItem = ({
         </Group>
         {/* </Link> */}
       </td>
+
       <td>
         <Text size="sm">{item.prenom}</Text>
       </td>
@@ -355,13 +414,54 @@ const ActionsMenu = ({
   modalState,
   selectionIds,
   setSelectionIds,
+  professeurs,
+  page,
 }: {
   selection: number;
   formState: FormState;
   modalState: ModalState;
   selectionIds: string[];
   setSelectionIds: (ids: string[]) => void;
+  professeurs?: IProfesseur[];
+  page: number;
 }) => {
+  const headers = [
+    { key: "code", label: "Code" },
+    { key: "nom", label: "Nom" },
+    { key: "prenom", label: "Prenom" },
+    { key: "photo", label: "Photo" },
+    { key: "telephone", label: "Telephone" },
+    { key: "codeDepartement", label: "CodeDepartement" },
+    { key: "Elements", label: "Elements" },
+  ];
+
+  const data = professeurs?.map((item) => {
+    return {
+      code: item.code,
+      nom: item.nom,
+      prenom: item.prenom,
+      photo: item.photo,
+      telephone: item.telephone,
+      codeDepartement: item.codeDepartement,
+      Elements: item.elements
+        ?.map((element) => element.intituleElement)
+        .join(", "),
+    };
+  });
+
+  const selectionData = selectionIds.map((id) => {
+    const professeur = professeurs?.find((item) => item.id === id);
+    return {
+      nom: professeur?.nom,
+      prenom: professeur?.prenom,
+      departement: professeur?.departement?.intituleDepartement,
+      Telephone: professeur?.telephone,
+      Elements: professeur?.elements
+        ?.map((element) => element.intituleElement)
+        .join(", "),
+    };
+  });
+
   const deleteProfesseursHandler = () => {
     if (selectionIds.length === 0) return;
     mutationDelete(selectionIds);
@@ -401,7 +501,7 @@ const ActionsMenu = ({
     });
 
   const queryClient = useQueryClient();
-  const { mutate: mutationDelete } = useMutation(deleteProfesseur, {
+  const { mutate: mutationDelete } = useMutation(deleteUtilisateur, {
     onMutate: () => {
       notifications.show({
         id: "delete-user",
@@ -441,10 +541,113 @@ const ActionsMenu = ({
       modalState.close();
     },
   });
+  const {
+    data: departements,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["departements"],
+    queryFn: () => getDepartements({ page: 1, size: 10 }),
+    keepPreviousData: true,
+  });
+  const {
+    data: rolesQuery,
+    isLoading: isRoleLoading,
+    isError: isRoleError,
+  } = useQuery({
+    queryKey: ["roles", page],
+    queryFn: () => getRoles({ page: 0, size: 10 }),
+    keepPreviousData: true,
+  });
 
+  const handleFileUpload = (file: File) => {
+    if (file === null) return;
+
+    Papa.parse(file, {
+      header: true,
+      skipEmptyLines: true,
+      complete: (results: any) => {
+        const data: IProfesseur[] = results.data.map((item: any) => {
+          return {
+            id: randomId() + "",
+            code: item.Code,
+            nom: item.Nom,
+            prenom: item.Prenom,
+            photo: "",
+            telephone: item.Telephone,
+            cin: "",
+            cne: "",
+            dateNaissance: "",
+            adresse: "",
+            ville: "",
+            pays: "",
+            roles: rolesQuery?.records?.filter(
+              (r: IRole) => r.roleName === "ROLE_PROF"
+            ),
+            codeDepartement: item.CodeDepartement,
+            departements: departements?.records?.filter(
+              (d: any) => d.codeDepartement === item.CodeDepartement
+            )[0]
+          };
+        });
+
+        if (data.length === 0) return;
+        data.map((professeur) => {
+          mutationSave.mutate(professeur);
+        });
+      },
+    });
+  };
+
+  const mutationSave = useMutation(saveProfesseur, {
+    onMutate: () => {
+      notifications.show({
+        id: "save-user",
+        loading: true,
+        title: "Professeur est en cours de sauvegarde",
+        message:
+          "Le chargement des données s'arrêtera après 2 secondes, vous pouvez fermer cette notification maintenant",
+        autoClose: false,
+        withCloseButton: false,
+      });
+    },
+    onSuccess: async () => {
+      queryClient.invalidateQueries(["professeurs", page]);
+      modalState.close();
+      notifications.update({
+        id: "save-user",
+        color: "green",
+        title: "Professeur a été ajouté avec succès",
+        message:
+          "La notification se terminera en 2 secondes, vous pouvez fermer cette notification maintenant",
+        icon: <IconCheck size="1rem" />,
+        autoClose: 2000,
+      });
+    },
+    onError: (error: AxiosError) => {
+      const excp = error.response?.data as IBusinessException;
+      modalState.close();
+      notifications.update({
+        id: "save-user",
+        color: "red",
+        title: error.message,
+        message: excp.error,
+        icon: <IconAdFilled size="1rem" />,
+        autoClose: 2000,
+      });
+    },
+  });
+
+  if (isLoading || isRoleLoading) return <Skeleton className="mt-3" />;
   return (
     <div className="flex items-center space-x-3 w-full md:w-auto">
-      <Menu position="bottom-end" shadow="md" width={200}>
+      <Menu
+        closeOnItemClick={true}
+        closeDelay={50}
+        position="bottom-end"
+        shadow="md"
+        width={200}
+      >
         <Menu.Target>
           <Button
             variant="default"
@@ -455,8 +658,32 @@ const ActionsMenu = ({
         </Menu.Target>
 
         <Menu.Dropdown>
-          <Menu.Item icon={<IconDatabaseImport size={14} />}>Import</Menu.Item>
-          <Menu.Item icon={<IconDatabaseExport size={14} />}>Export</Menu.Item>
+          <FileButton
+            onChange={(file) => {
+              console.log("start");
+              handleFileUpload(file as File);
+            }}
+            accept=".csv"
+          >
+            {(props) => (
+              <Button
+                {...props}
+                className="font-thin flex border-none"
+                variant="default"
+                color="blue"
+                leftIcon={<IconDatabaseExport size={14} />}
+                fullWidth
+              >
+                {" "}
+                <Text>Import</Text>{" "}
+              </Button>
+            )}
+          </FileButton>
+          <Menu.Item icon={<IconDatabaseExport size={14} />}>
+            <CSVLink data={data} headers={headers} filename={"professeurs.csv"}>
+              Export
+            </CSVLink>
+          </Menu.Item>
 
           <Menu.Divider />
 
@@ -465,7 +692,13 @@ const ActionsMenu = ({
             icon={<IconTableExport size={14} />}
             disabled={selection < 1}
           >
-            Export selection
+            <CSVLink
+              data={selectionData}
+              headers={headers}
+              filename={"professeurs.csv"}
+            >
+              Export selection
+            </CSVLink>
           </Menu.Item>
           <Menu.Item
             color="red"
@@ -481,12 +714,16 @@ const ActionsMenu = ({
           <Menu.Divider />
 
           <Menu.Label>Single-Selection</Menu.Label>
-          <Menu.Item
-            icon={<IconSettings size={14} />}
-            disabled={selection !== 1}
+          <Link
+            to={`/admin/gestion-utilisateur/professeurs/${selectionIds[0]}`}
           >
-            Details
-          </Menu.Item>
+            <Menu.Item
+              icon={<IconSettings size={14} />}
+              disabled={selection !== 1}
+            >
+              Details
+            </Menu.Item>
+          </Link>
           <Menu.Item
             onClick={() => {
               modalState.open();

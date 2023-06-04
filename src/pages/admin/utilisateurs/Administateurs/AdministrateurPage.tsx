@@ -13,8 +13,13 @@ import {
   Modal,
   useMantineTheme,
   Alert,
+  FileButton,
 } from "@mantine/core";
 import { usePagination, useDisclosure, randomId } from "@mantine/hooks";
+// @ts-ignore
+import { CSVLink } from "react-csv";
+// @ts-ignore
+import Papa from "papaparse";
 import {
   IconReload,
   IconSearch,
@@ -32,10 +37,13 @@ import classNames from "classnames";
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
+  IBusinessException,
+  IPagination,
+  IRole,
   IRoleWithoutPermissions,
   IUtilisateur,
 } from "../../../../types/interfaces";
-import { deleteUtilisateurs, getUtilisateurs } from "../../../../api/utilisateurApi";
+import { deleteUtilisateur, getUtilisaturs, saveUtilisateur } from "../../../../api/utilisateurApi";
 import Pagination from "../../../../components/Pagination";
 import { AdministrateurForm } from "./AdministrateurForm";
 import useModalState, { ModalState } from "../../../../store/modalStore";
@@ -45,6 +53,11 @@ import { modals } from "@mantine/modals";
 import { IconCheck } from "@tabler/icons-react";
 import { notifications } from "@mantine/notifications";
 import LoadingError from "../../../../components/LoadingError";
+import { getRoles } from "../../../../api/roleApi";
+import { Link } from "react-router-dom";
+import { AxiosError } from "axios";
+import { IconAdFilled } from "@tabler/icons-react";
+import { getDepartements } from "../../../../api/departementApi";
 
 const AdministrateurPage = () => {
   const [page, onChange] = useState(1);
@@ -61,13 +74,41 @@ const AdministrateurPage = () => {
     onChange(page);
   };
 
-  const { data, isLoading, isError, refetch, isFetching } = useQuery({
-    queryKey: ["utilisateurs", page],
-    queryFn: () =>
-      getUtilisateurs({ page: pagination.active, size: 10, nom: search })
-  });
+  function fetchData <T>(queryKey: any, queryFn: any){
+    const { data, isLoading, isError, refetch, isFetching } = useQuery<IPagination<T>>({
+      queryKey,
+      queryFn,
+    });
+    return { data, isLoading, isError, refetch, isFetching };
+  };
 
-  // console.log(pagination.active);
+  const {
+    data:rolesQuery,
+    isLoading: isRoleLoading,
+    isError: isRoleError,
+    refetch: refetchRole,
+    isFetching: isRoleFetching,
+  } = fetchData<IRole>(["roles", page], () => getRoles({ page: 0, size: 10 }));
+
+
+  const {
+    data: utilisateursQuery,
+    isLoading: isUtilisateurLoading,
+    isError: isUtilisateurError,
+    refetch: refetchUtilisateur,
+    isFetching: isUtilisateurFetching
+  }= fetchData<IUtilisateur>(
+    ["utilisateurs", page],
+    () => {
+  
+      return getUtilisaturs({
+        page: pagination.active,
+        size: 10,
+        nom: search,
+        isadmin: true,
+      });
+    }
+  );
 
   const toggleRow = (id: string) =>
     setSelection((current) =>
@@ -77,9 +118,9 @@ const AdministrateurPage = () => {
     );
   const toggleAll = () =>
     setSelection((current) =>
-      current.length === data?.records.length
+      current.length === utilisateursQuery?.records.length
         ? []
-        : (data?.records.map((item) => item.code) as string[])
+        : (utilisateursQuery?.records.map((item) => item.id) as string[])
     );
 
 
@@ -96,19 +137,21 @@ const AdministrateurPage = () => {
     detailsModalActions.open();
   };
 
-  const rows = data?.records?.map((item: IUtilisateur) => (
+  const rows = utilisateursQuery?.records?.map((item: IUtilisateur) => (
     <RowItem
       key={item.code}
-      selected={selection.includes(item.code)}
+      selected={selection.includes(item.id+"")}
       item={item}
       toggleRow={toggleRow}
       handleDetailsModalOpen={handleDetailsModalOpen}
     />
   ));
 
-  if (isLoading) return <Skeleton className="mt-3 min-h-screen" />
+  if (isRoleLoading|| isUtilisateurLoading) return <Skeleton className="mt-3 min-h-screen" />;
 
-  if (isError) return <LoadingError refetch={refetch} />
+  if (isRoleError) return <LoadingError refetch={refetchRole} />;
+  if (isUtilisateurError) return <LoadingError refetch={refetchUtilisateur} />;
+
 
 
   return (
@@ -145,7 +188,7 @@ const AdministrateurPage = () => {
               onChange={handleSearchChange}
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
-                  refetch();
+                  refetchUtilisateur();
                 }
               }}
             />
@@ -154,7 +197,7 @@ const AdministrateurPage = () => {
             className="ml-2"
             variant="default"
             onClick={() => {
-              refetch();
+              refetchUtilisateur();
             }}
           >
             Search
@@ -178,10 +221,12 @@ const AdministrateurPage = () => {
             modalState={modalState}
             selectionIds={selection}
             setSelectionIds={setSelection}
+            page={page}
+            utilisateur={utilisateursQuery?.records!}
           />
         </div>
       </div>
-      {isFetching && (
+      {isUtilisateurFetching && (
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10  ">
           <p className="w-fit px-3 py-1 text-xs font-medium leading-none text-center text-blue-800 bg-blue-200 rounded-full animate-pulse ">
             loading...
@@ -189,7 +234,7 @@ const AdministrateurPage = () => {
         </div>
       )}
       {
-        data?.records == null || data?.records?.length === 0 ?
+        utilisateursQuery?.records == null || utilisateursQuery?.records?.length === 0 ?
           <Alert className="w-full" icon={<IconAlertCircle size="1rem" />} title="Error!" color="red">
             Il n'exists aucun utilisateur pour le moment ! Veuillez en créer un.
           </Alert>
@@ -197,7 +242,7 @@ const AdministrateurPage = () => {
           <div className="relative">
             <Table
               className={classNames("border-gray-100 border-2 ", {
-                "blur-sm": isFetching,
+                "blur-sm": isUtilisateurFetching,
               })}
               verticalSpacing="sm"
             >
@@ -206,10 +251,10 @@ const AdministrateurPage = () => {
                   <th style={{ width: rem(40) }}>
                     <Checkbox
                       onChange={toggleAll}
-                      checked={selection.length === data?.records.length}
+                      checked={selection.length === utilisateursQuery?.records.length}
                       indeterminate={
                         selection.length > 0 &&
-                        selection.length !== data?.records.length
+                        selection.length !== utilisateursQuery?.records.length
                       }
                       transitionDuration={0}
                     />
@@ -224,7 +269,7 @@ const AdministrateurPage = () => {
             </Table>
             <Pagination
               className="m-5"
-              totalPages={data?.totalPages!}
+              totalPages={utilisateursQuery?.totalPages!}
               active={pagination.active}
               onPaginationChange={onPaginationChange}
             />
@@ -299,7 +344,7 @@ const RowItem = ({
       <td>
         <Checkbox
           checked={selected}
-          onChange={() => toggleRow(item.code)}
+          onChange={() => toggleRow(item.id+"")}
           transitionDuration={0}
         />
       </td>
@@ -310,7 +355,7 @@ const RowItem = ({
           className="hover:cursor-pointer"
           onClick={() => handleDetailsModalOpen(item)}
         >
-          <Avatar className="rounded-full  shadow-lg"   size={26} src={item.photo} radius={26} />
+          <Avatar className="rounded-full  "   size={26} src={item.photo} radius={26} />
           <Text size="sm" weight={500}>
             {item.nom}
           </Text>
@@ -340,13 +385,45 @@ const ActionsMenu = ({
   modalState,
   selectionIds,
   setSelectionIds,
+  page,
+  utilisateur
 }: {
   selection: number;
   formState: FormState;
   modalState: ModalState;
   selectionIds: string[];
   setSelectionIds: (ids: string[]) => void;
+  page: number;
+  utilisateur: IUtilisateur[];
 }) => {
+  const headers = [
+    { label: "Code", key: "code" },
+    { label: "Nom", key: "nom" },
+    { label: "Prenom", key: "prenom" },
+    { label: "Telephone", key: "telephone" },
+    { label: "Photo", key: "photo" },
+    {label:"Roles",key:"roles"},
+    { key: "codeDepartement", label: "CodeDepartement" },
+  ];
+
+  const data = utilisateur.map((item) => {
+    return {
+      code: item.code,
+      nom: item.nom,
+      prenom: item.prenom,
+      telephone: item.telephone,
+      codeDepartement: item.codeDepartement,
+      photo: item.photo,
+      roles: item.roles?.map((role) => role.roleName).join(","),
+    };
+  });
+
+  const selectionData = utilisateur.filter((item) =>
+    selectionIds.includes(item.id || "")
+  );
+
+
+
   const deleteUtilisateursHandler = () => {
     if (selectionIds.length === 0) return;
     mutationDelete(selectionIds);
@@ -381,9 +458,17 @@ const ActionsMenu = ({
         </Text>
       ),
     });
-
+    const {
+      data: rolesQuery,
+      isLoading: isRoleLoading,
+      isError: isRoleError,
+    } = useQuery({
+      queryKey: ["roles", page],
+      queryFn: () => getRoles({ page: 0, size: 10 }),
+      keepPreviousData: true,
+    });
   const queryClient = useQueryClient();
-  const { mutate: mutationDelete } = useMutation(deleteUtilisateurs, {
+  const { mutate: mutationDelete } = useMutation(deleteUtilisateur, {
     onMutate: () => {
       notifications.show({
         id: "delete-user",
@@ -423,7 +508,95 @@ const ActionsMenu = ({
       modalState.close();
     },
   });
+  const {
+    data: departements,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["departements"],
+    queryFn: () => getDepartements({ page: 1, size: 10 }),
+    keepPreviousData: true,
+  });
 
+  const handleFileUpload = (file: File) => {
+    if (!file) return;
+    Papa.parse(file, {
+      header: true,
+      skipEmptyLines: true,
+      complete: (results: any) => {
+        const data: IUtilisateur[] = results.data.map((item: any) => {
+          return {
+            id: randomId() + "",
+            code: item.Code,
+            nom: item.Nom,
+            prenom: item.Prenom,
+            cne: "",
+            cin: "",
+            dateNaissance: "",
+            telephone: item.Telephone,
+            adresse: "",
+            ville: "",
+            pays: "",
+            photo: item.Photo,
+            codeDepartement: item.CodeDepartement,
+            departements: departements?.records?.filter(
+              (d: any) => d.codeDepartement === item.CodeDepartement
+            )[0],
+            roles: rolesQuery?.records?.filter(
+              (role: IRole) => role.roleName === "ROLE_ADMIN"
+            ) as IRole[],
+          };
+        });
+        console.log(data);
+
+        if (data.length === 0) return;
+        data.map((etudiant) => {
+          mutationSave.mutate(etudiant);
+        });
+      },
+    });
+  };
+
+  const mutationSave = useMutation(saveUtilisateur, {
+    onMutate: () => {
+      notifications.show({
+        id: "save-user",
+        loading: true,
+        title: "Etudiant est en cours de sauvegarde",
+        message:
+          "Le chargement des données s'arrêtera après 2 secondes, vous pouvez fermer cette notification maintenant",
+        autoClose: false,
+        withCloseButton: false,
+      });
+    },
+    onSuccess: async () => {
+      queryClient.invalidateQueries(["etudiants", page]);
+      modalState.close();
+      notifications.update({
+        id: "save-user",
+        color: "green",
+        title: "Etudiant a été ajouté avec succès",
+        message:
+          "La notification se terminera en 2 secondes, vous pouvez fermer cette notification maintenant",
+        icon: <IconCheck size="1rem" />,
+        autoClose: 2000,
+      });
+    },
+    onError: (error: AxiosError) => {
+      const excp = error.response?.data as IBusinessException;
+      modalState.close();
+      notifications.update({
+        id: "save-user",
+        color: "red",
+        title: error.message,
+        message: excp.error,
+        icon: <IconAdFilled size="1rem" />,
+        autoClose: 2000,
+      });
+    },
+  });
+
+  if (isRoleLoading) return <Skeleton className="mt-3 min-h-screen" />;
   return (
     <div className="flex items-center space-x-3 w-full md:w-auto">
       <Menu position="bottom-end" shadow="md" width={200}>
@@ -437,9 +610,31 @@ const ActionsMenu = ({
         </Menu.Target>
 
         <Menu.Dropdown>
-          <Menu.Item icon={<IconDatabaseImport size={14} />}>Import</Menu.Item>
-          <Menu.Item icon={<IconDatabaseExport size={14} />}>Export</Menu.Item>
-
+        <FileButton
+            onChange={(file) => {
+              handleFileUpload(file as File);
+            }}
+            accept=".csv"
+          >
+            {(props) => (
+              <Button
+                {...props}
+                className="font-thin flex border-none"
+                variant="default"
+                color="blue"
+                leftIcon={<IconDatabaseExport size={14} />}
+                fullWidth
+              >
+                {" "}
+                <Text>Import</Text>{" "}
+              </Button>
+            )}
+          </FileButton>
+          <Menu.Item icon={<IconDatabaseExport size={14} />}>
+            <CSVLink data={data} headers={headers} filename={"administrateurs.csv"}>
+              Export
+            </CSVLink>
+          </Menu.Item>
           <Menu.Divider />
 
           <Menu.Label>Multi-Selection</Menu.Label>
@@ -463,12 +658,15 @@ const ActionsMenu = ({
           <Menu.Divider />
 
           <Menu.Label>Single-Selection</Menu.Label>
-          <Menu.Item
-            icon={<IconSettings size={14} />}
-            disabled={selection !== 1}
-          >
-            Details
-          </Menu.Item>
+          <Link to={`/admin/gestion-utilisateur/adminstrateurs/${selectionIds[0]}`}>
+            <Menu.Item
+              icon={<IconSettings size={14} />}
+              disabled={selection !== 1}
+            >
+              Details
+            </Menu.Item>
+            </Link>
+    
           <Menu.Item
             onClick={() => {
               modalState.open();
