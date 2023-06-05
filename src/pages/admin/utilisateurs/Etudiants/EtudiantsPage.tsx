@@ -14,6 +14,8 @@ import {
   useMantineTheme,
   Alert,
   FileButton,
+  TypographyStylesProvider,
+  Box,
 } from "@mantine/core";
 import { usePagination, useDisclosure, randomId } from "@mantine/hooks";
 
@@ -36,7 +38,7 @@ import { CSVLink } from "react-csv";
 // @ts-ignore
 import Papa from "papaparse";
 import classNames from "classnames";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
   IBusinessException,
@@ -45,11 +47,14 @@ import {
   IRoleWithoutPermissions,
   IUtilisateur,
 } from "../../../../types/interfaces";
-import { deleteUtilisateur, getUtilisaturs, saveUtilisateur } from "../../../../api/utilisateurApi";
+import {
+  deleteUtilisateur,
+  getUtilisaturs,
+  saveUtilisateur,
+} from "../../../../api/utilisateurApi";
 import Pagination from "../../../../components/Pagination";
 import { EtudiantForm } from "./EtudiantForm";
 import useModalState, { ModalState } from "../../../../store/modalStore";
-
 import useFormState, { FormState } from "../../../../store/formStore";
 import { modals } from "@mantine/modals";
 import { IconCheck } from "@tabler/icons-react";
@@ -58,23 +63,31 @@ import LoadingError from "../../../../components/LoadingError";
 import { Link } from "react-router-dom";
 import { AxiosError } from "axios";
 import { getRoles } from "../../../../api/roleApi";
+import { MRT_ColumnDef, MRT_RowSelectionState, MantineReactTable } from "mantine-react-table";
 
 const EtudiantsPage = () => {
   const [page, onChange] = useState(1);
-  const pagination = usePagination({ total: 10, page, onChange });
   const theme = useMantineTheme();
   const modalState = useModalState();
   const formState = useFormState();
   const [selection, setSelection] = useState<string[]>([]);
   const [search, setSearch] = useState("");
+  const [rowSelection, setRowSelection] = useState<MRT_RowSelectionState>({});
 
-  const onPaginationChange = (page: number) => {
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 5, //customize the default page size
+  });
+  const onPaginationChange = (pagination: any) => {
+    setPagination(pagination);
     setSelection([]);
-    onChange(page);
+    onChange(pagination.pageIndex + 1);
   };
 
-  const fetchData =(queryKey: any, queryFn: any) => {
-    const { data, isLoading, isError, refetch, isFetching } = useQuery<IPagination<any>>({
+  const fetchData = (queryKey: any, queryFn: any) => {
+    const { data, isLoading, isError, refetch, isFetching } = useQuery<
+      IPagination<any>
+    >({
       queryKey,
       queryFn,
     });
@@ -82,59 +95,40 @@ const EtudiantsPage = () => {
   };
 
   const {
-    data:rolesQuery ,
+    data: rolesQuery,
     isLoading: isRoleLoading,
     isError: isRoleError,
     refetch: refetchRole,
     isFetching: isRoleFetching,
   } = fetchData(["roles", page], () => getRoles({ page: 0, size: 10 }));
 
-console.log(rolesQuery);
+  console.log(rolesQuery);
 
   const {
     data: utilisateursQuery,
     isLoading: isUtilisateurLoading,
     isError: isUtilisateurError,
     refetch: refetchUtilisateur,
-    isFetching: isUtilisateurFetching
-  }= fetchData(
-    ["etudiants", page],
-    () => {
-      // if (rolesQuery?.records == null) return;
-      // const roleId = rolesQuery?.records?.filter(
-      //   (role) => role.roleName === "ROLE_ETUDIANT"
-      // )[0].roleId;
-      const roleId = "12442";
-      return getUtilisaturs({
-        page: pagination.active,
-        size: 10,
-        nom: search,
-        roleId: roleId,
-      });
-    }
-  );
+    isFetching: isUtilisateurFetching,
+  } = fetchData(["etudiants", page], () => {
+    // if (rolesQuery?.records == null) return;
+    // const roleId = rolesQuery?.records?.filter(
+    //   (role) => role.roleName === "ROLE_ETUDIANT"
+    // )[0].roleId;
+    // TODO: should replace roleId with code when backend is ready
+    const roleId = "12442";
+    return getUtilisaturs({
+      page: page,
+      size: 10,
+      nom: search,
+      roleId: roleId,
+    });
+  });
 
   // console.log(pagination.active);
 
-  const toggleRow = (id: string) =>
-    setSelection((current) =>
-      current.includes(id)
-        ? current.filter((item) => item !== id)
-        : [...current, id]
-    );
-  const toggleAll = () =>
-    setSelection(
-      (current) =>
-        current.length === utilisateursQuery?.records.length
-          ? []
-          : (utilisateursQuery?.records.map((item) => item.id) as string[]) //TODO: should replace id with code when backend is ready
-    );
 
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    event.preventDefault();
-    const { value } = event.currentTarget;
-    setSearch(value);
-  };
+
 
   const [detailsModalOpened, detailsModalActions] = useDisclosure(false);
   const [details, setDetails] = useState<IUtilisateur | undefined>(undefined);
@@ -143,21 +137,113 @@ console.log(rolesQuery);
     detailsModalActions.open();
   };
 
-  const rows = utilisateursQuery?.records?.map((item: IUtilisateur) => (
-    <RowItem
-      key={item.code}
-      selected={selection.includes(item.id || "")} //TODO: should replace id with code when backend is ready
-      item={item}
-      toggleRow={toggleRow}
-      handleDetailsModalOpen={handleDetailsModalOpen}
-    />
-  ));
+  
 
-  if (isRoleLoading || isUtilisateurLoading) return <Skeleton className="mt-3 min-h-screen" />;
+  const handleRowSelectionChange = () => {
+    const professeurIds =
+      utilisateursQuery?.records
+        ?.filter((item, index) => {
+          return rowSelection[item.id];
+        })
+        .map((item) => item.id) || [];
+
+    setSelection(professeurIds);
+  };
+
+  const columns = useMemo<MRT_ColumnDef<any>[]>(
+    () => [
+      {
+        accessorKey: "code",
+        header: "Code",
+      },
+      {
+        accessorFn: (row: IUtilisateur) => `${row.nom}`, //accessorFn used to join multiple data into a single cell
+        id: "name", //id is still required when using accessorFn instead of accessorKey
+        header: "Name",
+        size: 250,
+        Cell: ({
+          renderedCellValue,
+          row,
+        }: {
+          renderedCellValue: any;
+          row: any;
+        }) => (
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: "1rem",
+            }}
+          >
+            {/* <img
+              height={30}
+              src="https://avatars.githubusercontent.com/u/56592200?v=4"
+              loading="lazy"
+              style={{ borderRadius: "50%" }}
+            /> */}
+            <Avatar
+              className="rounded-full "
+              radius="xl"
+              size="sm"
+              src={row.original.photo}
+            />
+            {/* using renderedCellValue instead of cell.getValue() preserves filter match highlighting */}
+            <span>{renderedCellValue}</span>
+          </Box>
+        ),
+      },
+      {
+        accessorKey: "prenom",
+        header: "Prenom",
+      },
+      {
+        accessorKey: "cin",
+        header: "CIN",
+      },
+      {
+        accessorKey: "cne",
+        header: "CNE",
+      },
+      {
+        accessorKey: "dateNaissance",
+        header: "DateDeNaissance",
+      },
+      {
+        accessorKey: "telephone",
+        header: "Telephone",
+      },
+      {
+        accessorKey: "adresse",
+        header: "Adresse",
+      },
+      {
+        accessorKey: "ville",
+        header: "Ville",
+      },
+      {
+        accessorKey: "pays",
+        header: "Pays",
+      },
+      // {
+      //   accessorKey: "elements",
+      //   header: "Elements",
+      // }
+    ],
+    [] as MRT_ColumnDef<IUtilisateur[]>[]
+  );
+
+
+
+  useEffect(() => {
+    handleRowSelectionChange();
+    // onPaginationChange(pagination.pageIndex);
+  }, [rowSelection]);
+
+  if (isRoleLoading || isUtilisateurLoading)
+    return <Skeleton className="mt-3 min-h-screen" />;
   if (isRoleError) return <LoadingError refetch={refetchRole} />;
 
   if (isUtilisateurError) return <LoadingError refetch={refetchUtilisateur} />;
-
 
   console.log(selection);
 
@@ -188,32 +274,11 @@ console.log(rolesQuery);
           page={page}
         />
       </Modal>
-      <h1 className="text-3xl font-bold mb-3  p-2">Etudiants</h1>
+      {/* <h1 className="text-3xl font-bold mb-3  p-2">Etudiants</h1> */}
       <div className="flex flex-col md:flex-row items-center justify-between p-2">
         <div className="w-full flex">
-          <div className="w-full md:w-1/2">
-            <TextInput
-              placeholder="Search by any field"
-              mb="md"
-              icon={<IconSearch size="0.9rem" stroke={1.5} />}
-              value={search}
-              onChange={handleSearchChange}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  refetchUtilisateur();
-                }
-              }}
-            />
-          </div>
-          <Button
-            className="ml-2"
-            variant="default"
-            onClick={() => {
-              refetchUtilisateur();
-            }}
-          >
-            Search
-          </Button>
+          <h2 className="text-3xl font-bold  p-3">Etudiants</h2>
+          
         </div>
 
         <div className="flex items-center space-x-3 w-full md:w-auto">
@@ -245,7 +310,8 @@ console.log(rolesQuery);
           </p>
         </div>
       )}
-      {utilisateursQuery?.records == null || utilisateursQuery?.records?.length === 0 ? (
+      {utilisateursQuery?.records == null ||
+      utilisateursQuery?.records?.length === 0 ? (
         <Alert
           className="w-full"
           icon={<IconAlertCircle size="1rem" />}
@@ -255,45 +321,110 @@ console.log(rolesQuery);
           Il n'exists aucun Etudiant pour le moment ! Veuillez en créer un.
         </Alert>
       ) : (
-        <div className="relative">
-          <Table
-            className={classNames("border-gray-100 border-2 ", {
-              "blur-sm": isUtilisateurFetching,
-            })}
-            verticalSpacing="sm"
-          >
-            <thead className="bg-[#e7f5ff] ">
-              <tr>
-                <th style={{ width: rem(40) }}>
-                  <Checkbox
-                    onChange={toggleAll}
-                    checked={selection.length === utilisateursQuery?.records.length}
-                    indeterminate={
-                      selection.length > 0 &&
-                      selection.length !== utilisateursQuery?.records.length
-                    }
-                    transitionDuration={0}
-                  />
-                </th>
-                <th className="w-1/9">Nom</th>
-                <th className="w-1/9">Prenom</th>
-                <th className="w-1/9">CIN</th>
-                <th className="w-1/9">CNE</th>
-                <th className="w-1/9">Date</th>
-                <th className="w-1/9">Telephone</th>
-                <th className="w-1/9">Address</th>
-                <th className="w-1/9">Ville</th>
-                <th className="w-1/9">Pay</th>
-              </tr>
-            </thead>
-            <tbody>{rows}</tbody>
-          </Table>
-          <Pagination
-            className="m-5"
-            totalPages={utilisateursQuery?.totalPages!}
-            active={pagination.active}
-            onPaginationChange={onPaginationChange}
+        <div className="relative md:px-3">
+          <MantineReactTable
+            columns={columns}
+            data={utilisateursQuery?.records}
+            enableRowSelection
+            enableFullScreenToggle={false}
+            enableStickyFooter={false}
+            mantineTableProps={{
+              striped: true,
+              // highlightOnHover:false,
+            }}
+            mantinePaperProps={{
+              radius: "md",
+              withBorder: true,
+              shadow: "none",
+            }}
+            mantineTableBodyRowProps={{
+              style: {
+                backgroundColor: "white",
+              },
+              className: "hover:bg-gray-100",
+            }}
+            enableExpanding
+            getRowId={(row) => row.id}
+            onRowSelectionChange={setRowSelection} //connect internal row selection state to your own
+            state={{ rowSelection, pagination }}
+            onPaginationChange={(pagination) => onPaginationChange(pagination)} //hoist pagination state to your state when it changes internally
+            renderDetailPanel={({ row }: { row: any }) => (
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-around",
+                  justifyItems: "center",
+                  alignItems: "start",
+                }}
+              >
+                <Avatar
+                  className="rounded-full my-auto "
+                  radius="xl"
+                  size="xl"
+                  src={row.original.photo}
+                />
+                <Box sx={{ textAlign: "center" }}>
+                  <TypographyStylesProvider variant="h4">
+                    {" "}
+                    <Text className="font-bold" ta="center" c="dimmed" fz="md">
+                      <p>
+                        {" "}
+                        {row.original.nom} {row.original.prenom}
+                      </p>
+                    </Text>
+                  </TypographyStylesProvider>
+                  <TypographyStylesProvider variant="h1">
+                    <Text className="font-bold" ta="center" c="dimmed" fz="md">
+                      <p>
+                        {" "}
+                        CIN {row.original.cin} / CNE{row.original.cne}
+                      </p>
+                    </Text>
+                  </TypographyStylesProvider>
+                  <TypographyStylesProvider variant="h1">
+                    <Text className="font-bold" ta="center" c="dimmed" fz="md">
+                      <p>
+                        {" "}
+                        Date de naissance{" "}
+                        {(row.original.dateNaissance + "").substring(0, 10)}
+                      </p>
+                    </Text>
+                  </TypographyStylesProvider>
+                  <TypographyStylesProvider variant="h1">
+                    <Text className="font-bold" ta="center" c="dimmed" fz="md">
+                      <p>
+                        {" "}
+                        Adresse {row.original.adresse}
+                      </p>
+                    </Text>
+                  </TypographyStylesProvider>
+                  <Text className="font-bold" ta="center" c="dimmed" fz="md">
+                    <p> Tel {row.original.telephone}</p>
+                  </Text>
+                  <TypographyStylesProvider variant="h1">
+                    <Text className="font-bold" ta="center" c="dimmed" fz="md">
+                      <p>
+                        {" "}
+                        Pays {row.original.pays} / Ville {row.original.ville}
+                      </p>
+                    </Text>
+                  </TypographyStylesProvider>
+                  
+                 
+                </Box> 
+
+                <div className=""></div>
+              </Box>
+            )}
+            mantineDetailPanelProps={{
+              frameBorder: "2px",
+              className: "bg-gray-100",
+            }}
+            mantineBottomToolbarProps={{
+              className: "bg-gray-50 p-5",
+            }}
           />
+         
         </div>
       )}
       <DetailsModal
@@ -500,16 +631,16 @@ const ActionsMenu = ({
         </Text>
       ),
     });
-    const {
-      data: rolesQuery,
-      isLoading: isRoleLoading,
-      isError: isRoleError,
-    } = useQuery({
-      queryKey: ["roles", page],
-      queryFn: () => getRoles({ page: 0, size: 10 }),
-      keepPreviousData: true,
-    });
-  
+  const {
+    data: rolesQuery,
+    isLoading: isRoleLoading,
+    isError: isRoleError,
+  } = useQuery({
+    queryKey: ["roles", page],
+    queryFn: () => getRoles({ page: 0, size: 10 }),
+    keepPreviousData: true,
+  });
+
   const queryClient = useQueryClient();
   const { mutate: mutationDelete } = useMutation(deleteUtilisateur, {
     onMutate: () => {
@@ -579,10 +710,10 @@ const ActionsMenu = ({
         });
         console.log(data);
 
-        if (data.length === 0) return;
-        data.map((etudiant) => {
-          mutationSave.mutate(etudiant);
-        });
+        // if (data.length === 0) return;
+        // data.map((etudiant) => {
+        //   mutationSave.mutate(etudiant);
+        // });
       },
     });
   };

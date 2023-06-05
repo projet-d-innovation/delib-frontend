@@ -14,6 +14,8 @@ import {
   useMantineTheme,
   Alert,
   FileButton,
+  TypographyStylesProvider,
+  Box,
 } from "@mantine/core";
 import { usePagination, useDisclosure, randomId } from "@mantine/hooks";
 // @ts-ignore
@@ -34,7 +36,7 @@ import {
   IconAlertCircle,
 } from "@tabler/icons-react";
 import classNames from "classnames";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
   IBusinessException,
@@ -43,7 +45,11 @@ import {
   IRoleWithoutPermissions,
   IUtilisateur,
 } from "../../../../types/interfaces";
-import { deleteUtilisateur, getUtilisaturs, saveUtilisateur } from "../../../../api/utilisateurApi";
+import {
+  deleteUtilisateur,
+  getUtilisaturs,
+  saveUtilisateur,
+} from "../../../../api/utilisateurApi";
 import Pagination from "../../../../components/Pagination";
 import { AdministrateurForm } from "./AdministrateurForm";
 import useModalState, { ModalState } from "../../../../store/modalStore";
@@ -58,101 +64,166 @@ import { Link } from "react-router-dom";
 import { AxiosError } from "axios";
 import { IconAdFilled } from "@tabler/icons-react";
 import { getDepartements } from "../../../../api/departementApi";
+import {
+  MRT_ColumnDef,
+  MRT_RowSelectionState,
+  MantineReactTable,
+} from "mantine-react-table";
 
 const AdministrateurPage = () => {
   const [page, onChange] = useState(1);
-  const pagination = usePagination({ total: 10, page, onChange });
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 5, //customize the default page size
+  });
   const theme = useMantineTheme();
   const modalState = useModalState();
   const formState = useFormState();
   const [selection, setSelection] = useState<string[]>([]);
   const [search, setSearch] = useState("");
+  const [rowSelection, setRowSelection] = useState<MRT_RowSelectionState>({});
 
-
-  const onPaginationChange = (page: number) => {
+  const onPaginationChange = (pagination: any) => {
+    setPagination(pagination);
     setSelection([]);
-    onChange(page);
+    onChange(pagination.pageIndex + 1);
   };
 
-  function fetchData <T>(queryKey: any, queryFn: any){
-    const { data, isLoading, isError, refetch, isFetching } = useQuery<IPagination<T>>({
+  function fetchData<T>(queryKey: any, queryFn: any) {
+    const { data, isLoading, isError, refetch, isFetching } = useQuery<
+      IPagination<T>
+    >({
       queryKey,
       queryFn,
     });
     return { data, isLoading, isError, refetch, isFetching };
-  };
+  }
 
   const {
-    data:rolesQuery,
+    data: rolesQuery,
     isLoading: isRoleLoading,
     isError: isRoleError,
     refetch: refetchRole,
     isFetching: isRoleFetching,
   } = fetchData<IRole>(["roles", page], () => getRoles({ page: 0, size: 10 }));
 
-
   const {
     data: utilisateursQuery,
     isLoading: isUtilisateurLoading,
     isError: isUtilisateurError,
     refetch: refetchUtilisateur,
-    isFetching: isUtilisateurFetching
-  }= fetchData<IUtilisateur>(
-    ["utilisateurs", page],
-    () => {
-  
-      return getUtilisaturs({
-        page: pagination.active,
-        size: 10,
-        nom: search,
-        isadmin: true,
-      });
-    }
-  );
+    isFetching: isUtilisateurFetching,
+  } = fetchData<IUtilisateur>(["utilisateurs", page], () => {
+    return getUtilisaturs({
+      page: page,
+      size: 10,
+      nom: search,
+      isadmin: true,
+    });
+  });
 
-  const toggleRow = (id: string) =>
-    setSelection((current) =>
-      current.includes(id)
-        ? current.filter((item) => item !== id)
-        : [...current, id]
-    );
-  const toggleAll = () =>
-    setSelection((current) =>
-      current.length === utilisateursQuery?.records.length
-        ? []
-        : (utilisateursQuery?.records.map((item) => item.id) as string[])
-    );
-
-
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    event.preventDefault();
-    const { value } = event.currentTarget;
-    setSearch(value);
-  };
-
+ 
   const [detailsModalOpened, detailsModalActions] = useDisclosure(false);
   const [details, setDetails] = useState<IUtilisateur | undefined>(undefined);
-  const handleDetailsModalOpen = (item: IUtilisateur) => {
-    setDetails(item);
-    detailsModalActions.open();
+  
+
+  // const rows = utilisateursQuery?.records?.map((item: IUtilisateur) => (
+  //   <RowItem
+  //     key={item.code}
+  //     selected={selection.includes(item.id+"")}
+  //     item={item}
+  //     toggleRow={toggleRow}
+  //     handleDetailsModalOpen={handleDetailsModalOpen}
+  //   />
+  // ));
+
+  const columns = useMemo<MRT_ColumnDef<any>[]>(
+    () => [
+      {
+        accessorKey: "code",
+        header: "Code",
+      },
+      {
+        accessorFn: (row: IUtilisateur) => `${row.nom}`, //accessorFn used to join multiple data into a single cell
+        id: "name", //id is still required when using accessorFn instead of accessorKey
+        header: "Name",
+        size: 250,
+        Cell: ({
+          renderedCellValue,
+          row,
+        }: {
+          renderedCellValue: any;
+          row: any;
+        }) => (
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: "1rem",
+            }}
+          >
+            {/* <img
+              height={30}
+              src="https://avatars.githubusercontent.com/u/56592200?v=4"
+              loading="lazy"
+              style={{ borderRadius: "50%" }}
+            /> */}
+            <Avatar
+              className="rounded-md "
+              radius="xl"
+              size="sm"
+              src={row.photo}
+            />
+            {/* using renderedCellValue instead of cell.getValue() preserves filter match highlighting */}
+            <span>{renderedCellValue}</span>
+          </Box>
+        ),
+      },
+      {
+        accessorKey: "prenom",
+        header: "Prenom",
+      },
+      {
+        accessorKey: "telephone",
+        header: "Telephone",
+      },
+      {
+        // accessorFn: (row) => {row.roles.map((role: IRole) => role.roleName).join(",")},
+        accessorKey: "roles",
+        header: "Roles",
+        accessorFn: (row) =>
+          row.roles.map((role: IRole) => role.roleName).join("/ "),
+      },
+
+      // {
+      //   accessorKey: "elements",
+      //   header: "Elements",
+      // }
+    ],
+    [] as MRT_ColumnDef<IUtilisateur[]>[]
+  );
+
+  const handleRowSelectionChange = () => {
+    const professeurIds =
+      (utilisateursQuery?.records
+        ?.filter((item: any, index) => {
+          return rowSelection[item.id];
+        })
+        .map((item) => item.id) as string[]) || [];
+
+    setSelection(professeurIds);
   };
 
-  const rows = utilisateursQuery?.records?.map((item: IUtilisateur) => (
-    <RowItem
-      key={item.code}
-      selected={selection.includes(item.id+"")}
-      item={item}
-      toggleRow={toggleRow}
-      handleDetailsModalOpen={handleDetailsModalOpen}
-    />
-  ));
+  useEffect(() => {
+    handleRowSelectionChange();
+    // onPaginationChange(pagination.pageIndex);
+  }, [rowSelection]);
 
-  if (isRoleLoading|| isUtilisateurLoading) return <Skeleton className="mt-3 min-h-screen" />;
+  if (isRoleLoading || isUtilisateurLoading)
+    return <Skeleton className="mt-3 min-h-screen" />;
 
   if (isRoleError) return <LoadingError refetch={refetchRole} />;
   if (isUtilisateurError) return <LoadingError refetch={refetchUtilisateur} />;
-
-
 
   return (
     <main className=" min-h-screen py-2">
@@ -174,34 +245,17 @@ const AdministrateurPage = () => {
           blur: 3,
         }}
       >
-        <AdministrateurForm formState={formState.state} id={selection[0]} page={page} />
+        <AdministrateurForm
+          formState={formState.state}
+          id={selection[0]}
+          page={page}
+        />
       </Modal>
-      <h1 className="text-3xl font-bold mb-3  p-2">Corps administratif</h1>
       <div className="flex flex-col md:flex-row items-center justify-between p-2">
+        <h1 className="text-3xl font-bold mb-3  p-2">Administrateurs</h1>
+
         <div className="w-full flex">
-          <div className="w-full md:w-1/2">
-            <TextInput
-              placeholder="Search by any field"
-              mb="md"
-              icon={<IconSearch size="0.9rem" stroke={1.5} />}
-              value={search}
-              onChange={handleSearchChange}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  refetchUtilisateur();
-                }
-              }}
-            />
-          </div>
-          <Button
-            className="ml-2"
-            variant="default"
-            onClick={() => {
-              refetchUtilisateur();
-            }}
-          >
-            Search
-          </Button>
+         
         </div>
 
         <div className="flex items-center space-x-3 w-full md:w-auto">
@@ -233,48 +287,126 @@ const AdministrateurPage = () => {
           </p>
         </div>
       )}
-      {
-        utilisateursQuery?.records == null || utilisateursQuery?.records?.length === 0 ?
-          <Alert className="w-full" icon={<IconAlertCircle size="1rem" />} title="Error!" color="red">
-            Il n'exists aucun utilisateur pour le moment ! Veuillez en créer un.
-          </Alert>
-          :
-          <div className="relative">
-            <Table
-              className={classNames("border-gray-100 border-2 ", {
-                "blur-sm": isUtilisateurFetching,
-              })}
-              verticalSpacing="sm"
-            >
-              <thead className="bg-[#e7f5ff] ">
-                <tr>
-                  <th style={{ width: rem(40) }}>
-                    <Checkbox
-                      onChange={toggleAll}
-                      checked={selection.length === utilisateursQuery?.records.length}
-                      indeterminate={
-                        selection.length > 0 &&
-                        selection.length !== utilisateursQuery?.records.length
-                      }
-                      transitionDuration={0}
-                    />
-                  </th>
-                  <th className="w-1/4">Nom</th>
-                  <th className="w-1/4">Prenom</th>
-                  <th className="w-1/4">Telephone</th>
-                  <th className="w-1/4">Roles</th>
-                </tr>
-              </thead>
-              <tbody>{rows}</tbody>
-            </Table>
-            <Pagination
+      {utilisateursQuery?.records == null ||
+      utilisateursQuery?.records?.length === 0 ? (
+        <Alert
+          className="w-full"
+          icon={<IconAlertCircle size="1rem" />}
+          title="Error!"
+          color="red"
+        >
+          Il n'exists aucun utilisateur pour le moment ! Veuillez en créer un.
+        </Alert>
+      ) : (
+        <div className="relative">
+          <MantineReactTable
+            columns={columns}
+            data={utilisateursQuery?.records}
+            enableRowSelection
+            enableFullScreenToggle={false}
+            enableStickyFooter={false}
+            mantineTableProps={{
+              striped: true,
+              // highlightOnHover:false,
+            }}
+            mantinePaperProps={{
+              radius: "md",
+              withBorder: true,
+              shadow: "none",
+            }}
+            mantineTableBodyRowProps={{
+              style: {
+                backgroundColor: "white",
+              },
+              className: "hover:bg-gray-100",
+            }}
+            enableExpanding
+            getRowId={(row) => row.id}
+            onRowSelectionChange={setRowSelection} //connect internal row selection state to your own
+            state={{ rowSelection, pagination }}
+            onPaginationChange={(pagination) => onPaginationChange(pagination)} //hoist pagination state to your state when it changes internally
+            renderDetailPanel={({ row }: { row: any }) => (
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-around",
+                  alignItems: "center",
+                }}
+              >
+                <Avatar
+                  className="rounded-md "
+                  radius="xl"
+                  size="xl"
+                  src={row.photo}
+                />
+                <Box sx={{ textAlign: "center" }}>
+                  <TypographyStylesProvider variant="h4">
+                    {" "}
+                    <Text className="font-bold" ta="center" c="dimmed" fz="md">
+                      <p>
+                        {" "}
+                        {row.original.nom} {row.original.prenom}
+                      </p>
+                    </Text>
+                  </TypographyStylesProvider>
+                  {row.original.departement && (
+                    <TypographyStylesProvider variant="h1">
+                      <Text
+                        className="font-bold"
+                        ta="center"
+                        c="dimmed"
+                        fz="md"
+                      >
+                        <p>
+                          {" "}
+                          Departement{" "}
+                          {row.original.departement?.intituleDepartement}
+                        </p>
+                      </Text>
+                    </TypographyStylesProvider>
+                  )}
+                  <TypographyStylesProvider variant="h1">
+                    <Text className="font-bold" ta="center" c="dimmed" fz="md">
+                      <p> Tel {row.original.telephone}</p>
+                    </Text>
+                  </TypographyStylesProvider>
+                  <Text className="font-bold" ta="center" c="dimmed" fz="md">
+                    {row.original.roles.map((role: IRole) => (
+                      <Badge
+                        key={role.roleId + randomId()}
+                        className="text-xs text-gray-500 text-center"
+                      >
+                        {role.roleName}
+                      </Badge>
+                    ))}
+                  </Text>
+                </Box>
+              </Box>
+            )}
+            mantineDetailPanelProps={{
+              frameBorder: "2px",
+              className: "bg-gray-100",
+            }}
+            mantineBottomToolbarProps={{
+              className: "bg-gray-50 p-5",
+            }}
+          />
+          {/* <MantineReactTable.Column accessorKey="roles" header="Roles">
+        {(item:any) =>
+          item.roles.map((role:any, index:any) => (
+            <div key={index}>{role.roleName}</div>
+          ))
+        }
+      </MantineReactTable.Column> */}
+          {/* </MantineReactTable> */}
+          {/* <Pagination
               className="m-5"
               totalPages={utilisateursQuery?.totalPages!}
               active={pagination.active}
               onPaginationChange={onPaginationChange}
-            />
-          </div>
-      }
+            /> */}
+        </div>
+      )}
       <DetailsModal
         detailsModalOpened={detailsModalOpened}
         details={details}
@@ -339,12 +471,12 @@ const RowItem = ({
     <tr
       key={item.code}
       className={classNames({ "bg-blue-200": selected })}
-    // className={cx({ [classes.rowSelected]: selected })}
+      // className={cx({ [classes.rowSelected]: selected })}
     >
       <td>
         <Checkbox
           checked={selected}
-          onChange={() => toggleRow(item.id+"")}
+          onChange={() => toggleRow(item.id + "")}
           transitionDuration={0}
         />
       </td>
@@ -355,7 +487,12 @@ const RowItem = ({
           className="hover:cursor-pointer"
           onClick={() => handleDetailsModalOpen(item)}
         >
-          <Avatar className="rounded-full  "   size={26} src={item.photo} radius={26} />
+          <Avatar
+            className="rounded-full  "
+            size={26}
+            src={item.photo}
+            radius={26}
+          />
           <Text size="sm" weight={500}>
             {item.nom}
           </Text>
@@ -386,7 +523,7 @@ const ActionsMenu = ({
   selectionIds,
   setSelectionIds,
   page,
-  utilisateur
+  utilisateur,
 }: {
   selection: number;
   formState: FormState;
@@ -402,7 +539,7 @@ const ActionsMenu = ({
     { label: "Prenom", key: "prenom" },
     { label: "Telephone", key: "telephone" },
     { label: "Photo", key: "photo" },
-    {label:"Roles",key:"roles"},
+    { label: "Roles", key: "roles" },
     { key: "codeDepartement", label: "CodeDepartement" },
   ];
 
@@ -422,12 +559,10 @@ const ActionsMenu = ({
     selectionIds.includes(item.id || "")
   );
 
-
-
   const deleteUtilisateursHandler = () => {
     if (selectionIds.length === 0) return;
     mutationDelete(selectionIds);
-    modals.closeAll()
+    modals.closeAll();
   };
 
   const openDeleteModal = () =>
@@ -453,20 +588,23 @@ const ActionsMenu = ({
               variant="default"
               className="border-gray-400 text-black border:bg-gray-600"
               onClick={() => modals.closeAll()}
-              color="gray">Annuler</Button>
+              color="gray"
+            >
+              Annuler
+            </Button>
           </Group>
         </Text>
       ),
     });
-    const {
-      data: rolesQuery,
-      isLoading: isRoleLoading,
-      isError: isRoleError,
-    } = useQuery({
-      queryKey: ["roles", page],
-      queryFn: () => getRoles({ page: 0, size: 10 }),
-      keepPreviousData: true,
-    });
+  const {
+    data: rolesQuery,
+    isLoading: isRoleLoading,
+    isError: isRoleError,
+  } = useQuery({
+    queryKey: ["roles", page],
+    queryFn: () => getRoles({ page: 0, size: 10 }),
+    keepPreviousData: true,
+  });
   const queryClient = useQueryClient();
   const { mutate: mutationDelete } = useMutation(deleteUtilisateur, {
     onMutate: () => {
@@ -610,7 +748,7 @@ const ActionsMenu = ({
         </Menu.Target>
 
         <Menu.Dropdown>
-        <FileButton
+          <FileButton
             onChange={(file) => {
               handleFileUpload(file as File);
             }}
@@ -631,7 +769,11 @@ const ActionsMenu = ({
             )}
           </FileButton>
           <Menu.Item icon={<IconDatabaseExport size={14} />}>
-            <CSVLink data={data} headers={headers} filename={"administrateurs.csv"}>
+            <CSVLink
+              data={data}
+              headers={headers}
+              filename={"administrateurs.csv"}
+            >
               Export
             </CSVLink>
           </Menu.Item>
@@ -642,7 +784,13 @@ const ActionsMenu = ({
             icon={<IconTableExport size={14} />}
             disabled={selection < 1}
           >
-            Export selection
+            <CSVLink
+              data={selectionData}
+              headers={headers}
+              filename={"adminstrateurs.csv"}
+            >
+              Export selection
+            </CSVLink>
           </Menu.Item>
           <Menu.Item
             color="red"
@@ -658,15 +806,17 @@ const ActionsMenu = ({
           <Menu.Divider />
 
           <Menu.Label>Single-Selection</Menu.Label>
-          <Link to={`/admin/gestion-utilisateur/adminstrateurs/${selectionIds[0]}`}>
+          <Link
+            to={`/admin/gestion-utilisateur/adminstrateurs/${selectionIds[0]}`}
+          >
             <Menu.Item
               icon={<IconSettings size={14} />}
               disabled={selection !== 1}
             >
               Details
             </Menu.Item>
-            </Link>
-    
+          </Link>
+
           <Menu.Item
             onClick={() => {
               modalState.open();

@@ -1,9 +1,9 @@
 {
   "roles": [
     {
-      "id": "2",
-      "roleId": "12443",
-      "roleName": "ROLE_PROF",
+      "id": "1",
+      "roleId": "12442",
+      "roleName": "ROLE_ETUDIANT",
       "groupe": null,
       "permissions": [
         {
@@ -16,9 +16,9 @@
       ]
     },
     {
-      "id": "1",
-      "roleId": "12442",
-      "roleName": "ROLE_ETUDIANT",
+      "id": "2",
+      "roleId": "12443",
+      "roleName": "ROLE_PROF",
       "groupe": null,
       "permissions": [
         {
@@ -4914,37 +4914,6 @@
       ]
     },
     {
-      "code": "21421",
-      "nom": "zakaria",
-      "prenom": "dsdas",
-      "telephone": "2342423223",
-      "photo": "6270772.jpg",
-      "cin": "dsada222",
-      "cne": "dsad1222",
-      "dateNaissance": "2023-06-07T12:47:16.907Z",
-      "adresse": "sfdsf",
-      "ville": "ffsdf",
-      "pays": "fdsf",
-      "roles": [
-        {
-          "id": "1",
-          "roleId": "12442",
-          "roleName": "ROLE_ETUDIANT",
-          "groupe": null,
-          "permissions": [
-            {
-              "permissionId": 2,
-              "permissionName": "update",
-              "path": "string",
-              "method": "string",
-              "groupe": null
-            }
-          ]
-        }
-      ],
-      "id": "cD8AC65"
-    },
-    {
       "code": "w21321",
       "nom": "kawtar",
       "prenom": "wqewqe",
@@ -5030,33 +4999,17 @@
     {
       "id": "mantine-zbggm1n08",
       "code": "3",
-      "nom": "ziko",
+      "nom": "zikoo",
       "prenom": "koko",
-      "cne": "RR21312",
-      "cin": "BB12312",
+      "cne": "RR213122",
+      "cin": "BB123122",
       "dateNaissance": "2012-04-23T18:25:43.511Z",
       "telephone": "2213213321",
       "adresse": "barnoussi casa",
       "ville": "casa",
       "pays": "morocco",
-      "photo": "https://media.licdn.com/dms/image/D4D08AQE0CXu4hnoe7g/croft-frontend-shrinkToFit1024/0/1646754728586?e=2147483647&v=beta&t=ADkOVwOwmP-4rCH4y0g2_OBFlsszl01TpQPhCgt5SSc",
-      "roles": [
-        {
-          "id": "1",
-          "roleId": "12442",
-          "roleName": "ROLE_ETUDIANT",
-          "groupe": null,
-          "permissions": [
-            {
-              "permissionId": 2,
-              "permissionName": "update",
-              "path": "string",
-              "method": "string",
-              "groupe": null
-            }
-          ]
-        }
-      ]
+      "photo": "",
+      "roles": []
     },
     {
       "id": "mantine-2mqmj86dn",
@@ -5126,6 +5079,423 @@
           ]
         }
       ]
+    },
+    {
+      "id": "mantine-s0rsb38e1d",
+      "code": "w213221",
+      "nom": "kawtar",
+      "prenom": "wqewqe",
+      "cne": "",
+      "cin": "",
+      "dateNaissance": "",
+      "telephone": "1234567891",
+      "adresse": "",
+      "ville": "",
+      "pays": "",
+      "photo": "",
+      "codeDepartement": "2m",
+      "departements": {
+        "id": "2m",
+        "codeDepartement": "2m",
+        "intituleDepartement": "mathematique",
+        "codeChefDepartement": "1m"
+      },
+      "roles": [
+        {
+          "id": "3",
+          "roleId": "12443",
+          "roleName": "ROLE_PROF",
+          "groupe": "ADMIN",
+          "permissions": [
+            {
+              "permissionId": 2,
+              "permissionName": "update",
+              "path": "string",
+              "method": "string",
+              "groupe": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mantine-s0rsb8e11d",
+      "code": "w213221",
+      "nom": "kawtar",
+      "prenom": "wqewqe",
+      "cne": "",
+      "cin": "",
+      "dateNaissance": "",
+      "telephone": "1234567891",
+      "adresse": "",
+      "ville": "",
+      "pays": "",
+      "photo": "",
+      "codeDepartement": "2m",
+      "departements": {
+        "id": "2m",
+        "codeDepartement": "2m",
+        "intituleDepartement": "mathematique",
+        "codeChefDepartement": "1m"
+      },
+      "roles": [
+        {
+          "id": "3",
+          "roleId": "12443",
+          "roleName": "ROLE_PROF",
+          "groupe": "ADMIN",
+          "permissions": [
+            {
+              "permissionId": 2,
+              "permissionName": "update",
+              "path": "string",
+              "method": "string",
+              "groupe": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mantine-s0rdsb8e1d2",
+      "code": "w213221",
+      "nom": "kawtar",
+      "prenom": "wqewqe",
+      "cne": "",
+      "cin": "",
+      "dateNaissance": "",
+      "telephone": "1234567891",
+      "adresse": "",
+      "ville": "",
+      "pays": "",
+      "photo": "",
+      "codeDepartement": "2m",
+      "departements": {
+        "id": "2m",
+        "codeDepartement": "2m",
+        "intituleDepartement": "mathematique",
+        "codeChefDepartement": "1m"
+      },
+      "roles": [
+        {
+          "id": "3",
+          "roleId": "12443",
+          "roleName": "ROLE_PROF",
+          "groupe": "ADMIN",
+          "permissions": [
+            {
+              "permissionId": 2,
+              "permissionName": "update",
+              "path": "string",
+              "method": "string",
+              "groupe": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mantine-s0rdsbs8e1sd2",
+      "code": "w213221",
+      "nom": "kawtar",
+      "prenom": "wqewqe",
+      "cne": "",
+      "cin": "",
+      "dateNaissance": "",
+      "telephone": "1234567891",
+      "adresse": "",
+      "ville": "",
+      "pays": "",
+      "photo": "",
+      "codeDepartement": "2m",
+      "departements": {
+        "id": "2m",
+        "codeDepartement": "2m",
+        "intituleDepartement": "mathematique",
+        "codeChefDepartement": "1m"
+      },
+      "roles": [
+        {
+          "id": "3",
+          "roleId": "12443",
+          "roleName": "ROLE_PROF",
+          "groupe": "ADMIN",
+          "permissions": [
+            {
+              "permissionId": 2,
+              "permissionName": "update",
+              "path": "string",
+              "method": "string",
+              "groupe": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mantine-s0rasb8e1d2",
+      "code": "w213221",
+      "nom": "kawtar",
+      "prenom": "wqewqe",
+      "cne": "",
+      "cin": "",
+      "dateNaissance": "",
+      "telephone": "1234567891",
+      "adresse": "",
+      "ville": "",
+      "pays": "",
+      "photo": "",
+      "codeDepartement": "2m",
+      "departements": {
+        "id": "2m",
+        "codeDepartement": "2m",
+        "intituleDepartement": "mathematique",
+        "codeChefDepartement": "1m"
+      },
+      "roles": [
+        {
+          "id": "3",
+          "roleId": "12443",
+          "roleName": "ROLE_PROF",
+          "groupe": "ADMIN",
+          "permissions": [
+            {
+              "permissionId": 2,
+              "permissionName": "update",
+              "path": "string",
+              "method": "string",
+              "groupe": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mantine-s0rsb8de1d2",
+      "code": "w213221",
+      "nom": "kawtar",
+      "prenom": "wqewqe",
+      "cne": "",
+      "cin": "",
+      "dateNaissance": "",
+      "telephone": "1234567891",
+      "adresse": "",
+      "ville": "",
+      "pays": "",
+      "photo": "",
+      "codeDepartement": "2m",
+      "departements": {
+        "id": "2m",
+        "codeDepartement": "2m",
+        "intituleDepartement": "mathematique",
+        "codeChefDepartement": "1m"
+      },
+      "roles": [
+        {
+          "id": "3",
+          "roleId": "12443",
+          "roleName": "ROLE_PROF",
+          "groupe": "ADMIN",
+          "permissions": [
+            {
+              "permissionId": 2,
+              "permissionName": "update",
+              "path": "string",
+              "method": "string",
+              "groupe": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mantine-s0rsbww8de1d2",
+      "code": "w213221",
+      "nom": "kawtar",
+      "prenom": "wqewqe",
+      "cne": "",
+      "cin": "",
+      "dateNaissance": "",
+      "telephone": "1234567891",
+      "adresse": "",
+      "ville": "",
+      "pays": "",
+      "photo": "",
+      "codeDepartement": "2m",
+      "departements": {
+        "id": "2m",
+        "codeDepartement": "2m",
+        "intituleDepartement": "mathematique",
+        "codeChefDepartement": "1m"
+      },
+      "roles": [
+        {
+          "id": "3",
+          "roleId": "12443",
+          "roleName": "ROLE_PROF",
+          "groupe": "ADMIN",
+          "permissions": [
+            {
+              "permissionId": 2,
+              "permissionName": "update",
+              "path": "string",
+              "method": "string",
+              "groupe": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mantine-s0rsb8es1d2",
+      "code": "w213221",
+      "nom": "kawtar",
+      "prenom": "wqewqe",
+      "cne": "",
+      "cin": "",
+      "dateNaissance": "",
+      "telephone": "1234567891",
+      "adresse": "",
+      "ville": "",
+      "pays": "",
+      "photo": "",
+      "codeDepartement": "2m",
+      "departements": {
+        "id": "2m",
+        "codeDepartement": "2m",
+        "intituleDepartement": "mathematique",
+        "codeChefDepartement": "1m"
+      },
+      "roles": [
+        {
+          "id": "3",
+          "roleId": "12443",
+          "roleName": "ROLE_PROF",
+          "groupe": "ADMIN",
+          "permissions": [
+            {
+              "permissionId": 2,
+              "permissionName": "update",
+              "path": "string",
+              "method": "string",
+              "groupe": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mantinwe-s0rsb8e1d2",
+      "code": "w213221",
+      "nom": "kawtar",
+      "prenom": "wqewqe",
+      "cne": "",
+      "cin": "",
+      "dateNaissance": "",
+      "telephone": "1234567891",
+      "adresse": "",
+      "ville": "",
+      "pays": "",
+      "photo": "",
+      "codeDepartement": "2m",
+      "departements": {
+        "id": "2m",
+        "codeDepartement": "2m",
+        "intituleDepartement": "mathematique",
+        "codeChefDepartement": "1m"
+      },
+      "roles": [
+        {
+          "id": "3",
+          "roleId": "12443",
+          "roleName": "ROLE_PROF",
+          "groupe": "ADMIN",
+          "permissions": [
+            {
+              "permissionId": 2,
+              "permissionName": "update",
+              "path": "string",
+              "method": "string",
+              "groupe": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mantine-sw0rsb8e1d2",
+      "code": "w213221",
+      "nom": "kawtar",
+      "prenom": "wqewqe",
+      "cne": "",
+      "cin": "",
+      "dateNaissance": "",
+      "telephone": "1234567891",
+      "adresse": "",
+      "ville": "",
+      "pays": "",
+      "photo": "",
+      "codeDepartement": "2m",
+      "departements": {
+        "id": "2m",
+        "codeDepartement": "2m",
+        "intituleDepartement": "mathematique",
+        "codeChefDepartement": "1m"
+      },
+      "roles": [
+        {
+          "id": "3",
+          "roleId": "12443",
+          "roleName": "ROLE_PROF",
+          "groupe": "ADMIN",
+          "permissions": [
+            {
+              "permissionId": 2,
+              "permissionName": "update",
+              "path": "string",
+              "method": "string",
+              "groupe": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mantine-ok1ffp9dx",
+      "code": "w213221",
+      "nom": "kawtar",
+      "prenom": "wqewqe",
+      "cne": "",
+      "cin": "",
+      "dateNaissance": "",
+      "telephone": "1234567891",
+      "adresse": "",
+      "ville": "",
+      "pays": "",
+      "photo": "",
+      "codeDepartement": "2m",
+      "departements": {
+        "id": "2m",
+        "codeDepartement": "2m",
+        "intituleDepartement": "mathematique",
+        "codeChefDepartement": "1m"
+      },
+      "roles": []
+    },
+    {
+      "id": "mantine-m3rm0yayi",
+      "code": "21",
+      "nom": "zakria",
+      "prenom": "koko",
+      "cne": "RR21312",
+      "cin": "BB12312",
+      "dateNaissance": "2012-04-23T18:25:43.511Z",
+      "telephone": "2213213321",
+      "adresse": "barnoussi casa",
+      "ville": "casa",
+      "pays": "morocco",
+      "photo": "https://media.licdn.com/dms/image/D4D08AQE0CXu4hnoe7g/croft-frontend-shrinkToFit1024/0/1646754728586?e=2147483647&v=beta&t=ADkOVwOwmP-4rCH4y0g2_OBFlsszl01TpQPhCgt5SSc",
+      "roles": []
     }
   ],
   "departements": [

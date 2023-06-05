@@ -17,6 +17,8 @@ import {
   Accordion,
   FileButton,
   FileInput,
+  Box,
+  TypographyStylesProvider,
 } from "@mantine/core";
 import { usePagination, useDisclosure, randomId } from "@mantine/hooks";
 // @ts-ignore
@@ -39,7 +41,7 @@ import {
   IconAdFilled,
 } from "@tabler/icons-react";
 import classNames from "classnames";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
   IBusinessException,
@@ -47,6 +49,7 @@ import {
   IPagination,
   IProfesseur,
   IRole,
+  IUtilisateur,
 } from "../../../../types/interfaces";
 import {
   deleteProfesseur,
@@ -68,19 +71,30 @@ import { Link, Route, Router, Routes, useRoutes } from "react-router-dom";
 import { AxiosError } from "axios";
 import { getRoles } from "../../../../api/roleApi";
 import { getDepartements } from "../../../../api/departementApi";
+import {
+  MRT_ColumnDef,
+  MRT_RowSelectionState,
+  MantineReactTable,
+} from "mantine-react-table";
 
 const ProfesseursPage = () => {
   const [page, onChange] = useState(1);
-  const pagination = usePagination({ total: 10, page, onChange });
+  // const pagination = usePagination({ total: 10, page, onChange });
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 5, //customize the default page size
+  });
   const theme = useMantineTheme();
   const modalState = useModalState();
   const formState = useFormState();
   const [selection, setSelection] = useState<string[]>([]);
   const [search, setSearch] = useState("");
+  const [rowSelection, setRowSelection] = useState<MRT_RowSelectionState>({});
 
-  const onPaginationChange = (page: number) => {
+  const onPaginationChange = (pagination: any) => {
+    setPagination(pagination);
     setSelection([]);
-    onChange(page);
+    onChange(pagination.pageIndex + 1);
   };
 
   const fetchData = (queryKey: any, queryFn: any) => {
@@ -110,39 +124,20 @@ const ProfesseursPage = () => {
     refetch: refetchProfesseur,
     isFetching: isProfesseurFetching,
   } = fetchData(["professeurs", page], () => {
-    if (rolesQuery == null) return;
-    const roleId = rolesQuery?.records?.filter(
-      (role) => role.roleName === "ROLE_PROF"
-    )[0].roleId;
+    // if (rolesQuery == null) return;
+    // const roleId = rolesQuery?.records?.filter(
+    //   (role) => role.roleName === "ROLE_PROF"
+    // )[0].roleId;
     return getUtilisaturs({
-      page: pagination.active,
-      size: 10,
+      page: page,
+      size: pagination.pageSize,
       nom: search,
-      roleId: roleId,
+      // TODO: should change this to roleId when the backend is ready
+      roleId: "12443",
     });
   });
 
-  // console.log(pagination.active);
-
-  const toggleRow = (id: string) =>
-    setSelection((current) =>
-      current.includes(id)
-        ? current.filter((item) => item !== id)
-        : [...current, id]
-    );
-  const toggleAll = () =>
-    setSelection(
-      (current) =>
-        current.length === professeurQuery?.records.length
-          ? []
-          : (professeurQuery?.records.map((item) => item.id) as string[]) //TODO: should replace id with code when backend is ready
-    );
-
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    event.preventDefault();
-    const { value } = event.currentTarget;
-    setSearch(value);
-  };
+  
 
   const [detailsModalOpened, detailsModalActions] = useDisclosure(false);
   const [details, setDetails] = useState<IProfesseur | undefined>(undefined);
@@ -151,22 +146,91 @@ const ProfesseursPage = () => {
     detailsModalActions.open();
   };
 
-  const rows = professeurQuery?.records?.map((item: IProfesseur) => (
-    <RowItem
-      key={item.code}
-      selected={selection.includes(item.id || "")} //TODO: should replace id with code when backend is ready
-      item={item}
-      toggleRow={toggleRow}
-      handleDetailsModalOpen={handleDetailsModalOpen}
-    />
-  ));
+  
+  console.log(selection);
 
-  if (isProfesseurLoading || isRoleError)
-    return <Skeleton className="mt-3 min-h-screen" />;
+  const columns = useMemo<MRT_ColumnDef<any>[]>(
+    () => [
+      {
+        accessorKey: "code",
+        header: "Code",
+      },
+      {
+        accessorFn: (row: IUtilisateur) => `${row.nom}`, //accessorFn used to join multiple data into a single cell
+        id: "name", //id is still required when using accessorFn instead of accessorKey
+        header: "Name",
+        size: 250,
+        Cell: ({
+          renderedCellValue,
+          row,
+        }: {
+          renderedCellValue: any;
+          row: any;
+        }) => (
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: "1rem",
+            }}
+          >
+            {/* <img
+              height={30}
+              src="https://avatars.githubusercontent.com/u/56592200?v=4"
+              loading="lazy"
+              style={{ borderRadius: "50%" }}
+            /> */}
+            <Avatar
+              className="rounded-md "
+              radius="xl"
+              size="sm"
+              src={row.photo}
+            />
+            {/* using renderedCellValue instead of cell.getValue() preserves filter match highlighting */}
+            <span>{renderedCellValue}</span>
+          </Box>
+        ),
+      },
+      {
+        accessorKey: "prenom",
+        header: "Prenom",
+      },
+      {
+        accessorKey: "telephone",
+        header: "Telephone",
+      },
+      {
+        accessorKey: "departement.intituleDepartement",
+        header: "Departement",
+      },
+      // {
+      //   accessorKey: "elements",
+      //   header: "Elements",
+      // }
+    ],
+    [] as MRT_ColumnDef<IUtilisateur[]>[]
+  );
+
+  const handleRowSelectionChange = () => {
+    const professeurIds =
+      professeurQuery?.records
+        ?.filter((item, index) => {
+          return rowSelection[item.id];
+        })
+        .map((item) => item.id) || [];
+
+    setSelection(professeurIds);
+  };
+
+  useEffect(() => {
+    handleRowSelectionChange();
+    // onPaginationChange(pagination.pageIndex);
+  }, [rowSelection]);
 
   if (isRoleError) return <LoadingError refetch={refetchRole} />;
   if (isProfesseurError) return <LoadingError refetch={refetchProfesseur} />;
-  console.log(selection);
+  if (isProfesseurLoading || isRoleError)
+    return <Skeleton className="mt-3 min-h-screen" />;
 
   return (
     <main className=" min-h-screen py-2">
@@ -194,32 +258,11 @@ const ProfesseursPage = () => {
           page={page}
         />
       </Modal>
-      <h1 className="text-3xl font-bold mb-3  p-2">Professeurs</h1>
       <div className="flex flex-col md:flex-row items-center justify-between p-2">
         <div className="w-full flex">
-          <div className="w-full md:w-1/2">
-            <TextInput
-              placeholder="Search by any field"
-              mb="md"
-              icon={<IconSearch size="0.9rem" stroke={1.5} />}
-              value={search}
-              onChange={handleSearchChange}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  refetchProfesseur();
-                }
-              }}
-            />
-          </div>
-          <Button
-            className="ml-2"
-            variant="default"
-            onClick={() => {
-              refetchProfesseur();
-            }}
-          >
-            Search
-          </Button>
+          <h2 className="text-3xl font-bold  p-3">Professeurs</h2>
+
+          
         </div>
 
         <div className="flex items-center space-x-3 w-full md:w-auto">
@@ -262,42 +305,79 @@ const ProfesseursPage = () => {
           Il n'exists aucun Etudiant pour le moment ! Veuillez en créer un.
         </Alert>
       ) : (
-        <div className="relative">
-          <Table
-            className={classNames("border-gray-100 border-2 ", {
-              "blur-sm": isProfesseurFetching,
-            })}
-            verticalSpacing="sm"
-          >
-            <thead className="bg-[#e7f5ff] ">
-              <tr>
-                <th style={{ width: rem(40) }}>
-                  <Checkbox
-                    onChange={toggleAll}
-                    checked={
-                      selection.length === professeurQuery?.records.length
-                    }
-                    indeterminate={
-                      selection.length > 0 &&
-                      selection.length !== professeurQuery?.records.length
-                    }
-                    transitionDuration={0}
-                  />
-                </th>
-                <th className="w-1/5">Nom</th>
-                <th className="w-1/5">Prenom</th>
-                <th className="w-1/5">Telephone</th>
-                <th className="w-1/5">Departement</th>
-                <th className="w-1/5">Elements</th>
-              </tr>
-            </thead>
-            <tbody>{rows}</tbody>
-          </Table>
-          <Pagination
-            className="m-5"
-            totalPages={professeurQuery?.totalPages!}
-            active={pagination.active}
-            onPaginationChange={onPaginationChange}
+        <div className="relative md:px-3">
+          <MantineReactTable
+            columns={columns}
+            data={professeurQuery?.records}
+            enableRowSelection
+            enableFullScreenToggle={false}
+            enableStickyFooter={false}
+            mantineTableProps={{
+              striped: true,
+              // highlightOnHover:false,
+            }}
+            mantinePaperProps={{
+              radius: "md",
+              withBorder: true,
+              shadow: "none",
+            }}
+            mantineTableBodyRowProps={{
+              style: {
+                backgroundColor: "white",
+              },
+              className: "hover:bg-gray-100",
+            }}
+            enableExpanding
+            getRowId={(row) => row.id}
+            onRowSelectionChange={setRowSelection} //connect internal row selection state to your own
+            state={{ rowSelection, pagination }}
+            onPaginationChange={(pagination) => onPaginationChange(pagination)} //hoist pagination state to your state when it changes internally
+            renderDetailPanel={({ row }: { row: any }) => (
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-around",
+                  alignItems: "center",
+                }}
+              >
+                <Avatar
+                  className="rounded-md "
+                  radius="xl"
+                  size="xl"
+                  src={row.photo}
+                />
+                <Box sx={{ textAlign: "center" }}>
+                  <TypographyStylesProvider variant="h4">
+                    {" "}
+                    <Text className="font-bold" ta="center" c="dimmed" fz="md">
+                      <p>
+                        {" "}
+                        {row.original.nom} {row.original.prenom}
+                      </p>
+                    </Text>
+                  </TypographyStylesProvider>
+                  <TypographyStylesProvider variant="h1">
+                    <Text className="font-bold" ta="center" c="dimmed" fz="md">
+                      <p>
+                        {" "}
+                        Departement{" "}
+                        {row.original.departement?.intituleDepartement}
+                      </p>
+                    </Text>
+                  </TypographyStylesProvider>
+                  <Text className="font-bold" ta="center" c="dimmed" fz="md">
+                    <p> Tel {row.original.telephone}</p>
+                  </Text>
+                </Box>
+              </Box>
+            )}
+            mantineDetailPanelProps={{
+              frameBorder: "2px",
+              className: "bg-gray-100",
+            }}
+            mantineBottomToolbarProps={{
+              className: "bg-gray-50 p-5",
+            }}
           />
         </div>
       )}
@@ -435,19 +515,20 @@ const ActionsMenu = ({
     { key: "Elements", label: "Elements" },
   ];
 
-  const data = professeurs?.map((item) => {
-    return {
-      code: item.code,
-      nom: item.nom,
-      prenom: item.prenom,
-      photo: item.photo,
-      telephone: item.telephone,
-      codeDepartement: item.codeDepartement,
-      Elements: item.elements
-        ?.map((element) => element.intituleElement)
-        .join(", "),
-    };
-  });
+  const data =
+    professeurs?.map((item) => {
+      return {
+        code: item.code,
+        nom: item.nom,
+        prenom: item.prenom,
+        photo: item.photo,
+        telephone: item.telephone,
+        codeDepartement: item.codeDepartement,
+        Elements: item.elements
+          ?.map((element) => element.intituleElement)
+          .join(", "),
+      };
+    }) || [];
 
   const selectionData = selectionIds.map((id) => {
     const professeur = professeurs?.find((item) => item.id === id);
@@ -587,7 +668,7 @@ const ActionsMenu = ({
             codeDepartement: item.CodeDepartement,
             departements: departements?.records?.filter(
               (d: any) => d.codeDepartement === item.CodeDepartement
-            )[0]
+            )[0],
           };
         });
 

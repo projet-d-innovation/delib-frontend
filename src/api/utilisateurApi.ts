@@ -41,17 +41,26 @@ export const getUtilisaturs = async ({
 
   //TODO  should delete this when the backend is ready
   let users = data.filter((user: IUtilisateur) => {
-    if (roleId!="") {
+    if (roleId != "") {
       return user.roles?.some((role) => role.roleId === roleId);
     }
     return true;
   });
+
+  const TOTALE_ELEMENT = users.length;
 
   if (isadmin) {
     users = users.filter((user: IUtilisateur) => {
       return user.roles?.some((role) => role.groupe === ADMIN_GROUP);
     });
   }
+  
+
+  // TODO: should delete this when the backend is ready
+  // const startIndex = (page - 1) * size;
+  // const endIndex = startIndex + size;
+  // // Extract the users for the current page
+  // users = users.slice(startIndex, endIndex);
 
   const paginationEtudiant = {
     page: page,
