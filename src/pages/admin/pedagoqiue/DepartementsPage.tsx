@@ -119,7 +119,6 @@ const DepartementPage = () => {
         return;
       }
 
-      console.log(row)
       await Services.departementService.delete({ codeDepartementList : [row.getValue('codeDepartement')]})
       queryResult.refetch()
     },
