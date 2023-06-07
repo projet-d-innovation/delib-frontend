@@ -1,51 +1,5 @@
 {
-  "roles": [
-    {
-      "id": "1",
-      "roleId": "12442",
-      "roleName": "ROLE_ETUDIANT",
-      "groupe": null,
-      "permissions": [
-        {
-          "permissionId": 2,
-          "permissionName": "update",
-          "path": "string",
-          "method": "string",
-          "groupe": null
-        }
-      ]
-    },
-    {
-      "id": "2",
-      "roleId": "12443",
-      "roleName": "ROLE_PROF",
-      "groupe": null,
-      "permissions": [
-        {
-          "permissionId": 2,
-          "permissionName": "update",
-          "path": "string",
-          "method": "string",
-          "groupe": null
-        }
-      ]
-    },
-    {
-      "id": "3",
-      "roleId": "12444",
-      "roleName": "ROLE_ADMIN",
-      "groupe": "ADMIN",
-      "permissions": [
-        {
-          "permissionId": 2,
-          "permissionName": "update",
-          "path": "string",
-          "method": "string",
-          "groupe": null
-        }
-      ]
-    }
-  ],
+  "roles": [],
   "utilisateurs": [
     {
       "id": "2",
@@ -59,6 +13,7 @@
       "dateNaissance": "2012-04-23T18:25:43.511Z",
       "ville": "casa",
       "pays": "morocco",
+      "sexe": "M",
       "photo": "https://media.licdn.com/dms/image/D4D08AQE0CXu4hnoe7g/croft-frontend-shrinkToFit1024/0/1646754728586?e=2147483647&v=beta&t=ADkOVwOwmP-4rCH4y0g2_OBFlsszl01TpQPhCgt5SSc",
       "codeAnneUniversitaire": "1",
       "anneUniversitaire": [
@@ -4802,14 +4757,16 @@
       "codeFiliere": "1",
       "filiere": {
         "id": "1",
-        "code": "2",
-        "intitule": "GLSID",
-        "codeDepartement": "1m"
+        "codeFiliere": "2343",
+        "intituleFiliere": "GLSID",
+        "codeDepartement": "2131",
+        "codeChefFiliere": "1122",
+        "codeRegleDeCalcul": "2333"
       },
       "roles": [
         {
           "id": "1",
-          "roleId": "12442",
+          "roleId": "1231",
           "roleName": "ROLE_ETUDIANT",
           "groupe": null,
           "permissions": [
@@ -4834,187 +4791,9 @@
       ]
     },
     {
-      "id": "8",
-      "code": "10",
-      "cin": "BB12312",
-      "cne": "RR21312",
-      "nom": "zakria",
-      "prenom": "koko",
-      "telephone": "2213213321",
-      "adresse": "barnoussi casa",
-      "dateNaissance": "2012-04-23T18:25:43.511Z",
-      "ville": "casa",
-      "pays": "morocco",
-      "photo": "https://media.licdn.com/dms/image/D4D08AQE0CXu4hnoe7g/croft-frontend-shrinkToFit1024/0/1646754728586?e=2147483647&v=beta&t=ADkOVwOwmP-4rCH4y0g2_OBFlsszl01TpQPhCgt5SSc",
-      "codeFiliere": "1",
-      "filiere": {
-        "id": "1",
-        "code": "1",
-        "intitule": "GLSID",
-        "codeDepartement": "1m"
-      },
-      "roles": [
-        {
-          "id": "1",
-          "roleId": "12443",
-          "roleName": "ROLE_PORF",
-          "groupe": null,
-          "permissions": [
-            {
-              "permissionId": 2,
-              "permissionName": "update",
-              "path": "string",
-              "method": "string",
-              "groupe": null
-            }
-          ]
-        }
-      ],
-      "permissions": [
-        {
-          "permissionId": 2,
-          "permissionName": "update",
-          "path": "string",
-          "method": "string",
-          "groupe": null
-        }
-      ],
-      "codeDepartement": "1m",
-      "departement": {
-        "id": "1m",
-        "codeDepartement": "1m",
-        "intituleDepartement": "informatique",
-        "codeChefDepartement": "2m"
-      },
-      "elements": [
-        {
-          "id": "1",
-          "codeElement": "1",
-          "intituleElement": "java",
-          "coefficientElement": "0.5",
-          "codeModule": "12331",
-          "codeProfesseur": "13213"
-        },
-        {
-          "id": "2",
-          "codeElement": "2",
-          "intituleElement": "jee",
-          "coefficientElement": "0.5",
-          "codeModule": "12331",
-          "codeProfesseur": "13213"
-        },
-        {
-          "id": "3",
-          "codeElement": "3",
-          "intituleElement": "C++",
-          "coefficientElement": "0.5",
-          "codeModule": "12331",
-          "codeProfesseur": "13213"
-        }
-      ]
-    },
-    {
-      "code": "w21321",
-      "nom": "kawtar",
-      "prenom": "wqewqe",
-      "telephone": "1234567891",
-      "photo": "",
-      "cin": "",
-      "cne": "",
-      "dateNaissance": "2023-06-04T12:55:29.737Z",
-      "adresse": "",
-      "ville": "",
-      "pays": "",
-      "roles": [
-        {
-          "id": "2",
-          "roleId": "12443",
-          "roleName": "ROLE_PROF",
-          "groupe": null,
-          "permissions": [
-            {
-              "permissionId": 2,
-              "permissionName": "update",
-              "path": "string",
-              "method": "string",
-              "groupe": null
-            }
-          ]
-        }
-      ],
-      "codeDepartement": "2m",
-      "departement": {
-        "id": "2m",
-        "codeDepartement": "2m",
-        "intituleDepartement": "mathematique",
-        "codeChefDepartement": "1m"
-      },
-      "id": "JsUS34h"
-    },
-    {
-      "code": "w213221",
-      "nom": "kawtar",
-      "prenom": "wqewqe",
-      "telephone": "1234567891",
-      "photo": "",
-      "cin": "",
-      "cne": "",
-      "dateNaissance": "2023-06-04T12:55:29.737Z",
-      "adresse": "",
-      "ville": "",
-      "pays": "",
-      "roles": [
-        {
-          "id": "2",
-          "roleId": "12443",
-          "roleName": "ROLE_PROF",
-          "groupe": "ADMIN",
-          "permissions": [
-            {
-              "permissionId": 2,
-              "permissionName": "update",
-              "path": "string",
-              "method": "string",
-              "groupe": null
-            }
-          ]
-        }
-      ],
-      "codeDepartement": "2m",
-      "departement": {
-        "id": "2m",
-        "codeDepartement": "2m",
-        "intituleDepartement": "mathematique",
-        "codeChefDepartement": "1m"
-      },
-      "codeFiliere": "1",
-      "filiere": {
-        "id": "1",
-        "code": "1",
-        "intitule": "GLSID",
-        "codeDepartement": "1m"
-      },
-      "id": "JsUS3493h"
-    },
-    {
-      "id": "mantine-zbggm1n08",
-      "code": "3",
-      "nom": "zikoo",
-      "prenom": "koko",
-      "cne": "RR213122",
-      "cin": "BB123122",
-      "dateNaissance": "2012-04-23T18:25:43.511Z",
-      "telephone": "2213213321",
-      "adresse": "barnoussi casa",
-      "ville": "casa",
-      "pays": "morocco",
-      "photo": "",
-      "roles": []
-    },
-    {
       "id": "mantine-2mqmj86dn",
       "code": "1121",
-      "nom": "zakaria",
+      "nom": "zakariaaaa",
       "prenom": "dsdas",
       "cne": "dsad1222",
       "cin": "dsada222",
@@ -5023,11 +4802,20 @@
       "adresse": "sfdsf",
       "ville": "ffsdf",
       "pays": "fdsf",
-      "photo": "6270772.jpg",
+      "filiere": {
+        "id": "1",
+        "codeFiliere": "2343",
+        "intituleFiliere": "GLSID",
+        "codeDepartement": "2131",
+        "codeChefFiliere": "1122",
+        "codeRegleDeCalcul": "2333"
+      },
+      "sexe": "F",
+      "photo": "2021-08-12-ts3_thumbs-9cf.png",
       "roles": [
         {
           "id": "1",
-          "roleId": "12442",
+          "roleId": "1231",
           "roleName": "ROLE_ETUDIANT",
           "groupe": null,
           "permissions": [
@@ -5043,449 +4831,38 @@
       ]
     },
     {
-      "id": "mantine-s0rsb8e1d",
-      "code": "w213221",
-      "nom": "kawtar",
-      "prenom": "wqewqe",
-      "cne": "",
-      "cin": "",
-      "dateNaissance": "",
-      "telephone": "1234567891",
-      "adresse": "",
-      "ville": "",
-      "pays": "",
-      "photo": "",
-      "codeDepartement": "2m",
-      "departements": {
-        "id": "2m",
-        "codeDepartement": "2m",
-        "intituleDepartement": "mathematique",
-        "codeChefDepartement": "1m"
+      "id": "mantine-jrql5vmc31213212",
+      "code": "1213212",
+      "nom": "dasd",
+      "prenom": "dasd",
+      "telephone": "2132132312",
+      "photo": "Screenshot_4(1).png",
+      "cin": "sad213",
+      "cne": "dsa123",
+      "dateNaissance": "2023-06-07T14:28:24.417Z",
+      "adresse": "dsadsa",
+      "ville": "sada",
+      "pays": "dsad",
+      "sexe": "M",
+      "filiere": {
+        "codeFiliere": "1321",
+        "intituleFiliere": "GLSID",
+        "codeDepartement": "2131",
+        "codeChefFiliere": "1122",
+        "codeRegleDeCalcul": "2333"
       },
       "roles": [
         {
-          "id": "3",
-          "roleId": "12444",
-          "roleName": "ROLE_ADMIN",
-          "groupe": "ADMIN",
-          "permissions": [
-            {
-              "permissionId": 2,
-              "permissionName": "update",
-              "path": "string",
-              "method": "string",
-              "groupe": null
-            }
-          ]
+          "roleId": "1231",
+          "roleName": "ROLE_ETUDIANT",
+          "groupe": ""
         }
       ]
     },
     {
-      "id": "mantine-s0rsb38e1d",
-      "code": "w213221",
-      "nom": "kawtar",
-      "prenom": "wqewqe",
-      "cne": "",
-      "cin": "",
-      "dateNaissance": "",
-      "telephone": "1234567891",
-      "adresse": "",
-      "ville": "",
-      "pays": "",
-      "photo": "",
-      "codeDepartement": "2m",
-      "departements": {
-        "id": "2m",
-        "codeDepartement": "2m",
-        "intituleDepartement": "mathematique",
-        "codeChefDepartement": "1m"
-      },
-      "roles": [
-        {
-          "id": "3",
-          "roleId": "12443",
-          "roleName": "ROLE_PROF",
-          "groupe": "ADMIN",
-          "permissions": [
-            {
-              "permissionId": 2,
-              "permissionName": "update",
-              "path": "string",
-              "method": "string",
-              "groupe": null
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "mantine-s0rsb8e11d",
-      "code": "w213221",
-      "nom": "kawtar",
-      "prenom": "wqewqe",
-      "cne": "",
-      "cin": "",
-      "dateNaissance": "",
-      "telephone": "1234567891",
-      "adresse": "",
-      "ville": "",
-      "pays": "",
-      "photo": "",
-      "codeDepartement": "2m",
-      "departements": {
-        "id": "2m",
-        "codeDepartement": "2m",
-        "intituleDepartement": "mathematique",
-        "codeChefDepartement": "1m"
-      },
-      "roles": [
-        {
-          "id": "3",
-          "roleId": "12443",
-          "roleName": "ROLE_PROF",
-          "groupe": "ADMIN",
-          "permissions": [
-            {
-              "permissionId": 2,
-              "permissionName": "update",
-              "path": "string",
-              "method": "string",
-              "groupe": null
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "mantine-s0rdsb8e1d2",
-      "code": "w213221",
-      "nom": "kawtar",
-      "prenom": "wqewqe",
-      "cne": "",
-      "cin": "",
-      "dateNaissance": "",
-      "telephone": "1234567891",
-      "adresse": "",
-      "ville": "",
-      "pays": "",
-      "photo": "",
-      "codeDepartement": "2m",
-      "departements": {
-        "id": "2m",
-        "codeDepartement": "2m",
-        "intituleDepartement": "mathematique",
-        "codeChefDepartement": "1m"
-      },
-      "roles": [
-        {
-          "id": "3",
-          "roleId": "12443",
-          "roleName": "ROLE_PROF",
-          "groupe": "ADMIN",
-          "permissions": [
-            {
-              "permissionId": 2,
-              "permissionName": "update",
-              "path": "string",
-              "method": "string",
-              "groupe": null
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "mantine-s0rdsbs8e1sd2",
-      "code": "w213221",
-      "nom": "kawtar",
-      "prenom": "wqewqe",
-      "cne": "",
-      "cin": "",
-      "dateNaissance": "",
-      "telephone": "1234567891",
-      "adresse": "",
-      "ville": "",
-      "pays": "",
-      "photo": "",
-      "codeDepartement": "2m",
-      "departements": {
-        "id": "2m",
-        "codeDepartement": "2m",
-        "intituleDepartement": "mathematique",
-        "codeChefDepartement": "1m"
-      },
-      "roles": [
-        {
-          "id": "3",
-          "roleId": "12443",
-          "roleName": "ROLE_PROF",
-          "groupe": "ADMIN",
-          "permissions": [
-            {
-              "permissionId": 2,
-              "permissionName": "update",
-              "path": "string",
-              "method": "string",
-              "groupe": null
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "mantine-s0rasb8e1d2",
-      "code": "w213221",
-      "nom": "kawtar",
-      "prenom": "wqewqe",
-      "cne": "",
-      "cin": "",
-      "dateNaissance": "",
-      "telephone": "1234567891",
-      "adresse": "",
-      "ville": "",
-      "pays": "",
-      "photo": "",
-      "codeDepartement": "2m",
-      "departements": {
-        "id": "2m",
-        "codeDepartement": "2m",
-        "intituleDepartement": "mathematique",
-        "codeChefDepartement": "1m"
-      },
-      "roles": [
-        {
-          "id": "3",
-          "roleId": "12443",
-          "roleName": "ROLE_PROF",
-          "groupe": "ADMIN",
-          "permissions": [
-            {
-              "permissionId": 2,
-              "permissionName": "update",
-              "path": "string",
-              "method": "string",
-              "groupe": null
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "mantine-s0rsb8de1d2",
-      "code": "w213221",
-      "nom": "kawtar",
-      "prenom": "wqewqe",
-      "cne": "",
-      "cin": "",
-      "dateNaissance": "",
-      "telephone": "1234567891",
-      "adresse": "",
-      "ville": "",
-      "pays": "",
-      "photo": "",
-      "codeDepartement": "2m",
-      "departements": {
-        "id": "2m",
-        "codeDepartement": "2m",
-        "intituleDepartement": "mathematique",
-        "codeChefDepartement": "1m"
-      },
-      "roles": [
-        {
-          "id": "3",
-          "roleId": "12443",
-          "roleName": "ROLE_PROF",
-          "groupe": "ADMIN",
-          "permissions": [
-            {
-              "permissionId": 2,
-              "permissionName": "update",
-              "path": "string",
-              "method": "string",
-              "groupe": null
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "mantine-s0rsbww8de1d2",
-      "code": "w213221",
-      "nom": "kawtar",
-      "prenom": "wqewqe",
-      "cne": "",
-      "cin": "",
-      "dateNaissance": "",
-      "telephone": "1234567891",
-      "adresse": "",
-      "ville": "",
-      "pays": "",
-      "photo": "",
-      "codeDepartement": "2m",
-      "departements": {
-        "id": "2m",
-        "codeDepartement": "2m",
-        "intituleDepartement": "mathematique",
-        "codeChefDepartement": "1m"
-      },
-      "roles": [
-        {
-          "id": "3",
-          "roleId": "12443",
-          "roleName": "ROLE_PROF",
-          "groupe": "ADMIN",
-          "permissions": [
-            {
-              "permissionId": 2,
-              "permissionName": "update",
-              "path": "string",
-              "method": "string",
-              "groupe": null
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "mantine-s0rsb8es1d2",
-      "code": "w213221",
-      "nom": "kawtar",
-      "prenom": "wqewqe",
-      "cne": "",
-      "cin": "",
-      "dateNaissance": "",
-      "telephone": "1234567891",
-      "adresse": "",
-      "ville": "",
-      "pays": "",
-      "photo": "",
-      "codeDepartement": "2m",
-      "departements": {
-        "id": "2m",
-        "codeDepartement": "2m",
-        "intituleDepartement": "mathematique",
-        "codeChefDepartement": "1m"
-      },
-      "roles": [
-        {
-          "id": "3",
-          "roleId": "12443",
-          "roleName": "ROLE_PROF",
-          "groupe": "ADMIN",
-          "permissions": [
-            {
-              "permissionId": 2,
-              "permissionName": "update",
-              "path": "string",
-              "method": "string",
-              "groupe": null
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "mantinwe-s0rsb8e1d2",
-      "code": "w213221",
-      "nom": "kawtar",
-      "prenom": "wqewqe",
-      "cne": "",
-      "cin": "",
-      "dateNaissance": "",
-      "telephone": "1234567891",
-      "adresse": "",
-      "ville": "",
-      "pays": "",
-      "photo": "",
-      "codeDepartement": "2m",
-      "departements": {
-        "id": "2m",
-        "codeDepartement": "2m",
-        "intituleDepartement": "mathematique",
-        "codeChefDepartement": "1m"
-      },
-      "roles": [
-        {
-          "id": "3",
-          "roleId": "12443",
-          "roleName": "ROLE_PROF",
-          "groupe": "ADMIN",
-          "permissions": [
-            {
-              "permissionId": 2,
-              "permissionName": "update",
-              "path": "string",
-              "method": "string",
-              "groupe": null
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "mantine-sw0rsb8e1d2",
-      "code": "w213221",
-      "nom": "kawtar",
-      "prenom": "wqewqe",
-      "cne": "",
-      "cin": "",
-      "dateNaissance": "",
-      "telephone": "1234567891",
-      "adresse": "",
-      "ville": "",
-      "pays": "",
-      "photo": "",
-      "codeDepartement": "2m",
-      "departements": {
-        "id": "2m",
-        "codeDepartement": "2m",
-        "intituleDepartement": "mathematique",
-        "codeChefDepartement": "1m"
-      },
-      "roles": [
-        {
-          "id": "3",
-          "roleId": "12443",
-          "roleName": "ROLE_PROF",
-          "groupe": "ADMIN",
-          "permissions": [
-            {
-              "permissionId": 2,
-              "permissionName": "update",
-              "path": "string",
-              "method": "string",
-              "groupe": null
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "mantine-ok1ffp9dx",
-      "code": "w213221",
-      "nom": "kawtar",
-      "prenom": "wqewqe",
-      "cne": "",
-      "cin": "",
-      "dateNaissance": "",
-      "telephone": "1234567891",
-      "adresse": "",
-      "ville": "",
-      "pays": "",
-      "photo": "",
-      "codeDepartement": "2m",
-      "departements": {
-        "id": "2m",
-        "codeDepartement": "2m",
-        "intituleDepartement": "mathematique",
-        "codeChefDepartement": "1m"
-      },
-      "roles": []
-    },
-    {
-      "id": "mantine-m3rm0yayi",
-      "code": "21",
-      "nom": "zakria",
+      "id": "mantine-hxio66lm1",
+      "code": "12",
+      "nom": "zikooo",
       "prenom": "koko",
       "cne": "RR21312",
       "cin": "BB12312",
@@ -5494,8 +4871,35 @@
       "adresse": "barnoussi casa",
       "ville": "casa",
       "pays": "morocco",
-      "photo": "https://media.licdn.com/dms/image/D4D08AQE0CXu4hnoe7g/croft-frontend-shrinkToFit1024/0/1646754728586?e=2147483647&v=beta&t=ADkOVwOwmP-4rCH4y0g2_OBFlsszl01TpQPhCgt5SSc",
-      "roles": []
+      "sexe": "M",
+      "filiere": {
+        "codeFiliere": "2343",
+        "intituleFiliere": "BDCC",
+        "codeDepartement": "2131",
+        "codeChefFiliere": "1122",
+        "codeRegleDeCalcul": "2333"
+      },
+      "roles": [
+        {
+          "roleId": "1231",
+          "roleName": "ROLE_ETUDIANT",
+          "groupe": ""
+        }
+      ]
+    },
+    {
+      "id": "mantine-sph9xrotm",
+      "code": "1121",
+      "nom": "zikoz",
+      "prenom": "kawat",
+      "telephone": "2132321111",
+      "roles": [
+        {
+          "roleId": "1231",
+          "roleName": "ROLE_ETUDIANT",
+          "groupe": ""
+        }
+      ]
     }
   ],
   "departements": [

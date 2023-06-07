@@ -16,7 +16,7 @@ import {
   rem,
 } from "@mantine/core";
 import { Link, useParams } from "react-router-dom";
-import { getUtilisateur } from "../../../../api/utilisateurApi";
+import { getUtilisateurJsonServer as getUtilisateur } from "../../../../api/utilisateurApi";
 import { useQuery } from "react-query";
 import LoadingError from "../../../../components/LoadingError";
 import {
@@ -92,7 +92,7 @@ const EtudiantDetailsPage = () => {
             theme.colorScheme === "dark" ? theme.colors.dark[8] : theme.white,
         })}
       >
-        <div className="grid md:grid-flow-col md:space-x-10 space-y-10 items-center">
+        <div className="grid md:grid-flow-col md:space-x-10 space-y-5 items-center">
           <div className=" md:border-r-2 md:h-full grid items-center ">
             <div className="">
               <Avatar
@@ -111,8 +111,9 @@ const EtudiantDetailsPage = () => {
               >
                 {etudiant?.nom} {etudiant?.prenom}
               </Text>
+            
               <Text ta="center" c="dimmed" fz="sm">
-                {etudiant?.anneUniversitaire?.at(-1)?.filiere?.intitule}
+                {etudiant?.filiere?.intituleFiliere}
               </Text>
               <Text ta="center" c="dimmed" fz="sm">
                 <Badge className="m-2 px-5">
@@ -157,6 +158,14 @@ const EtudiantDetailsPage = () => {
                     </Text>
                     <Text className="font-bold" ta="left" c="dark" fz="sm">
                       {etudiant?.cne}
+                    </Text>
+                  </Group>
+                  <Group className="">
+                    <Text className="font-bold" ta="left" c="dimmed" fz="sm">
+                      Sexe:
+                    </Text>
+                    <Text className="font-bold" ta="left" c="dark" fz="sm">
+                      {etudiant?.sexe?.toLowerCase() == "m" ? "Homme" : "Femme"}
                     </Text>
                   </Group>
                   <Group className="">
@@ -210,7 +219,7 @@ const EtudiantDetailsPage = () => {
                 </div>
               </div>
               <div className="border-b-2 shadow-sm"></div>
-              <div className="">
+              <div className="pb-5">
                 <Text ta="left" c="dimmed" fz="sm">
                   <div className="flex space-x-3">
                     <svg

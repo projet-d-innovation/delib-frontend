@@ -1,17 +1,14 @@
 import { IPagination, IProfesseur, IUtilisateur } from "../types/interfaces";
 import { api } from "./axios";
 
-const ADMINISTRATEURS_BASE_URL = "/administration/utilisateurs";
+const baseURL = import.meta.env.UTILISATEUR_BACKEND_URL as string;
 
-const UTILISATEURS_BASE_URL = "http://localhost:3000/utilisateurs";
-
-const PROFESSEURS_BASE_URL = "http://localhost:3000/professeurs";
-
-const TOTALE_ELEMENT = 20; //TODO: should delete when the backend is ready
+const UTILISATEURS_BASE_URL = "http://localhost:8082/api/v1/utilisateurs";
+const UTILISATEURS_BASE_URL_JSON = "http://localhost:3000/utilisateurs";
 
 const ADMIN_GROUP = "ADMIN"; //TODO: should delete when the backend is ready
 
-export const getUtilisaturs = async ({
+export const getUtilisatursJsonServer = async ({
   page,
   size = 10,
   nom = "",
@@ -35,7 +32,7 @@ export const getUtilisaturs = async ({
     size,
   };
 
-  const { data } = await api.get(UTILISATEURS_BASE_URL, {
+  const { data } = await api.get(UTILISATEURS_BASE_URL_JSON, {
     params: nom ? searchParams : params,
   });
 
@@ -54,7 +51,6 @@ export const getUtilisaturs = async ({
       return user.roles?.some((role) => role.groupe === ADMIN_GROUP);
     });
   }
-  
 
   // TODO: should delete this when the backend is ready
   // const startIndex = (page - 1) * size;
@@ -73,11 +69,11 @@ export const getUtilisaturs = async ({
   return paginationEtudiant;
 };
 
-export const deleteUtilisateur = async (
+export const deleteUtilisateurJsonServer = async (
   utilisateurId: string[]
 ): Promise<void> => {
   //TODO: should use the code instead of id when the backend is ready
-  // await api.delete(`${UTILISATEURS_BASE_URL}/bulk`, {
+  // await api.delete(`${UTILISATEURS_BASE_URL_JSON}/bulk`, {
   //   params: {
   //     codes: utilisateurId,
   //   }
@@ -85,14 +81,123 @@ export const deleteUtilisateur = async (
 
   for (let index = 0; index < utilisateurId.length; index++) {
     const element = utilisateurId[index];
-    await api.delete(`${UTILISATEURS_BASE_URL}/${element}`);
+    await api.delete(`${UTILISATEURS_BASE_URL_JSON}/${element}`);
   }
 };
 
-export const getUtilisateur = async (
+export const getUtilisateurJsonServer = async (
   utilisateurId: string
 ): Promise<IUtilisateur> => {
-  const { data } = await api.get(`${UTILISATEURS_BASE_URL}/${utilisateurId}`);
+  const { data } = await api.get(
+    `${UTILISATEURS_BASE_URL_JSON}/${utilisateurId}`
+  );
+  return data;
+};
+
+export const updateUtilisateurJsonServer = async (
+  utilisateur: IUtilisateur
+): Promise<IUtilisateur> => {
+  const { data } = await api.patch(
+    `${UTILISATEURS_BASE_URL_JSON}/${utilisateur.id}`, //TODO: should use the code instead of id when the backend is ready
+    utilisateur
+  );
+  console.log(data);
+
+  return data;
+};
+
+export const saveUtilisateurJsonServer = async (
+  utilisateur: IUtilisateur
+): Promise<IUtilisateur> => {
+  const { data } = await api.post(UTILISATEURS_BASE_URL_JSON, utilisateur);
+  console.log(data);
+
+  return data;
+};
+
+export const getUtilisaturs = async ({
+  page,
+  size = 10,
+  nom = "",
+  roleId = "",
+  group = "",
+  includeRoles = false,
+  includePermissions = false,
+  includeDepartement = false,
+  includeElements = false,
+}: {
+  page: number;
+  size?: number;
+  nom?: string;
+  roleId?: string;
+  group?: string;
+  includeRoles?: boolean;
+  includePermissions?: boolean;
+  includeDepartement?: boolean;
+  includeElements?: boolean;
+}): Promise<IPagination<IUtilisateur>> => {
+  const params = {
+    page: page,
+    size,
+    includeDepartement,
+    includeElements,
+    includePermissions,
+    includeRoles,
+  };
+  let data: Promise<IPagination<IUtilisateur>>;
+
+  if (group !== "") {
+    const response = await api.get(UTILISATEURS_BASE_URL + "/group/" + group, {
+      params,
+    });
+    data = response.data;
+  } else if (roleId !== "") {
+    const response = await api.get(UTILISATEURS_BASE_URL + "/role/" + roleId, {
+      params,
+    });
+    data = response.data;
+  } else {
+    const response = await api.get(UTILISATEURS_BASE_URL, {
+      params,
+    });
+    data = response.data;
+  }
+
+  return data;
+};
+
+export const deleteUtilisateur = async (
+  utilisateurId: string[]
+): Promise<void> => {
+  // TODO: should use the code instead of id when the backend is ready
+  await api.delete(`${UTILISATEURS_BASE_URL}/bulk`, {
+    params: {
+      codes: utilisateurId,
+    },
+  });
+};
+
+export const getUtilisateur = async ({
+  utilisateurId,
+  includeRoles = false,
+  includePermissions = false,
+  includeDepartement = false,
+  includeElements = false,
+}: {
+  utilisateurId: string;
+  includeRoles?: boolean;
+  includePermissions?: boolean;
+  includeDepartement?: boolean;
+  includeElements?: boolean;
+}): Promise<IUtilisateur> => {
+  const { data } = await api.get(`${UTILISATEURS_BASE_URL}/${utilisateurId}`, {
+    params: {
+      includeDepartement,
+      includeElements,
+      includePermissions,
+      includeRoles,
+    },
+  });
   return data;
 };
 
@@ -100,10 +205,9 @@ export const updateUtilisateur = async (
   utilisateur: IUtilisateur
 ): Promise<IUtilisateur> => {
   const { data } = await api.patch(
-    `${UTILISATEURS_BASE_URL}/${utilisateur.id}`, //TODO: should use the code instead of id when the backend is ready
+    `${UTILISATEURS_BASE_URL}/${utilisateur.code}`,
     utilisateur
   );
-  console.log(data);
 
   return data;
 };
@@ -117,92 +221,33 @@ export const saveUtilisateur = async (
   return data;
 };
 
-export const getProfesseurs = async ({
-  page,
-  size = 10,
-  nom = "",
-}: {
-  page: number;
-  size?: number;
-  nom?: string;
-}): Promise<IPagination<IProfesseur>> => {
-  // TODO: should delete this two params when the backend is ready
-  const searchParams = {
-    page: page - 1,
-    size,
-    nom,
-  };
-  const params = {
-    page: page - 1,
-    size,
-  };
+export const getUtilisateurSheet = async (utilisateurId: string[]) => {
+ return  api
+      .get("http://localhost:8082/api/v1/utilisateurs/sheet", {
+        responseType: "blob",
+   
+        params: {
+          codes: utilisateurId,
+        },
+      })
 
-  const { data } = await api.get(PROFESSEURS_BASE_URL, {
-    params: nom ? searchParams : params,
-  });
-  const paginationEtudiant = {
-    page: page,
-    size: size,
-    totalElements: TOTALE_ELEMENT,
-    totalPages: TOTALE_ELEMENT / size - 1,
-    records: data,
-  };
-
-  console.log(paginationEtudiant);
-
-  return paginationEtudiant;
 };
 
-export const deleteProfesseur = async (
-  professeurId: string[]
-): Promise<void> => {
-  //TODO: should use the code instead of id when the backend is ready
-  // await api.delete(`${ETUDIANTS_BASE_URL}/bulk`, {
-  //   params: {
-  //     codes: professeurId
-  //   }
-  // });
-
-  for (let index = 0; index < professeurId.length; index++) {
-    const element = professeurId[index];
-    await api.delete(`${PROFESSEURS_BASE_URL}/${element}`);
+export const uploadUtilisateurSheet = async (file: File) => {
+  try {
+    const formData = new FormData();
+    formData.append("file", file);
+    const response = await api.post(
+      `${UTILISATEURS_BASE_URL}/sheet`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    console.log("File uploaded successfully!", response);
+  } catch (error) {
+    console.error("Error uploading file:", error);
   }
-};
-
-export const getProfesseur = async (
-  professeurId: string
-): Promise<IProfesseur> => {
-  const { data } = await api.get(`${PROFESSEURS_BASE_URL}/${professeurId}`);
-  return data;
-};
-
-export const updateProfesseur = async (
-  professeur: IProfesseur
-): Promise<IProfesseur> => {
-  const { data } = await api.patch(
-    `${PROFESSEURS_BASE_URL}/${professeur.id}`, //TODO: should use the code instead of id when the backend is ready
-    professeur
-  );
-  console.log(data);
-
-  return data;
-};
-
-export const saveProfesseur = async (
-  utilisateur: IProfesseur
-): Promise<IProfesseur> => {
-  const { data } = await api.post(PROFESSEURS_BASE_URL, utilisateur);
-  console.log(data);
-
-  return data;
-};
-
-export const updateElementsProfesseur = async (
-  professeur: IProfesseur
-): Promise<IProfesseur> => {
-  const { data } = await api.patch(
-    `${PROFESSEURS_BASE_URL}/${professeur.id}`,
-    professeur
-  );
-  return data;
 };

@@ -25,7 +25,7 @@ import { usePagination, useDisclosure, randomId } from "@mantine/hooks";
 import { CSVLink } from "react-csv";
 // @ts-ignore
 import Papa from "papaparse";
-
+import { api } from "../../../../api/axios";
 import {
   IconReload,
   IconSearch,
@@ -39,6 +39,7 @@ import {
   IconDatabaseImport,
   IconAlertCircle,
   IconAdFilled,
+  IconDownload,
 } from "@tabler/icons-react";
 import classNames from "classnames";
 import { useEffect, useMemo, useState } from "react";
@@ -52,11 +53,11 @@ import {
   IUtilisateur,
 } from "../../../../types/interfaces";
 import {
-  deleteProfesseur,
   deleteUtilisateur,
-  getProfesseurs,
+  getUtilisateurSheet,
   getUtilisaturs,
-  saveProfesseur,
+  saveUtilisateur,
+  uploadUtilisateurSheet,
 } from "../../../../api/utilisateurApi";
 import Pagination from "../../../../components/Pagination";
 import useModalState, { ModalState } from "../../../../store/modalStore";
@@ -73,17 +74,25 @@ import { getRoles } from "../../../../api/roleApi";
 import { getDepartements } from "../../../../api/departementApi";
 import {
   MRT_ColumnDef,
+  MRT_Row,
   MRT_RowSelectionState,
   MantineReactTable,
 } from "mantine-react-table";
+import { ExportToCsv } from "export-to-csv";
 
 const ProfesseursPage = () => {
   const [page, onChange] = useState(1);
   // const pagination = usePagination({ total: 10, page, onChange });
   const [pagination, setPagination] = useState({
     pageIndex: 0,
-    pageSize: 5, //customize the default page size
+    pageSize: 5,
+    //customize the default page size
   });
+  const [profs, setProfs] = useState<IUtilisateur[]>([]);
+  const [totalElements, setTotalElements] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const [isProfLoading, setIsProfLoading] = useState(false);
+
   const theme = useMantineTheme();
   const modalState = useModalState();
   const formState = useFormState();
@@ -92,7 +101,7 @@ const ProfesseursPage = () => {
   const [rowSelection, setRowSelection] = useState<MRT_RowSelectionState>({});
 
   const onPaginationChange = (pagination: any) => {
-    setPagination(pagination);
+    refetchProfesseur();
     setSelection([]);
     onChange(pagination.pageIndex + 1);
   };
@@ -124,30 +133,43 @@ const ProfesseursPage = () => {
     refetch: refetchProfesseur,
     isFetching: isProfesseurFetching,
   } = fetchData(["professeurs", page], () => {
-    // if (rolesQuery == null) return;
-    // const roleId = rolesQuery?.records?.filter(
-    //   (role) => role.roleName === "ROLE_PROF"
-    // )[0].roleId;
+    if (rolesQuery == null) return;
+    const roleId = rolesQuery?.records?.filter(
+      (role) => role.roleName === "ROLE_PROF"
+    )[0].roleId;
     return getUtilisaturs({
-      page: page,
+      page: pagination.pageIndex || 0,
       size: pagination.pageSize,
       nom: search,
-      // TODO: should change this to roleId when the backend is ready
-      roleId: "12443",
+      roleId: roleId,
+      includeDepartement: true,
+      includeElements: true,
     });
   });
 
-  
+  useEffect(() => {
+    if (professeurQuery) {
+      setProfs(professeurQuery?.records || []);
+      setIsProfLoading(isProfesseurLoading);
+      setTotalElements(
+        professeurQuery?.totalPages * professeurQuery?.size || 0
+      );
+      setTotalPages(professeurQuery?.totalPages || 0);
+    }
+  }, [professeurQuery]);
+
+  console.log("professeurQuery");
+
+  console.log(profs);
+
+  console.log(pagination);
 
   const [detailsModalOpened, detailsModalActions] = useDisclosure(false);
   const [details, setDetails] = useState<IProfesseur | undefined>(undefined);
-  const handleDetailsModalOpen = (item: IProfesseur) => {
-    setDetails(item);
-    detailsModalActions.open();
-  };
-
-  
-  console.log(selection);
+  // const handleDetailsModalOpen = (item: IProfesseur) => {
+  //   setDetails(item);
+  //   detailsModalActions.open();
+  // };
 
   const columns = useMemo<MRT_ColumnDef<any>[]>(
     () => [
@@ -174,12 +196,6 @@ const ProfesseursPage = () => {
               gap: "1rem",
             }}
           >
-            {/* <img
-              height={30}
-              src="https://avatars.githubusercontent.com/u/56592200?v=4"
-              loading="lazy"
-              style={{ borderRadius: "50%" }}
-            /> */}
             <Avatar
               className="rounded-md "
               radius="xl"
@@ -203,21 +219,35 @@ const ProfesseursPage = () => {
         accessorKey: "departement.intituleDepartement",
         header: "Departement",
       },
-      // {
-      //   accessorKey: "elements",
-      //   header: "Elements",
-      // }
+
+      {
+        accessorKey: "elements",
+        header: "Elements",
+        Cell: ({
+          renderedCellValue,
+          row,
+        }: {
+          renderedCellValue: any;
+          row: any;
+        }) => (
+          <Badge className="text-xs text-gray-500 text-center ">
+            {row.elements?.lenght || 0}
+            {" elements"}
+          </Badge>
+        ),
+      },
     ],
+
     [] as MRT_ColumnDef<IUtilisateur[]>[]
   );
 
   const handleRowSelectionChange = () => {
     const professeurIds =
-      professeurQuery?.records
+      profs
         ?.filter((item, index) => {
-          return rowSelection[item.id];
+          return rowSelection[index];
         })
-        .map((item) => item.id) || [];
+        .map((item) => item.code) || [];
 
     setSelection(professeurIds);
   };
@@ -227,10 +257,15 @@ const ProfesseursPage = () => {
     // onPaginationChange(pagination.pageIndex);
   }, [rowSelection]);
 
+  useEffect(() => {
+    onPaginationChange(pagination);
+  }, [pagination]);
+
+
   if (isRoleError) return <LoadingError refetch={refetchRole} />;
   if (isProfesseurError) return <LoadingError refetch={refetchProfesseur} />;
-  if (isProfesseurLoading || isRoleError)
-    return <Skeleton className="mt-3 min-h-screen" />;
+  // if (isRoleLoading)
+  //   return <Skeleton className="mt-3 min-h-screen" />;
 
   return (
     <main className=" min-h-screen py-2">
@@ -261,8 +296,6 @@ const ProfesseursPage = () => {
       <div className="flex flex-col md:flex-row items-center justify-between p-2">
         <div className="w-full flex">
           <h2 className="text-3xl font-bold  p-3">Professeurs</h2>
-
-          
         </div>
 
         <div className="flex items-center space-x-3 w-full md:w-auto">
@@ -282,8 +315,10 @@ const ProfesseursPage = () => {
             modalState={modalState}
             selectionIds={selection}
             setSelectionIds={setSelection}
-            professeurs={professeurQuery?.records}
+            professeurs={profs}
             page={page}
+            totaleElements={totalElements}
+            totalePages={totalPages}
           />
         </div>
       </div>
@@ -294,8 +329,7 @@ const ProfesseursPage = () => {
           </p>
         </div>
       )}
-      {professeurQuery?.records == null ||
-      professeurQuery?.records?.length === 0 ? (
+      {!isProfesseurFetching && (profs == null || profs?.length === 0) ? (
         <Alert
           className="w-full"
           icon={<IconAlertCircle size="1rem" />}
@@ -308,10 +342,20 @@ const ProfesseursPage = () => {
         <div className="relative md:px-3">
           <MantineReactTable
             columns={columns}
-            data={professeurQuery?.records}
+            data={profs}
+            manualPagination
+            rowCount={totalElements}
+            pageCount={totalPages}
             enableRowSelection
             enableFullScreenToggle={false}
             enableStickyFooter={false}
+            state={{
+              rowSelection,
+              pagination,
+              isLoading: isProfesseurLoading,
+              showAlertBanner: isProfesseurLoading,
+              showProgressBars: isProfesseurFetching,
+            }}
             mantineTableProps={{
               striped: true,
               // highlightOnHover:false,
@@ -330,8 +374,7 @@ const ProfesseursPage = () => {
             enableExpanding
             getRowId={(row) => row.id}
             onRowSelectionChange={setRowSelection} //connect internal row selection state to your own
-            state={{ rowSelection, pagination }}
-            onPaginationChange={(pagination) => onPaginationChange(pagination)} //hoist pagination state to your state when it changes internally
+            onPaginationChange={setPagination} //hoist pagination state to your state when it changes internally
             renderDetailPanel={({ row }: { row: any }) => (
               <Box
                 sx={{
@@ -378,6 +421,32 @@ const ProfesseursPage = () => {
             mantineBottomToolbarProps={{
               className: "bg-gray-50 p-5",
             }}
+            renderTopToolbarCustomActions={({ table }) => (
+              <Box
+              sx={{
+                display: "flex",
+                gap: "16px",
+                padding: "8px",
+                flexWrap: "wrap",
+              }}
+            >
+              <Text className="md:ml-3" ta="left" c="dimmed" fz="sm">
+                <div className="flex space-x-3">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    className="bi bi-people-fill"
+                    viewBox="0 0 16 16"
+                  >
+                    <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7Zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm-5.784 6A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216ZM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z" />
+                  </svg>
+                  <p> Table des Professeurs</p>
+                </div>
+              </Text>
+            </Box>
+            )}
           />
         </div>
       )}
@@ -443,14 +512,14 @@ const RowItem = ({
 }) => {
   return (
     <tr
-      key={item.id}
+      key={item.code}
       className={classNames({ "bg-blue-200": selected })}
       // className={cx({ [classes.rowSelected]: selected })}
     >
       <td>
         <Checkbox
           checked={selected}
-          onChange={() => toggleRow(item.id || "")}
+          onChange={() => toggleRow(item.code || "")}
           transitionDuration={0}
         />
       </td>
@@ -496,14 +565,18 @@ const ActionsMenu = ({
   setSelectionIds,
   professeurs,
   page,
+  totaleElements,
+  totalePages,
 }: {
   selection: number;
   formState: FormState;
   modalState: ModalState;
   selectionIds: string[];
   setSelectionIds: (ids: string[]) => void;
-  professeurs?: IProfesseur[];
+  professeurs?: IUtilisateur[];
   page: number;
+  totaleElements: number;
+  totalePages: number;
 }) => {
   const headers = [
     { key: "code", label: "Code" },
@@ -512,36 +585,109 @@ const ActionsMenu = ({
     { key: "photo", label: "Photo" },
     { key: "telephone", label: "Telephone" },
     { key: "codeDepartement", label: "CodeDepartement" },
-    { key: "Elements", label: "Elements" },
+    { key: "elements", label: "Elements" },
   ];
 
-  const data =
-    professeurs?.map((item) => {
-      return {
-        code: item.code,
-        nom: item.nom,
-        prenom: item.prenom,
-        photo: item.photo,
-        telephone: item.telephone,
-        codeDepartement: item.codeDepartement,
-        Elements: item.elements
-          ?.map((element) => element.intituleElement)
-          .join(", "),
-      };
-    }) || [];
+  // const data =
+  //   professeurs?.map((item) => {
+  //     return {
+  //       code: item.code,
+  //       nom: item.nom,
+  //       prenom: item.prenom,
+  //       photo: item.photo,
+  //       telephone: item.telephone,
+  //       codeDepartement: item.codeDepartement,
+  //       Elements: item.elements
+  //         ?.map((element) => element.intituleElement)
+  //         .join(", "),
+  //     };
+  //   }) || [];
 
-  const selectionData = selectionIds.map((id) => {
-    const professeur = professeurs?.find((item) => item.id === id);
-    return {
-      nom: professeur?.nom,
-      prenom: professeur?.prenom,
-      departement: professeur?.departement?.intituleDepartement,
-      Telephone: professeur?.telephone,
-      Elements: professeur?.elements
-        ?.map((element) => element.intituleElement)
-        .join(", "),
-    };
-  });
+  const handleExportData = () => {
+    notifications.show({
+      id: "download-user",
+      loading: true,
+      title: "utilisateur est en coure de telechargement ",
+      message:
+        "Le chargement des données s'arrêtera après 2 secondes, vous pouvez fermer cette notification maintenant",
+      autoClose: false,
+      withCloseButton: false,
+    });
+    const roleId = rolesQuery?.records?.filter(
+      (role) => role.roleName === "ROLE_PROF"
+    )[0].roleId;
+    getUtilisaturs({
+      page: 0,
+      size: totaleElements * totalePages,
+      roleId: roleId,
+      includeDepartement: true,
+    })
+      .then((res) => {
+        const codes = res?.records?.map((item) => item.code);
+        getUtilisateurSheet(codes)
+          .then((res: any) => {
+            const url = window.URL.createObjectURL(new Blob([res.data]));
+            const link = document.createElement("a");
+            link.href = url;
+            link.setAttribute("download", "professeurs.xlsx");
+            document.body.appendChild(link);
+            link.click();
+            notifications.update({
+              id: "download-user",
+              color: "teal",
+              title: "l'utilisateur est telecharge avec succès",
+              message:
+                "La notification se terminera en 2 secondes, vous pouvez fermer cette notification maintenant",
+              icon: <IconCheck size="1rem" />,
+              autoClose: 2000,
+            });
+          })
+          .catch((err: AxiosError) => {
+            console.log(err);
+          });
+
+        // csvExporter.generateCsv(data);
+      })
+      .catch((err) => {
+        notifications.update({
+          id: "update-user",
+          color: "red",
+          title: err,
+          message: err.message,
+          icon: <IconAdFilled size="1rem" />,
+          autoClose: 2000,
+        });
+      });
+  };
+
+  const handleExportRows = () => {
+    getUtilisateurSheet(selectionIds)
+      .then((res: any) => {
+        const url = window.URL.createObjectURL(new Blob([res.data]));
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", "professeurs.xlsx");
+        document.body.appendChild(link);
+        link.click();
+      })
+      .catch((err: AxiosError) => {
+        console.log(err);
+      });
+  };
+
+  // const selectionData = selectionIds.map((id) => {
+  //   const professeur = professeurs?.find((item) => item.code === id);
+  //   return {
+  //     code: professeur?.code,
+  //     nom: professeur?.nom,
+  //     prenom: professeur?.prenom,
+  //     telephone: professeur?.telephone,
+  //     CodeDepartement: professeur?.departement?.codeDepartement,
+  //     elements: professeur?.elements
+  //       ?.map((element) => element.intituleElement)
+  //       .join(", "),
+  //   };
+  // });
 
   const deleteProfesseursHandler = () => {
     if (selectionIds.length === 0) return;
@@ -628,7 +774,7 @@ const ActionsMenu = ({
     isError,
   } = useQuery({
     queryKey: ["departements"],
-    queryFn: () => getDepartements({ page: 1, size: 10 }),
+    queryFn: () => getDepartements({ page: 0, size: 10 }),
     keepPreviousData: true,
   });
   const {
@@ -648,9 +794,8 @@ const ActionsMenu = ({
       header: true,
       skipEmptyLines: true,
       complete: (results: any) => {
-        const data: IProfesseur[] = results.data.map((item: any) => {
+        const data: IUtilisateur[] = results.data.map((item: any) => {
           return {
-            id: randomId() + "",
             code: item.Code,
             nom: item.Nom,
             prenom: item.Prenom,
@@ -662,13 +807,12 @@ const ActionsMenu = ({
             adresse: "",
             ville: "",
             pays: "",
-            roles: rolesQuery?.records?.filter(
-              (r: IRole) => r.roleName === "ROLE_PROF"
-            ),
+            sexe: item.Sexe,
+            roles:
+              rolesQuery?.records
+                ?.filter((r: IRole) => r.roleName === "ROLE_PROF")
+                .map((r: IRole) => r.roleId) || [],
             codeDepartement: item.CodeDepartement,
-            departements: departements?.records?.filter(
-              (d: any) => d.codeDepartement === item.CodeDepartement
-            )[0],
           };
         });
 
@@ -680,7 +824,7 @@ const ActionsMenu = ({
     });
   };
 
-  const mutationSave = useMutation(saveProfesseur, {
+  const mutationSave = useMutation(saveUtilisateur, {
     onMutate: () => {
       notifications.show({
         id: "save-user",
@@ -743,8 +887,9 @@ const ActionsMenu = ({
             onChange={(file) => {
               console.log("start");
               handleFileUpload(file as File);
+              // uploadUtilisateurSheet(file as File)
             }}
-            accept=".csv"
+            accept=".xlsx, .csv"
           >
             {(props) => (
               <Button
@@ -760,10 +905,15 @@ const ActionsMenu = ({
               </Button>
             )}
           </FileButton>
-          <Menu.Item icon={<IconDatabaseExport size={14} />}>
-            <CSVLink data={data} headers={headers} filename={"professeurs.csv"}>
-              Export
-            </CSVLink>
+          <Menu.Item
+            onClick={() => {
+              handleExportData();
+            }}
+            icon={<IconDatabaseExport size={14} />}
+          >
+            {/* <CSVLink data={data} headers={headers} filename={"professeurs.csv"}> */}
+            Export
+            {/* </CSVLink> */}
           </Menu.Item>
 
           <Menu.Divider />
@@ -772,14 +922,17 @@ const ActionsMenu = ({
           <Menu.Item
             icon={<IconTableExport size={14} />}
             disabled={selection < 1}
+            onClick={() => {
+              handleExportRows();
+            }}
           >
-            <CSVLink
+            {/* <CSVLink
               data={selectionData}
               headers={headers}
               filename={"professeurs.csv"}
-            >
+            > */}
               Export selection
-            </CSVLink>
+            {/* </CSVLink> */}
           </Menu.Item>
           <Menu.Item
             color="red"

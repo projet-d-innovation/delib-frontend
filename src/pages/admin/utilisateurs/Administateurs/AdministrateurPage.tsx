@@ -47,8 +47,10 @@ import {
 } from "../../../../types/interfaces";
 import {
   deleteUtilisateur,
+  getUtilisateurSheet,
   getUtilisaturs,
   saveUtilisateur,
+  uploadUtilisateurSheet,
 } from "../../../../api/utilisateurApi";
 import Pagination from "../../../../components/Pagination";
 import { AdministrateurForm } from "./AdministrateurForm";
@@ -66,9 +68,12 @@ import { IconAdFilled } from "@tabler/icons-react";
 import { getDepartements } from "../../../../api/departementApi";
 import {
   MRT_ColumnDef,
+  MRT_Row,
   MRT_RowSelectionState,
   MantineReactTable,
 } from "mantine-react-table";
+import { getSearchParamsForLocation } from "react-router-dom/dist/dom";
+import { IconDownload } from "@tabler/icons-react";
 
 const AdministrateurPage = () => {
   const [page, onChange] = useState(1);
@@ -82,9 +87,11 @@ const AdministrateurPage = () => {
   const [selection, setSelection] = useState<string[]>([]);
   const [search, setSearch] = useState("");
   const [rowSelection, setRowSelection] = useState<MRT_RowSelectionState>({});
-
+  const [utilisateurs, setUtilisateurs] = useState<IUtilisateur[]>([]);
+  const [totalElements, setTotalElements] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
   const onPaginationChange = (pagination: any) => {
-    setPagination(pagination);
+    refetchUtilisateur();
     setSelection([]);
     onChange(pagination.pageIndex + 1);
   };
@@ -115,33 +122,34 @@ const AdministrateurPage = () => {
     isFetching: isUtilisateurFetching,
   } = fetchData<IUtilisateur>(["utilisateurs", page], () => {
     return getUtilisaturs({
-      page: page,
-      size: 10,
+      page: pagination.pageIndex || 0,
+      size: pagination.pageSize,
       nom: search,
-      isadmin: true,
+      group: "ADMIN",
+      includeDepartement: true,
+      includeRoles: true,
     });
   });
 
- 
+  useEffect(() => {
+    if (utilisateursQuery) {
+      setUtilisateurs(utilisateursQuery?.records || []);
+      setTotalElements(
+        utilisateursQuery?.totalPages * utilisateursQuery?.size || 0
+      );
+      setTotalPages(utilisateursQuery?.totalPages || 0);
+    }
+  }, [utilisateursQuery]);
+
   const [detailsModalOpened, detailsModalActions] = useDisclosure(false);
   const [details, setDetails] = useState<IUtilisateur | undefined>(undefined);
-  
-
-  // const rows = utilisateursQuery?.records?.map((item: IUtilisateur) => (
-  //   <RowItem
-  //     key={item.code}
-  //     selected={selection.includes(item.id+"")}
-  //     item={item}
-  //     toggleRow={toggleRow}
-  //     handleDetailsModalOpen={handleDetailsModalOpen}
-  //   />
-  // ));
 
   const columns = useMemo<MRT_ColumnDef<any>[]>(
     () => [
       {
         accessorKey: "code",
         header: "Code",
+        enableHiding: true,
       },
       {
         accessorFn: (row: IUtilisateur) => `${row.nom}`, //accessorFn used to join multiple data into a single cell
@@ -162,17 +170,11 @@ const AdministrateurPage = () => {
               gap: "1rem",
             }}
           >
-            {/* <img
-              height={30}
-              src="https://avatars.githubusercontent.com/u/56592200?v=4"
-              loading="lazy"
-              style={{ borderRadius: "50%" }}
-            /> */}
             <Avatar
-              className="rounded-md "
+              className="rounded-full "
               radius="xl"
               size="sm"
-              src={row.photo}
+              src={row.original.photo}
             />
             {/* using renderedCellValue instead of cell.getValue() preserves filter match highlighting */}
             <span>{renderedCellValue}</span>
@@ -205,11 +207,11 @@ const AdministrateurPage = () => {
 
   const handleRowSelectionChange = () => {
     const professeurIds =
-      (utilisateursQuery?.records
-        ?.filter((item: any, index) => {
-          return rowSelection[item.id];
+      utilisateurs
+        ?.filter((item, index) => {
+          return rowSelection[index];
         })
-        .map((item) => item.id) as string[]) || [];
+        .map((item) => item.code) || [];
 
     setSelection(professeurIds);
   };
@@ -219,11 +221,115 @@ const AdministrateurPage = () => {
     // onPaginationChange(pagination.pageIndex);
   }, [rowSelection]);
 
-  if (isRoleLoading || isUtilisateurLoading)
-    return <Skeleton className="mt-3 min-h-screen" />;
+  useEffect(() => {
+    onPaginationChange(pagination);
+  }, [pagination]);
+
+  const handleExportRows = (rows: MRT_Row<IUtilisateur>[]) => {
+    // @ts-ignore
+    // const rowscvs = rows?.map((row) => {
+    //   return {
+    //     code: row.original.code,
+    //     nom: row.original.nom,
+    //     prenom: row.original.prenom,
+    //     telephone: row.original.telephone,
+    //     codeDepartement: row.original.departement?.codeDepartement,
+    //     elements: row.original.elements
+    //       ?.map((element) => element.intituleElement)
+    //       .join(", "),
+    //   };
+    // });
+    // csvExporter.generateCsv(
+    //   rowscvs.map((row) => {
+    //     return row;
+    //   })
+    // );
+    getUtilisateurSheet(selection)
+      .then((res: any) => {
+        const url = window.URL.createObjectURL(new Blob([res.data]));
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", "professeurs.xlsx");
+        document.body.appendChild(link);
+        link.click();
+      })
+      .catch((err: AxiosError) => {
+        console.log(err);
+      });
+  };
+  const handleExportData = () => {
+    notifications.show({
+      id: "download-user",
+      loading: true,
+      title: "utilisateur est en coure de telechargement ",
+      message:
+        "Le chargement des données s'arrêtera après 2 secondes, vous pouvez fermer cette notification maintenant",
+      autoClose: false,
+      withCloseButton: false,
+    });
+    getUtilisaturs({
+      page: 0,
+      size: totalElements * totalPages,
+      nom: search,
+      group: "ADMIN",
+      includeDepartement: true,
+      includeRoles: true,
+    })
+      .then((res) => {
+        // const data = res?.records?.map((item) => {
+        //   return {
+        //     code: item.code,
+        //     nom: item.nom,
+        //     prenom: item.prenom,
+        //     telephone: item.telephone,
+        //     codeDepartement: item.departement?.codeDepartement,
+        //     elements: item.elements
+        //       ?.map((element) => element.intituleElement)
+        //       .join(", "),
+        //   };
+        // });
+        const codes = res?.records?.map((item) => item.code);
+        getUtilisateurSheet(codes)
+          .then((res: any) => {
+            const url = window.URL.createObjectURL(new Blob([res.data]));
+            const link = document.createElement("a");
+            link.href = url;
+            link.setAttribute("download", "administrateurs.xlsx");
+            document.body.appendChild(link);
+            link.click();
+            notifications.update({
+              id: "download-user",
+              color: "teal",
+              title: "l'utilisateur est telecharge avec succès",
+              message:
+                "La notification se terminera en 2 secondes, vous pouvez fermer cette notification maintenant",
+              icon: <IconCheck size="1rem" />,
+              autoClose: 2000,
+            });
+          })
+          .catch((err: AxiosError) => {
+            console.log(err);
+          });
+
+        // csvExporter.generateCsv(data);
+      })
+      .catch((err) => {
+        notifications.update({
+          id: "update-user",
+          color: "red",
+          title: err,
+          message: err.message,
+          icon: <IconAdFilled size="1rem" />,
+          autoClose: 2000,
+        });
+      });
+  };
+
+  // if (isRoleLoading || isUtilisateurLoading)
+  //   return <Skeleton className="mt-3 min-h-screen" />;
 
   if (isRoleError) return <LoadingError refetch={refetchRole} />;
-  if (isUtilisateurError) return <LoadingError refetch={refetchUtilisateur} />;
+  // if (isUtilisateurError) return <LoadingError refetch={refetchUtilisateur} />;
 
   return (
     <main className=" min-h-screen py-2">
@@ -254,9 +360,7 @@ const AdministrateurPage = () => {
       <div className="flex flex-col md:flex-row items-center justify-between p-2">
         <h1 className="text-3xl font-bold mb-3  p-2">Administrateurs</h1>
 
-        <div className="w-full flex">
-         
-        </div>
+        <div className="w-full flex"></div>
 
         <div className="flex items-center space-x-3 w-full md:w-auto">
           <Button
@@ -277,6 +381,9 @@ const AdministrateurPage = () => {
             setSelectionIds={setSelection}
             page={page}
             utilisateur={utilisateursQuery?.records!}
+            roles={rolesQuery?.records!}
+            totalePages={totalPages}
+            totalElements={totalElements}
           />
         </div>
       </div>
@@ -287,8 +394,9 @@ const AdministrateurPage = () => {
           </p>
         </div>
       )}
-      {utilisateursQuery?.records == null ||
-      utilisateursQuery?.records?.length === 0 ? (
+      {!isUtilisateurFetching &&
+      (utilisateursQuery?.records == null ||
+        utilisateursQuery?.records?.length === 0) ? (
         <Alert
           className="w-full"
           icon={<IconAlertCircle size="1rem" />}
@@ -301,10 +409,21 @@ const AdministrateurPage = () => {
         <div className="relative">
           <MantineReactTable
             columns={columns}
-            data={utilisateursQuery?.records}
-            enableRowSelection
+            data={utilisateurs}
+            rowCount={totalElements}
+            pageCount={totalPages}
+            state={{
+              rowSelection,
+              pagination,
+              isLoading: isUtilisateurLoading,
+              showAlertBanner: isUtilisateurLoading,
+              showProgressBars: isUtilisateurFetching,
+            }}
+            manualPagination
             enableFullScreenToggle={false}
             enableStickyFooter={false}
+            enableRowSelection
+            enableExpanding
             mantineTableProps={{
               striped: true,
               // highlightOnHover:false,
@@ -320,11 +439,9 @@ const AdministrateurPage = () => {
               },
               className: "hover:bg-gray-100",
             }}
-            enableExpanding
             getRowId={(row) => row.id}
+            onPaginationChange={setPagination}
             onRowSelectionChange={setRowSelection} //connect internal row selection state to your own
-            state={{ rowSelection, pagination }}
-            onPaginationChange={(pagination) => onPaginationChange(pagination)} //hoist pagination state to your state when it changes internally
             renderDetailPanel={({ row }: { row: any }) => (
               <Box
                 sx={{
@@ -334,10 +451,10 @@ const AdministrateurPage = () => {
                 }}
               >
                 <Avatar
-                  className="rounded-md "
+                  className="rounded-fullZ "
                   radius="xl"
                   size="xl"
-                  src={row.photo}
+                  src={row.original.photo}
                 />
                 <Box sx={{ textAlign: "center" }}>
                   <TypographyStylesProvider variant="h4">
@@ -390,21 +507,33 @@ const AdministrateurPage = () => {
             mantineBottomToolbarProps={{
               className: "bg-gray-50 p-5",
             }}
+            renderTopToolbarCustomActions={({ table }) => (
+              <Box
+                sx={{
+                  display: "flex",
+                  gap: "16px",
+                  padding: "8px",
+                  flexWrap: "wrap",
+                }}
+              >
+                <Text className="md:ml-3" ta="left" c="dimmed" fz="sm">
+                  <div className="flex space-x-3">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      fill="currentColor"
+                      className="bi bi-people-fill"
+                      viewBox="0 0 16 16"
+                    >
+                      <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7Zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm-5.784 6A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216ZM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z" />
+                    </svg>
+                    <p> Table des Administrateurs</p>
+                  </div>
+                </Text>
+              </Box>
+            )}
           />
-          {/* <MantineReactTable.Column accessorKey="roles" header="Roles">
-        {(item:any) =>
-          item.roles.map((role:any, index:any) => (
-            <div key={index}>{role.roleName}</div>
-          ))
-        }
-      </MantineReactTable.Column> */}
-          {/* </MantineReactTable> */}
-          {/* <Pagination
-              className="m-5"
-              totalPages={utilisateursQuery?.totalPages!}
-              active={pagination.active}
-              onPaginationChange={onPaginationChange}
-            /> */}
         </div>
       )}
       <DetailsModal
@@ -524,6 +653,9 @@ const ActionsMenu = ({
   setSelectionIds,
   page,
   utilisateur,
+  roles,
+  totalePages,
+  totalElements,
 }: {
   selection: number;
   formState: FormState;
@@ -532,32 +664,120 @@ const ActionsMenu = ({
   setSelectionIds: (ids: string[]) => void;
   page: number;
   utilisateur: IUtilisateur[];
+  roles: IRole[];
+  totalePages: number;
+  totalElements: number;
 }) => {
   const headers = [
     { label: "Code", key: "code" },
     { label: "Nom", key: "nom" },
     { label: "Prenom", key: "prenom" },
     { label: "Telephone", key: "telephone" },
-    { label: "Photo", key: "photo" },
+    // { label: "Photo", key: "photo" },
     { label: "Roles", key: "roles" },
     { key: "codeDepartement", label: "CodeDepartement" },
   ];
 
-  const data = utilisateur.map((item) => {
-    return {
-      code: item.code,
-      nom: item.nom,
-      prenom: item.prenom,
-      telephone: item.telephone,
-      codeDepartement: item.codeDepartement,
-      photo: item.photo,
-      roles: item.roles?.map((role) => role.roleName).join(","),
-    };
-  });
+  const handleExportRows = () => {
+    getUtilisateurSheet(selectionIds)
+      .then((res: any) => {
+        const url = window.URL.createObjectURL(new Blob([res.data]));
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", "professeurs.xlsx");
+        document.body.appendChild(link);
+        link.click();
+      })
+      .catch((err: AxiosError) => {
+        console.log(err);
+      });
+  };
+  const handleExportData = () => {
+    notifications.show({
+      id: "download-user",
+      loading: true,
+      title: "utilisateur est en coure de telechargement ",
+      message:
+        "Le chargement des données s'arrêtera après 2 secondes, vous pouvez fermer cette notification maintenant",
+      autoClose: false,
+      withCloseButton: false,
+    });
+    getUtilisaturs({
+      page: 0,
+      size: totalElements * totalePages,
+      group: "ADMIN",
+      includeDepartement: true,
+      includeRoles: true,
+    })
+      .then((res) => {
+        // const data = res?.records?.map((item) => {
+        //   return {
+        //     code: item.code,
+        //     nom: item.nom,
+        //     prenom: item.prenom,
+        //     telephone: item.telephone,
+        //     codeDepartement: item.departement?.codeDepartement,
+        //     elements: item.elements
+        //       ?.map((element) => element.intituleElement)
+        //       .join(", "),
+        //   };
+        // });
+        const codes = res?.records?.map((item) => item.code);
+        getUtilisateurSheet(codes)
+          .then((res: any) => {
+            const url = window.URL.createObjectURL(new Blob([res.data]));
+            const link = document.createElement("a");
+            link.href = url;
+            link.setAttribute("download", "administrateurs.xlsx");
+            document.body.appendChild(link);
+            link.click();
+            notifications.update({
+              id: "download-user",
+              color: "teal",
+              title: "l'utilisateur est telecharge avec succès",
+              message:
+                "La notification se terminera en 2 secondes, vous pouvez fermer cette notification maintenant",
+              icon: <IconCheck size="1rem" />,
+              autoClose: 2000,
+            });
+          })
+          .catch((err: AxiosError) => {
+            console.log(err);
+          });
 
-  const selectionData = utilisateur.filter((item) =>
-    selectionIds.includes(item.id || "")
-  );
+        // csvExporter.generateCsv(data);
+      })
+      .catch((err) => {
+        notifications.update({
+          id: "update-user",
+          color: "red",
+          title: err,
+          message: err.message,
+          icon: <IconAdFilled size="1rem" />,
+          autoClose: 2000,
+        });
+      });
+  };
+
+  // const data = utilisateur?.map((item) => {
+  //   return {
+  //     code: item.code,
+  //     nom: item.nom,
+  //     prenom: item.prenom,
+  //     telephone: item.telephone,
+  //     codeDepartement: item.codeDepartement,
+  //     photo: item.photo,
+  //     roles: item.roles?.map((role) => role.roleName).join(", "),
+  //   };
+  // });
+
+  const selectionData = utilisateur
+    ?.filter((item) => selectionIds.includes(item.code || ""))
+    .map((item) => ({
+      ...item,
+      roles: item.roles?.map((role) => role.roleName).join(", "),
+    }));
+  console.log(selectionData);
 
   const deleteUtilisateursHandler = () => {
     if (selectionIds.length === 0) return;
@@ -596,15 +816,7 @@ const ActionsMenu = ({
         </Text>
       ),
     });
-  const {
-    data: rolesQuery,
-    isLoading: isRoleLoading,
-    isError: isRoleError,
-  } = useQuery({
-    queryKey: ["roles", page],
-    queryFn: () => getRoles({ page: 0, size: 10 }),
-    keepPreviousData: true,
-  });
+
   const queryClient = useQueryClient();
   const { mutate: mutationDelete } = useMutation(deleteUtilisateur, {
     onMutate: () => {
@@ -646,15 +858,11 @@ const ActionsMenu = ({
       modalState.close();
     },
   });
-  const {
-    data: departements,
-    isLoading,
-    isError,
-  } = useQuery({
-    queryKey: ["departements"],
-    queryFn: () => getDepartements({ page: 1, size: 10 }),
-    keepPreviousData: true,
-  });
+  // const { data: departements } = useQuery({
+  //   queryKey: ["departements"],
+  //   queryFn: () => getDepartements({ page: 1, size: 10 }),
+  //   keepPreviousData: true,
+  // });
 
   const handleFileUpload = (file: File) => {
     if (!file) return;
@@ -664,25 +872,24 @@ const ActionsMenu = ({
       complete: (results: any) => {
         const data: IUtilisateur[] = results.data.map((item: any) => {
           return {
-            id: randomId() + "",
+            // id: randomId() + "",
             code: item.Code,
             nom: item.Nom,
             prenom: item.Prenom,
-            cne: "",
-            cin: "",
-            dateNaissance: "",
+            photo: "",
             telephone: item.Telephone,
+            cin: "",
+            cne: "",
+            dateNaissance: "",
             adresse: "",
             ville: "",
             pays: "",
-            photo: item.Photo,
+            sexe: item.Sexe,
+            roles:
+              roles
+                ?.filter((r: IRole) => r.roleName === "ROLE_ADMIN")
+                .map((r: IRole) => r.roleId) || [],
             codeDepartement: item.CodeDepartement,
-            departements: departements?.records?.filter(
-              (d: any) => d.codeDepartement === item.CodeDepartement
-            )[0],
-            roles: rolesQuery?.records?.filter(
-              (role: IRole) => role.roleName === "ROLE_ADMIN"
-            ) as IRole[],
           };
         });
         console.log(data);
@@ -719,6 +926,7 @@ const ActionsMenu = ({
         icon: <IconCheck size="1rem" />,
         autoClose: 2000,
       });
+      
     },
     onError: (error: AxiosError) => {
       const excp = error.response?.data as IBusinessException;
@@ -734,7 +942,6 @@ const ActionsMenu = ({
     },
   });
 
-  if (isRoleLoading) return <Skeleton className="mt-3 min-h-screen" />;
   return (
     <div className="flex items-center space-x-3 w-full md:w-auto">
       <Menu position="bottom-end" shadow="md" width={200}>
@@ -752,7 +959,7 @@ const ActionsMenu = ({
             onChange={(file) => {
               handleFileUpload(file as File);
             }}
-            accept=".csv"
+            accept=".xlsx,.xls,.csv"
           >
             {(props) => (
               <Button
@@ -768,14 +975,13 @@ const ActionsMenu = ({
               </Button>
             )}
           </FileButton>
-          <Menu.Item icon={<IconDatabaseExport size={14} />}>
-            <CSVLink
-              data={data}
-              headers={headers}
-              filename={"administrateurs.csv"}
-            >
-              Export
-            </CSVLink>
+          <Menu.Item
+            onClick={() => {
+              handleExportData();
+            }}
+            icon={<IconDatabaseExport size={14} />}
+          >
+            Export
           </Menu.Item>
           <Menu.Divider />
 
@@ -783,14 +989,11 @@ const ActionsMenu = ({
           <Menu.Item
             icon={<IconTableExport size={14} />}
             disabled={selection < 1}
+            onClick={() => {
+              handleExportRows();
+            }}
           >
-            <CSVLink
-              data={selectionData}
-              headers={headers}
-              filename={"adminstrateurs.csv"}
-            >
-              Export selection
-            </CSVLink>
+            Export selection
           </Menu.Item>
           <Menu.Item
             color="red"

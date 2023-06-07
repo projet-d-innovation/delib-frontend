@@ -18,10 +18,24 @@ export interface ISessionUniversitaire {
 }
 
 export interface IFiliere {
-  id: string;
-  code: string;
-  intitule: string;
+  id?: string;
+  codeFiliere: string;
+  intituleFiliere: string;
   codeDepartement: string;
+  codeChefFiliere: string;
+  codeRegleDeCalcul: string;
+  semestres?: ISemestre[];
+  chefFiliere?: IUtilisateur;
+  regleDeCalcul?: IRegleDeCalcul;
+}
+
+export interface IRegleDeCalcul {
+  codeRegleDeCalcul: string;
+  noteValidationModule: number;
+  noteEliminatoireModule: number;
+  noteCompensationModule: number;
+  noteValidationAnnee: number;
+  nbrModulesDerogation: number;
 }
 
 export interface IAnneUniversitaire {
@@ -86,6 +100,7 @@ export interface IUtilisateur {
   ville: string;
   pays: string;
   photo: string;
+  sexe: string;
   codeFiliere?: string;
   filiere?: IFiliere;
   codeDepartement?: string;
@@ -165,7 +180,7 @@ export interface IPermission {
 }
 
 export interface IRole {
-  id ?: string;
+  id?: string;
   roleId: string;
   roleName: string;
   groupe?: string;

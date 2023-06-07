@@ -8,9 +8,12 @@ import {
   rem,
   FileInput,
   MultiSelect,
+  Radio,
+  Select,
 } from "@mantine/core";
 import {
   IBusinessException,
+  IDepartement,
   IPagination,
   IRole,
   IUtilisateur,
@@ -30,6 +33,7 @@ import { IconAdFilled } from "@tabler/icons-react";
 import { AxiosError } from "axios";
 import { DateInput } from "@mantine/dates";
 import LoadingError from "../../../../components/LoadingError";
+import { getDepartements } from "../../../../api/departementApi";
 
 export function AdministrateurForm({
   formState,
@@ -58,6 +62,8 @@ export function AdministrateurForm({
       pay: "",
       image: "",
       roles: [],
+      sexe: "",
+      departement: "",
     },
 
     validate: {
@@ -71,18 +77,10 @@ export function AdministrateurForm({
         { min: 10, max: 10 },
         "must be a valid telephone number"
       ),
-      adresse: hasLength(
-        { min: 3, max: 20 },
-        "adresse must be 3-20 characters long"
-      ),
-      ville: hasLength(
-        { min: 2, max: 10 },
-        "ville must be 2-10 characters long"
-      ),
-      pay: hasLength({ min: 2, max: 10 }, "pay must be 2-10 characters long"),
       // // image: isNotEmpty("image is required"),
       // image: isNotEmpty("image is required"),
       roles: isNotEmpty("roles is required"),
+      departement: isNotEmpty("codeDepartement is required"),
     },
   });
 
@@ -91,48 +89,67 @@ export function AdministrateurForm({
   if (formState === "edit") {
     useQuery({
       queryKey: ["utilisateur", id],
-      queryFn: () => getUtilisateur(id + ""),
+      queryFn: () =>
+        getUtilisateur({
+          utilisateurId: id + "",
+          includeDepartement: true,
+          includeRoles: true,
+        }),
       keepPreviousData: true,
       onSuccess(data) {
         // console.log(data);
         form.setValues({
           code: data.code,
-          cin: data.cin,
-          cne: data.cne,
           nom: data.nom,
           prenom: data.prenom,
-          dateNaissance: new Date(data.dateNaissance),
           telephone: data.telephone,
-          adresse: data.adresse,
-          ville: data.ville,
-          pay: data.pays,
+          sexe: data.sexe,
+          image: data.photo,
           roles: data.roles?.map((role) => role.roleId) as [],
+          departement: data.departement?.intituleDepartement,
         });
       },
     });
   }
 
-  function fetchData <T>(queryKey: any, queryFn: any){
-    const { data, isLoading, isError, refetch, isFetching } = useQuery<IPagination<T>>({
+  function fetchData<T>(queryKey: any, queryFn: any) {
+    const { data, isLoading, isError, refetch, isFetching } = useQuery<
+      IPagination<T>
+    >({
       queryKey,
       queryFn,
     });
     return { data, isLoading, isError, refetch, isFetching };
-  };
+  }
 
   const {
-    data:rolesQuery,
+    data: departementQuery,
+    isLoading: departementLoading,
+    isError: departementError,
+    refetch: departementRefetch,
+    isFetching: departementFetching,
+  } = fetchData<IDepartement>(["departements", page], () =>
+    getDepartements({ page: 0, size: 10 })
+  );
+
+  const departementNames = departementQuery?.records.map((departement) => {
+    return departement.intituleDepartement;
+  }) as string[];
+  const {
+    data: rolesQuery,
     isLoading,
-    isError ,
-    refetch ,
-    isFetching ,
+    isError,
+    refetch,
+    isFetching,
   } = fetchData<IRole>(["roles", page], () => getRoles({ page: 0, size: 10 }));
 
-  const roles = rolesQuery?.records?.map((role) => {
-    return { value: role.roleId, label: role.roleName };
-  }) as { value: string; label: string }[] ||[];
+  const roles =
+    (rolesQuery?.records?.map((role) => {
+      return { value: role.roleId, label: role.roleName };
+    }) as { value: string; label: string }[]) || [];
 
   const saveUtilisateurHnadler = () => {
+
     if (form.isValid()) {
       const data: IUtilisateur = {
         code: form.values.code,
@@ -146,8 +163,15 @@ export function AdministrateurForm({
         adresse: form.values.adresse,
         ville: form.values.ville,
         pays: form.values.pay,
-        roles: form.values.roles
+        roles: form.values.roles,
+        sexe: form.values.sexe,
+        codeDepartement: departementQuery?.records.findLast(
+          (departement) =>
+            departement.intituleDepartement === form.values.departement
+            )?.codeDepartement
       };
+      console.log("hiiiiiii");
+console.log(data);
       mutationSave.mutate(data);
     }
   };
@@ -167,6 +191,11 @@ export function AdministrateurForm({
         ville: form.values.ville,
         pays: form.values.pay,
         roles: form.values.roles,
+        sexe: form.values.sexe,
+        codeDepartement: departementQuery?.records.findLast(
+          (departement) =>
+            departement.intituleDepartement === form.values.departement
+            )?.codeDepartement
       };
       mutationUpdate.mutate(data);
     }
@@ -251,9 +280,10 @@ export function AdministrateurForm({
     },
   });
 
-  if (isLoading || loading) return <Skeleton className="mt-3 min-h-screen" />;
+  if (isLoading || loading || departementLoading)
+    return <Skeleton className="mt-3 min-h-screen" />;
 
-  if (isError ) return <div>error</div>;
+  if (isError || departementError) return <div>error</div>;
 
   return (
     <Box
@@ -296,7 +326,7 @@ export function AdministrateurForm({
         mt="md"
         {...form.getInputProps("telephone")}
       /> */}
-    
+
       <div className="flex items-center ">
         <TextInput
           className="pr-2 w-1/2"
@@ -316,13 +346,13 @@ export function AdministrateurForm({
         />
       </div>
 
-    
-      <DateInput
+      {/* <DateInput
         label="Date input"
         placeholder="Date input"
         mt="md"
         {...form.getInputProps("dateNaissance")}
-      />
+      /> */}
+
       <TextInput
         label="Telephone"
         placeholder="Entrez votre Telephone"
@@ -330,43 +360,24 @@ export function AdministrateurForm({
         mt="md"
         {...form.getInputProps("telephone")}
       />
+      
+      <Radio.Group
+        className="mt-4"
+        name="sexe"
+        label="Genre"
+        withAsterisk
+        defaultValue="M"
+        {...form.getInputProps("sexe")}
+      >
+        <Group mt="xs">
+          <Radio value="M" label="masculin" />
+          <Radio value="F" label="féminin" />
+        </Group>
+      </Radio.Group>
 
-      <TextInput
-        label="adresse"
-        placeholder="Entrez votre Adresse"
-        withAsterisk
-        mt="md"
-        {...form.getInputProps("adresse")}
-      />
-      <TextInput
-        label="Ville"
-        placeholder="Entrez votre Ville"
-        withAsterisk
-        mt="md"
-        {...form.getInputProps("ville")}
-      />
-      <TextInput
-        label="Pay"
-        placeholder="Entrez votre Pay"
-        withAsterisk
-        mt="md"
-        {...form.getInputProps("pay")}
-      />
 
-      {/* <FileInput
-        label="image"
-        placeholder="Entrez votre image"
-        icon={<IconUpload size={rem(14)} />}
-        // withAsterisk
-        mt="md"
-        // required
-        onChange={(file) => {
-          form.getInputProps("image").onChange(file?.name);
-        }}
-      /> */}
       <MultiSelect
-        data={roles
-        }
+        data={roles}
         label="Roles"
         placeholder="Choisissez vos rôles"
         withAsterisk
@@ -374,6 +385,21 @@ export function AdministrateurForm({
         required
         {...form.getInputProps("roles")}
       />
+      <Select
+        className="pt-4 pb-3"
+        label="Departement"
+        placeholder="choisir un departement"
+        data={departementNames}
+        withAsterisk
+        transitionProps={{
+          transition: "pop-top-left",
+          duration: 80,
+          timingFunction: "ease",
+        }}
+        {...form.getInputProps("departement")}
+        withinPortal
+      />
+
       <FileInput
         label="image"
         placeholder="Entrez votre image"

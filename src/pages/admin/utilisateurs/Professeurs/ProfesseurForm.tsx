@@ -5,12 +5,19 @@ import {
   FileInput,
   Group,
   MultiSelect,
+  Radio,
   Select,
   Skeleton,
   TextInput,
   rem,
 } from "@mantine/core";
-import { IBusinessException, IPagination, IProfesseur, IRole, IUtilisateur } from "../../../../types/interfaces";
+import {
+  IBusinessException,
+  IDepartement,
+  IPagination,
+  IRole,
+  IUtilisateur,
+} from "../../../../types/interfaces";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 
 import useModalState from "../../../../store/modalStore";
@@ -19,11 +26,8 @@ import { IconCheck, IconUpload } from "@tabler/icons-react";
 import { IconAdFilled } from "@tabler/icons-react";
 import { AxiosError } from "axios";
 import {
-  getProfesseur,
   getUtilisateur,
-  saveProfesseur,
   saveUtilisateur,
-  updateProfesseur,
   updateUtilisateur,
 } from "../../../../api/utilisateurApi";
 import { getDepartements } from "../../../../api/departementApi";
@@ -57,6 +61,7 @@ export function ProfesseurForm({
       pay: "",
       photo: "",
       Departement: "",
+      sexe: "",
     },
 
     validate: {
@@ -74,8 +79,10 @@ export function ProfesseurForm({
     },
   });
 
-  const fetchData =(queryKey: any, queryFn: any) => {
-    const { data, isLoading, isError, refetch, isFetching } = useQuery<IPagination<any>>({
+  const fetchData = (queryKey: any, queryFn: any) => {
+    const { data, isLoading, isError, refetch, isFetching } = useQuery<
+      IPagination<any>
+    >({
       queryKey,
       queryFn,
     });
@@ -83,32 +90,57 @@ export function ProfesseurForm({
   };
 
   const {
-    data:rolesQuery ,
+    data: rolesQuery,
     isLoading: isRoleLoading,
     isError: isRoleError,
     refetch: refetchRole,
     isFetching: isRoleFetching,
   } = fetchData(["roles", page], () => getRoles({ page: 0, size: 10 }));
 
+  // const {
+  //   data: departements,
+  //   isLoading,
+  //   isError,
+  // } = useQuery({
+  //   queryKey: ["departements"],
+  //   queryFn: () => getDepartements({ page: 1, size: 10 }),
+  //   keepPreviousData: true,
+  // });
 
+  // const {
+  //   data: departementQuery,
+  //   isLoading: departementLoading,
+  //   isError: departementError,
+  //   refetch: departementRefetch,
+  //   isFetching: departementFetching,
+  // } = fetchData<IDepartement>(["departements", page], () =>
+  //   getDepartements({ page: 0, size: 10 })
+  // );
   const {
-    data: departements,
-    isLoading,
-    isError,
-  } = useQuery({
-    queryKey: ["departements"],
-    queryFn: () => getDepartements({ page: 1, size: 10 }),
-    keepPreviousData: true,
-  });
+    data: departementQuery,
+    isLoading: departementLoading,
+    isError: departementError,
+    refetch: departementRefetch,
+    isFetching: departementFetching,
+    // @ts-ignore
+  } = fetchData<IDepartement>(["departements", page], () =>
+    getDepartements({ page: 0, size: 10 })
+  );
 
-  const departementNames = departements?.records.map(
+
+  const departementNames = departementQuery?.records.map(
     (d) => d.intituleDepartement
   ) as string[];
 
   if (formState === "edit") {
     useQuery({
       queryKey: ["professeur", id],
-      queryFn: () => getUtilisateur(id),
+      queryFn: () =>
+        getUtilisateur({
+          utilisateurId: id + "",
+          includeDepartement: true,
+          includeElements: true,
+        }),
       keepPreviousData: true,
       onSuccess(data) {
         form.setValues({
@@ -123,9 +155,9 @@ export function ProfesseurForm({
           ville: data.ville,
           pay: data.pays,
           photo: data.photo,
-          Departement: departements?.records.find(
+          Departement: departementQuery?.records.find(
             (d) => d.codeDepartement === data.codeDepartement
-            )?.intituleDepartement as string,
+          )?.intituleDepartement as string,
         });
       },
     });
@@ -145,13 +177,17 @@ export function ProfesseurForm({
         adresse: form.values.adresse,
         ville: form.values.ville,
         pays: form.values.pay,
-        roles: rolesQuery?.records?.filter((r:IRole) => r.roleName === "ROLE_PROF"),
-        codeDepartement: departements?.records.find(
+        sexe: form.values.sexe,
+        roles: rolesQuery?.records
+          ?.filter((r: IRole) => r.roleName === "ROLE_PROF")
+          .map((r: IRole) => r.roleId) as [],
+        codeDepartement: departementQuery?.records.find(
           (d) => d.intituleDepartement === form.values.Departement
         )?.codeDepartement as string,
-        departement: departements?.records.find(    //TODO: this attrebute should be removed when the backend is ready
+        departement: departementQuery?.records.find(
+          //TODO: this attrebute should be removed when the backend is ready
           (d) => d.intituleDepartement === form.values.Departement
-        )
+        ),
       };
 
       mutationSave.mutate(data);
@@ -173,13 +209,14 @@ export function ProfesseurForm({
         adresse: form.values.adresse,
         ville: form.values.ville,
         pays: form.values.pay,
-        roles: rolesQuery?.records?.filter((r:IRole) => r.roleName === "ROLE_PROF"),
-        codeDepartement: departements?.records.find(
-          (d) => d.intituleDepartement === form.values.Departement
-        )?.codeDepartement as string,
-        departement: departements?.records.find(    //TODO: this attrebute should be removed when the backend is ready
-          (d) => d.intituleDepartement === form.values.Departement
-        )
+        sexe: form.values.sexe,
+        roles: rolesQuery?.records
+          ?.filter((r: IRole) => r.roleName === "ROLE_PROF")
+          .map((r: IRole) => r.roleId) as [],
+        codeDepartement: departementQuery?.records.findLast(
+          (departement) =>
+            departement.intituleDepartement === form.values.Departement
+            )?.codeDepartement
       };
       mutationUpdate.mutate(data);
     }
@@ -264,9 +301,11 @@ export function ProfesseurForm({
     },
   });
 
-  if (loading || isLoading||isRoleLoading) return <Skeleton className="mt-3 min-h-screen" />;
+  if (loading || departementLoading || isRoleLoading)
+    return <Skeleton className="mt-3 min-h-screen" />;
 
-  if (isError || isRoleError) return <div>error</div>;
+  if (departementError ) return <div> Departement error</div>;
+  if (isRoleError) return <div> Role error</div>;
 
   return (
     <Box
@@ -310,6 +349,19 @@ export function ProfesseurForm({
         mt="md"
         {...form.getInputProps("telephone")}
       />
+  <Radio.Group
+        className="mt-4"
+        name="sexe"
+        label="Sexe"
+        withAsterisk
+        defaultValue="M"
+        {...form.getInputProps("sexe")}
+      >
+        <Group mt="xs">
+          <Radio value="M" label="Homme" />
+          <Radio value="F" label="Femme" />
+        </Group>
+      </Radio.Group>
 
       <FileInput
         label="image"
@@ -333,12 +385,12 @@ export function ProfesseurForm({
         {...form.getInputProps("Departement")}
         withinPortal
       />
-
+     
       <Group position="right" mt="md">
         <Button
           variant="default"
-          type="submit"
           className="bg-blue-400 text-white hover:bg-blue-600"
+          type="submit"
           onClick={
             formState == "create"
               ? saveProfesseursHnadler

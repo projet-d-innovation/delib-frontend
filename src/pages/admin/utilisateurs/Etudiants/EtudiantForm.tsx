@@ -6,13 +6,26 @@ import {
   FileInput,
   Group,
   MultiSelect,
+  Radio,
+  Select,
   Skeleton,
   TextInput,
   rem,
 } from "@mantine/core";
-import { IBusinessException, IPagination, IRole, IUtilisateur,  } from "../../../../types/interfaces";
+import {
+  IBusinessException,
+  IFiliere,
+  IPagination,
+  IRole,
+  IUtilisateur,
+} from "../../../../types/interfaces";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { getUtilisateur, getUtilisaturs, saveUtilisateur, updateUtilisateur } from "../../../../api/utilisateurApi";
+import {
+  getUtilisateurJsonServer as getUtilisateur,
+  getUtilisaturs,
+  saveUtilisateurJsonServer as saveUtilisateur,
+  updateUtilisateurJsonServer as updateUtilisateur,
+} from "../../../../api/utilisateurApi";
 import useModalState from "../../../../store/modalStore";
 import { notifications } from "@mantine/notifications";
 import { IconCheck, IconUpload } from "@tabler/icons-react";
@@ -20,8 +33,10 @@ import { IconAdFilled } from "@tabler/icons-react";
 import { AxiosError } from "axios";
 import { DateInput } from "@mantine/dates";
 import { useState } from "react";
-import { getRoles } from "../../../../api/roleApi";
+import { getRolesJsonServer as getRoles } from "../../../../api/roleApi";
 import LoadingError from "../../../../components/LoadingError";
+import { getFiliers } from "../../../../api/filierApi";
+import { randomId } from "@mantine/hooks";
 
 export function EtudiantForm({
   formState,
@@ -48,12 +63,14 @@ export function EtudiantForm({
       ville: "",
       pay: "",
       image: "",
+      sexe: "",
+      filiere: "",
     },
 
     validate: {
       code: isNotEmpty("code is required"),
-      cin: hasLength({ min: 8, max: 8 }, "must be a valid cin"),
-      cne: hasLength({ min: 8, max: 8 }, "must be a valid cne"),
+      // cin: hasLength({ min: 8, max: 8 }, "must be a valid cin"),
+      // cne: hasLength({ min: 8, max: 8 }, "must be a valid cne"),
       nom: hasLength({ min: 2, max: 10 }, "nom must be 2-10 characters long"),
       prenom: hasLength(
         { min: 2, max: 10 },
@@ -73,11 +90,17 @@ export function EtudiantForm({
       ),
       pay: hasLength({ min: 2, max: 10 }, "pay must be 2-10 characters long"),
       // // image: isNotEmpty("image is required"),
+      sexe: isNotEmpty("sexe is required"),
+      filiere: isNotEmpty("filiere is required"),
     },
   });
 
-  const fetchData =(queryKey: any, queryFn: any) => {
-    const { data, isLoading, isError, refetch, isFetching } = useQuery<IPagination<any>>({
+  console.log(form.values);
+
+  const fetchData = (queryKey: any, queryFn: any) => {
+    const { data, isLoading, isError, refetch, isFetching } = useQuery<
+      IPagination<any>
+    >({
       queryKey,
       queryFn,
     });
@@ -85,13 +108,24 @@ export function EtudiantForm({
   };
 
   const {
-    data:rolesQuery ,
+    data: rolesQuery,
     isLoading: isRoleLoading,
     isError: isRoleError,
     refetch: refetchRole,
     isFetching: isRoleFetching,
   } = fetchData(["roles", page], () => getRoles({ page: 0, size: 10 }));
 
+  const {
+    data: filiereQuery,
+    isLoading: isFiliereLoading,
+    isError: isFiliereError,
+    refetch: refetchFiliere,
+    isFetching: isFiliereFetching,
+  } = fetchData(["filieres", page], () => getFiliers({ page: 0, size: 10 }));
+
+  const filiereNames = filiereQuery?.records?.map((filiere: IFiliere) => {
+    return filiere.intituleFiliere;
+  }) as string[];
 
   if (formState === "edit") {
     useQuery({
@@ -111,6 +145,8 @@ export function EtudiantForm({
           adresse: data.adresse,
           ville: data.ville,
           pay: data.pays,
+          sexe: data.sexe,
+          filiere: data.filiere?.intituleFiliere,
         });
       },
     });
@@ -119,6 +155,7 @@ export function EtudiantForm({
   const saveEtudiantsHnadler = () => {
     if (form.isValid()) {
       const data: IUtilisateur = {
+        id: randomId() + form.values.code,
         code: form.values.code,
         nom: form.values.nom,
         prenom: form.values.prenom,
@@ -130,7 +167,13 @@ export function EtudiantForm({
         adresse: form.values.adresse,
         ville: form.values.ville,
         pays: form.values.pay,
-        roles: rolesQuery?.records?.filter((role:IRole) => role.roleName === "ROLE_ETUDIANT"),
+        sexe: form.values.sexe,
+        filiere: filiereQuery?.records?.filter(
+          (filiere: IFiliere) => filiere.intituleFiliere === form.values.filiere
+        )[0],
+        roles: rolesQuery?.records?.filter(
+          (role: IRole) => role.roleName === "ROLE_ETUDIANT"
+        ),
       };
 
       mutationSave.mutate(data);
@@ -152,7 +195,14 @@ export function EtudiantForm({
         adresse: form.values.adresse,
         ville: form.values.ville,
         pays: form.values.pay,
-        roles: rolesQuery?.records?.filter((role:IRole) => role.roleName === "ROLE_ETUDIANT"),
+        sexe: form.values.sexe,
+        // todo: should be changed to filiereId when the back end is ready
+        filiere: filiereQuery?.records?.filter(
+          (filiere: IFiliere) => filiere.intituleFiliere === form.values.filiere
+        )[0],
+        roles: rolesQuery?.records?.filter(
+          (role: IRole) => role.roleName === "ROLE_ETUDIANT"
+        ),
       };
 
       mutationUpdate.mutate(data);
@@ -238,14 +288,12 @@ export function EtudiantForm({
     },
   });
 
-  if (loading||isRoleLoading) return <Skeleton className="mt-3 min-h-screen" />;
-  if ( isRoleError) return <div>error</div>;
+  if (loading || isRoleLoading || isFiliereLoading)
+    return <Skeleton className="mt-3 min-h-screen" />;
+  if (isRoleError) return <div>Role error</div>;
+  if (isFiliereError) return <div>Filiere error</div>;
   return (
-    <Box
-      component="form"
-      mt="md"
-      onSubmit={form.onSubmit(() => {})}
-    >
+    <Box component="form" mt="md" onSubmit={form.onSubmit(() => {})}>
       {formState === "create" && (
         <TextInput
           label="Code"
@@ -293,7 +341,6 @@ export function EtudiantForm({
         />
       </div>
 
-    
       <DateInput
         label="Date input"
         placeholder="Date input"
@@ -328,6 +375,33 @@ export function EtudiantForm({
         withAsterisk
         mt="md"
         {...form.getInputProps("pay")}
+      />
+      <Radio.Group
+        className="mt-4"
+        name="sexe"
+        label="Genre"
+        withAsterisk
+        defaultValue="M"
+        {...form.getInputProps("sexe")}
+      >
+        <Group mt="xs">
+          <Radio value="M" label="Homme" />
+          <Radio value="F" label="Femme" />
+        </Group>
+      </Radio.Group>
+
+      <Select
+        className="pt-4 pb-3"
+        label="Filiere"
+        placeholder="choisir une filiere"
+        data={filiereNames}
+        transitionProps={{
+          transition: "pop-top-left",
+          duration: 80,
+          timingFunction: "ease",
+        }}
+        {...form.getInputProps("filiere")}
+        withinPortal
       />
 
       <FileInput

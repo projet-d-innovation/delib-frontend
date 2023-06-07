@@ -42,15 +42,17 @@ import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
   IBusinessException,
+  IFiliere,
   IPagination,
   IRole,
   IRoleWithoutPermissions,
   IUtilisateur,
 } from "../../../../types/interfaces";
 import {
-  deleteUtilisateur,
-  getUtilisaturs,
-  saveUtilisateur,
+  deleteUtilisateurJsonServer as deleteUtilisateur,
+  getUtilisateurSheet,
+  getUtilisatursJsonServer as getUtilisaturs,
+  saveUtilisateurJsonServer as saveUtilisateur,
 } from "../../../../api/utilisateurApi";
 import Pagination from "../../../../components/Pagination";
 import { EtudiantForm } from "./EtudiantForm";
@@ -63,7 +65,14 @@ import LoadingError from "../../../../components/LoadingError";
 import { Link } from "react-router-dom";
 import { AxiosError } from "axios";
 import { getRoles } from "../../../../api/roleApi";
-import { MRT_ColumnDef, MRT_RowSelectionState, MantineReactTable } from "mantine-react-table";
+import {
+  MRT_ColumnDef,
+  MRT_Row,
+  MRT_RowSelectionState,
+  MantineReactTable,
+} from "mantine-react-table";
+import { IconDownload } from "@tabler/icons-react";
+import { getFiliers } from "../../../../api/filierApi";
 
 const EtudiantsPage = () => {
   const [page, onChange] = useState(1);
@@ -73,7 +82,8 @@ const EtudiantsPage = () => {
   const [selection, setSelection] = useState<string[]>([]);
   const [search, setSearch] = useState("");
   const [rowSelection, setRowSelection] = useState<MRT_RowSelectionState>({});
-
+  const [totalElements, setTotalElements] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
   const [pagination, setPagination] = useState({
     pageIndex: 0,
     pageSize: 5, //customize the default page size
@@ -112,32 +122,28 @@ const EtudiantsPage = () => {
     isFetching: isUtilisateurFetching,
   } = fetchData(["etudiants", page], () => {
     // if (rolesQuery?.records == null) return;
-    // const roleId = rolesQuery?.records?.filter(
-    //   (role) => role.roleName === "ROLE_ETUDIANT"
-    // )[0].roleId;
+    const roleId = rolesQuery?.records?.filter(
+      (role) => role.roleName === "ROLE_ETUDIANT"
+    )[0].roleId;
     // TODO: should replace roleId with code when backend is ready
-    const roleId = "12442";
+    // const roleId = roleId;
     return getUtilisaturs({
       page: page,
       size: 10,
       nom: search,
-      roleId: roleId,
+      roleId: "1231",
+      // roleId: roleId,
     });
   });
 
   // console.log(pagination.active);
 
-
-
-
   const [detailsModalOpened, detailsModalActions] = useDisclosure(false);
   const [details, setDetails] = useState<IUtilisateur | undefined>(undefined);
-  const handleDetailsModalOpen = (item: IUtilisateur) => {
-    setDetails(item);
-    detailsModalActions.open();
-  };
-
-  
+  // const handleDetailsModalOpen = (item: IUtilisateur) => {
+  //   setDetails(item);
+  //   detailsModalActions.open();
+  // };
 
   const handleRowSelectionChange = () => {
     const professeurIds =
@@ -175,12 +181,6 @@ const EtudiantsPage = () => {
               gap: "1rem",
             }}
           >
-            {/* <img
-              height={30}
-              src="https://avatars.githubusercontent.com/u/56592200?v=4"
-              loading="lazy"
-              style={{ borderRadius: "50%" }}
-            /> */}
             <Avatar
               className="rounded-full "
               radius="xl"
@@ -197,6 +197,10 @@ const EtudiantsPage = () => {
         header: "Prenom",
       },
       {
+        accessorKey: "filiere.intituleFiliere",
+        header: "Filiere",
+      },
+      {
         accessorKey: "cin",
         header: "CIN",
       },
@@ -205,6 +209,14 @@ const EtudiantsPage = () => {
         header: "CNE",
       },
       {
+        accessorFn: (row: IUtilisateur) =>
+          `${row.sexe === "M" ? "Homme" : "Femme"}`,
+        accessorKey: "sexe",
+        header: "Sexe",
+      },
+      {
+        accessorFn: (row: IUtilisateur) =>
+          `${(row.dateNaissance + "").substring(0, 10)}`,
         accessorKey: "dateNaissance",
         header: "DateDeNaissance",
       },
@@ -224,6 +236,7 @@ const EtudiantsPage = () => {
         accessorKey: "pays",
         header: "Pays",
       },
+
       // {
       //   accessorKey: "elements",
       //   header: "Elements",
@@ -231,16 +244,100 @@ const EtudiantsPage = () => {
     ],
     [] as MRT_ColumnDef<IUtilisateur[]>[]
   );
-
-
+  useEffect(() => {
+    if (utilisateursQuery) {
+      setTotalElements(
+        utilisateursQuery?.totalPages * utilisateursQuery?.size || 0
+      );
+      setTotalPages(utilisateursQuery?.totalPages || 0);
+    }
+  }, [utilisateursQuery]);
 
   useEffect(() => {
     handleRowSelectionChange();
     // onPaginationChange(pagination.pageIndex);
   }, [rowSelection]);
 
-  if (isRoleLoading || isUtilisateurLoading)
-    return <Skeleton className="mt-3 min-h-screen" />;
+  useEffect(() => {
+    onPaginationChange(pagination);
+  }, [pagination]);
+
+  const handleExportRows = (rows: MRT_Row<IUtilisateur>[]) => {
+    getUtilisateurSheet(selection)
+      .then((res: any) => {
+        const url = window.URL.createObjectURL(new Blob([res.data]));
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", "etudiants.xlsx");
+        document.body.appendChild(link);
+        link.click();
+      })
+      .catch((err: AxiosError) => {
+        console.log(err);
+      });
+  };
+  const handleExportData = () => {
+    notifications.show({
+      id: "download-user",
+      loading: true,
+      title: "utilisateur est en coure de telechargement ",
+      message:
+        "Le chargement des données s'arrêtera après 2 secondes, vous pouvez fermer cette notification maintenant",
+      autoClose: false,
+      withCloseButton: false,
+    });
+    const roleId = rolesQuery?.records?.filter(
+      (role) => role.roleName === "ROLE_ETUDIANT"
+    )[0].roleId;
+
+    getUtilisaturs({
+      page: 0,
+      size: 20,
+      nom: search,
+      roleId: roleId,
+    })
+      .then((res) => {
+        const codes = res?.records?.map((item) => item.code);
+        console.log("codes........");
+
+        console.log(codes);
+
+        getUtilisateurSheet(codes)
+          .then((res: any) => {
+            const url = window.URL.createObjectURL(new Blob([res.data]));
+            const link = document.createElement("a");
+            link.href = url;
+            link.setAttribute("download", "etudiants.xlsx");
+            document.body.appendChild(link);
+            link.click();
+            notifications.update({
+              id: "download-user",
+              color: "teal",
+              title: "l'utilisateur est telecharge avec succès",
+              message:
+                "La notification se terminera en 2 secondes, vous pouvez fermer cette notification maintenant",
+              icon: <IconCheck size="1rem" />,
+              autoClose: 2000,
+            });
+          })
+          .catch((err: AxiosError) => {
+            console.log(err);
+          });
+
+        // csvExporter.generateCsv(data);
+      })
+      .catch((err) => {
+        notifications.update({
+          id: "update-user",
+          color: "red",
+          title: err,
+          message: err.message,
+          icon: <IconAdFilled size="1rem" />,
+          autoClose: 2000,
+        });
+      });
+  };
+
   if (isRoleError) return <LoadingError refetch={refetchRole} />;
 
   if (isUtilisateurError) return <LoadingError refetch={refetchUtilisateur} />;
@@ -278,7 +375,6 @@ const EtudiantsPage = () => {
       <div className="flex flex-col md:flex-row items-center justify-between p-2">
         <div className="w-full flex">
           <h2 className="text-3xl font-bold  p-3">Etudiants</h2>
-          
         </div>
 
         <div className="flex items-center space-x-3 w-full md:w-auto">
@@ -300,6 +396,7 @@ const EtudiantsPage = () => {
             setSelectionIds={setSelection}
             etudiants={utilisateursQuery?.records!}
             page={page}
+            roles={rolesQuery?.records!}
           />
         </div>
       </div>
@@ -310,8 +407,9 @@ const EtudiantsPage = () => {
           </p>
         </div>
       )}
-      {utilisateursQuery?.records == null ||
-      utilisateursQuery?.records?.length === 0 ? (
+      {!isUtilisateurFetching &&
+      (utilisateursQuery?.records == null ||
+        utilisateursQuery?.records?.length === 0) ? (
         <Alert
           className="w-full"
           icon={<IconAlertCircle size="1rem" />}
@@ -324,10 +422,21 @@ const EtudiantsPage = () => {
         <div className="relative md:px-3">
           <MantineReactTable
             columns={columns}
-            data={utilisateursQuery?.records}
+            data={utilisateursQuery?.records || []}
+            rowCount={totalElements}
+            pageCount={totalPages}
+            state={{
+              rowSelection,
+              pagination,
+              isLoading: isUtilisateurLoading || isRoleLoading,
+              showAlertBanner: isUtilisateurLoading || isRoleLoading,
+              showProgressBars: isUtilisateurFetching || isRoleFetching,
+            }}
+            manualPagination
             enableRowSelection
             enableFullScreenToggle={false}
             enableStickyFooter={false}
+            enableExpanding
             mantineTableProps={{
               striped: true,
               // highlightOnHover:false,
@@ -343,11 +452,9 @@ const EtudiantsPage = () => {
               },
               className: "hover:bg-gray-100",
             }}
-            enableExpanding
             getRowId={(row) => row.id}
             onRowSelectionChange={setRowSelection} //connect internal row selection state to your own
-            state={{ rowSelection, pagination }}
-            onPaginationChange={(pagination) => onPaginationChange(pagination)} //hoist pagination state to your state when it changes internally
+            onPaginationChange={setPagination} //hoist pagination state to your state when it changes internally
             renderDetailPanel={({ row }: { row: any }) => (
               <Box
                 sx={{
@@ -392,26 +499,38 @@ const EtudiantsPage = () => {
                   </TypographyStylesProvider>
                   <TypographyStylesProvider variant="h1">
                     <Text className="font-bold" ta="center" c="dimmed" fz="md">
-                      <p>
-                        {" "}
-                        Adresse {row.original.adresse}
-                      </p>
+                      <p> Adresse {row.original.adresse}</p>
                     </Text>
                   </TypographyStylesProvider>
-                  <Text className="font-bold" ta="center" c="dimmed" fz="md">
-                    <p> Tel {row.original.telephone}</p>
-                  </Text>
                   <TypographyStylesProvider variant="h1">
+                    <TypographyStylesProvider variant="h1">
+                      <Text
+                        className="font-bold"
+                        ta="center"
+                        c="dimmed"
+                        fz="md"
+                      >
+                        <p> Pays {row.original.pays}</p>
+                      </Text>
+                    </TypographyStylesProvider>
+                    <TypographyStylesProvider variant="h1">
+                      <Text
+                        className="font-bold"
+                        ta="center"
+                        c="dimmed"
+                        fz="md"
+                      >
+                        <p>
+                          {" "}
+                          Pays {row.original.pays} / Ville {row.original.ville}
+                        </p>
+                      </Text>
+                    </TypographyStylesProvider>
                     <Text className="font-bold" ta="center" c="dimmed" fz="md">
-                      <p>
-                        {" "}
-                        Pays {row.original.pays} / Ville {row.original.ville}
-                      </p>
+                      <p> Number {row.original.telephone}</p>
                     </Text>
                   </TypographyStylesProvider>
-                  
-                 
-                </Box> 
+                </Box>
 
                 <div className=""></div>
               </Box>
@@ -423,8 +542,33 @@ const EtudiantsPage = () => {
             mantineBottomToolbarProps={{
               className: "bg-gray-50 p-5",
             }}
+            renderTopToolbarCustomActions={({ table }) => (
+              <Box
+                sx={{
+                  display: "flex",
+                  gap: "16px",
+                  padding: "8px",
+                  flexWrap: "wrap",
+                }}
+              >
+                <Text className="md:ml-3" ta="left" c="dimmed" fz="sm">
+                  <div className="flex space-x-3">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      fill="currentColor"
+                      className="bi bi-people-fill"
+                      viewBox="0 0 16 16"
+                    >
+                      <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7Zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm-5.784 6A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216ZM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z" />
+                    </svg>
+                    <p> Table des Etudiants</p>
+                  </div>
+                </Text>
+              </Box>
+            )}
           />
-         
         </div>
       )}
       <DetailsModal
@@ -476,72 +620,72 @@ const Error = ({ refetch }: { refetch: () => void }) => {
   );
 };
 
-const RowItem = ({
-  item,
-  selected,
-  toggleRow,
-  handleDetailsModalOpen,
-}: {
-  item: IUtilisateur;
-  selected: boolean;
-  toggleRow: (id: string) => void;
-  handleDetailsModalOpen: (item: IUtilisateur) => void;
-}) => {
-  return (
-    <tr
-      key={item.id}
-      className={classNames({ "bg-blue-200": selected })}
-      // className={cx({ [classes.rowSelected]: selected })}
-    >
-      <td>
-        <Checkbox
-          checked={selected}
-          onChange={() => toggleRow(item.id || "")}
-          transitionDuration={0}
-        />
-      </td>
-      <td>
-        {/* <Link to={`/admin/gestion-Etudiant/adminstrateurs/${item.code}`} className="flex items-center"> */}
-        <Group
-          spacing="sm"
-          className="hover:cursor-pointer"
-          onClick={() => handleDetailsModalOpen(item)}
-        >
-          <Avatar size={26} src={item.photo} radius={26} />
-          <Text size="sm" weight={500}>
-            {item.nom}
-          </Text>
-        </Group>
-        {/* </Link> */}
-      </td>
-      <td>
-        <Text size="sm">{item.prenom}</Text>
-      </td>
-      <td>
-        <Text size="sm">{item.cin}</Text>
-      </td>
-      <td>
-        <Text size="sm">{item.cne}</Text>
-      </td>
-      <td>
-        <Text size="sm">{(item.dateNaissance + "").substring(0, 10)}</Text>
-      </td>
-      <td>
-        <Text size="sm">{item.telephone}</Text>
-      </td>
-      <td>
-        <Text size="sm">{item.adresse}</Text>
-      </td>
+// const RowItem = ({
+//   item,
+//   selected,
+//   toggleRow,
+//   handleDetailsModalOpen,
+// }: {
+//   item: IUtilisateur;
+//   selected: boolean;
+//   toggleRow: (id: string) => void;
+//   handleDetailsModalOpen: (item: IUtilisateur) => void;
+// }) => {
+//   return (
+//     <tr
+//       key={item.id}
+//       className={classNames({ "bg-blue-200": selected })}
+//       // className={cx({ [classes.rowSelected]: selected })}
+//     >
+//       <td>
+//         <Checkbox
+//           checked={selected}
+//           onChange={() => toggleRow(item.id || "")}
+//           transitionDuration={0}
+//         />
+//       </td>
+//       <td>
+//         {/* <Link to={`/admin/gestion-Etudiant/adminstrateurs/${item.code}`} className="flex items-center"> */}
+//         <Group
+//           spacing="sm"
+//           className="hover:cursor-pointer"
+//           onClick={() => handleDetailsModalOpen(item)}
+//         >
+//           <Avatar size={26} src={item.photo} radius={26} />
+//           <Text size="sm" weight={500}>
+//             {item.nom}
+//           </Text>
+//         </Group>
+//         {/* </Link> */}
+//       </td>
+//       <td>
+//         <Text size="sm">{item.prenom}</Text>
+//       </td>
+//       <td>
+//         <Text size="sm">{item.cin}</Text>
+//       </td>
+//       <td>
+//         <Text size="sm">{item.cne}</Text>
+//       </td>
+//       <td>
+//         <Text size="sm">{(item.dateNaissance + "").substring(0, 10)}</Text>
+//       </td>
+//       <td>
+//         <Text size="sm">{item.telephone}</Text>
+//       </td>
+//       <td>
+//         <Text size="sm">{item.adresse}</Text>
+//       </td>
 
-      <td>
-        <Text size="sm">{item.ville}</Text>
-      </td>
-      <td>
-        <Text size="sm">{item.pays}</Text>
-      </td>
-    </tr>
-  );
-};
+//       <td>
+//         <Text size="sm">{item.ville}</Text>
+//       </td>
+//       <td>
+//         <Text size="sm">{item.pays}</Text>
+//       </td>
+//     </tr>
+//   );
+// };
 
 const ActionsMenu = ({
   selection,
@@ -551,6 +695,7 @@ const ActionsMenu = ({
   setSelectionIds,
   etudiants,
   page,
+  roles,
 }: {
   selection: number;
   formState: FormState;
@@ -559,6 +704,7 @@ const ActionsMenu = ({
   setSelectionIds: (ids: string[]) => void;
   etudiants: IUtilisateur[];
   page: number;
+  roles: IRole[];
 }) => {
   const headers = [
     { label: "Code", key: "code" },
@@ -571,28 +717,38 @@ const ActionsMenu = ({
     { label: "Adresse", key: "adresse" },
     { label: "Ville", key: "ville" },
     { label: "Pays", key: "pays" },
-    { label: "Photo", key: "photo" },
+    // { label: "Photo", key: "photo" },
+    { label: "Sexe", key: "sexe" },
+    { label: "Filiere", key: "filiere" },
   ];
 
-  const data = etudiants.map((item) => {
-    return {
-      code: item.code,
-      nom: item.nom,
-      prenom: item.prenom,
-      cne: item.cne,
-      cin: item.cin,
-      dateNaissance: item.dateNaissance,
-      telephone: item.telephone,
-      adresse: item.adresse,
-      ville: item.ville,
-      pays: item.pays,
-      photo: item.photo,
-    };
+  const { data: filiereQuery } = useQuery({
+    queryKey: ["filieres", page],
+    queryFn: () => getFiliers({ page: 0, size: 10 }),
+    keepPreviousData: true,
   });
 
-  const selectionData = etudiants.filter((item) =>
-    selectionIds.includes(item.id || "")
-  );
+  const data =
+    etudiants?.map((item) => {
+      return {
+        code: item.code,
+        nom: item.nom,
+        prenom: item.prenom,
+        cne: item.cne,
+        cin: item.cin,
+        dateNaissance: item.dateNaissance,
+        telephone: item.telephone,
+        adresse: item.adresse,
+        ville: item.ville,
+        pays: item.pays,
+        photo: item.photo,
+        sexe: item.sexe,
+        filiere: item?.filiere?.codeFiliere,
+      };
+    }) || [];
+
+  const selectionData =
+    etudiants?.filter((item) => selectionIds.includes(item.id || "")) || [];
 
   const deleteEtudiantsHandler = () => {
     if (selectionIds.length === 0) return;
@@ -631,15 +787,6 @@ const ActionsMenu = ({
         </Text>
       ),
     });
-  const {
-    data: rolesQuery,
-    isLoading: isRoleLoading,
-    isError: isRoleError,
-  } = useQuery({
-    queryKey: ["roles", page],
-    queryFn: () => getRoles({ page: 0, size: 10 }),
-    keepPreviousData: true,
-  });
 
   const queryClient = useQueryClient();
   const { mutate: mutationDelete } = useMutation(deleteUtilisateur, {
@@ -703,17 +850,21 @@ const ActionsMenu = ({
             ville: item.Ville,
             pays: item.Pays,
             photo: item.Photo,
-            roles: rolesQuery?.records?.filter(
+            sexe: item.Sexe,
+            filiere: filiereQuery?.records?.findLast(
+              (f: any) => f.codeFiliere === item.Filiere
+            ),
+            roles: roles?.filter(
               (role: IRole) => role.roleName === "ROLE_ETUDIANT"
             ) as IRole[],
           };
         });
-        console.log(data);
+        // console.log(data);
 
-        // if (data.length === 0) return;
-        // data.map((etudiant) => {
-        //   mutationSave.mutate(etudiant);
-        // });
+        if (data.length === 0) return;
+        data.map((etudiant) => {
+          mutationSave.mutate(etudiant);
+        });
       },
     });
   };
@@ -780,24 +931,31 @@ const ActionsMenu = ({
             onChange={(file) => {
               handleFileUpload(file as File);
             }}
-            accept=".csv"
+            accept=".csv, xlsx, xls"
           >
             {(props) => (
               <Button
                 {...props}
-                className="font-thin flex border-none"
+                className="font-thin flex border-none p-3"
                 variant="default"
                 color="blue"
                 leftIcon={<IconDatabaseExport size={14} />}
                 fullWidth
               >
-                {" "}
-                <Text>Import</Text>{" "}
+                <Text>Import</Text>
               </Button>
             )}
           </FileButton>
-          <Menu.Item icon={<IconDatabaseExport size={14} />}>
-            <CSVLink data={data} headers={headers} filename={"etudiants.csv"}>
+          <Menu.Item
+            className="flex items-center "
+            icon={<IconDatabaseExport size={14} />}
+          >
+            <CSVLink
+              key={randomId()}
+              data={data}
+              headers={headers}
+              filename={"etudiants.csv"}
+            >
               Export
             </CSVLink>
           </Menu.Item>

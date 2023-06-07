@@ -14,7 +14,7 @@ import {
 } from "@mantine/core";
 import { IconCircleCheck } from "@tabler/icons-react";
 import { Link, useParams } from "react-router-dom";
-import { getProfesseur, getUtilisateur } from "../../../../api/utilisateurApi";
+import { getUtilisateur } from "../../../../api/utilisateurApi";
 import { useQuery } from "react-query";
 import LoadingError from "../../../../components/LoadingError";
 
@@ -33,7 +33,11 @@ const ProfesseurDetailsPage = () => {
     isFetching,
   } = useQuery({
     queryKey: ["professeur", id],
-    queryFn: () => getUtilisateur(id || ""),
+    queryFn: () => getUtilisateur({
+      utilisateurId: id || "",
+      includeDepartement: true,
+      includeElements: true,
+    }),
   });
 
   if (isLoading) return <Skeleton className="mt-3 min-h-screen" />;
@@ -51,7 +55,7 @@ const ProfesseurDetailsPage = () => {
             theme.colorScheme === "dark" ? theme.colors.dark[8] : theme.white,
         })}
       >
-        <div className="grid md:grid-flow-col md:space-x-10 space-y-10 items-center">
+        <div className="grid md:grid-flow-col md:space-x-10 space-y-5 items-center">
           <div className=" md:border-r-2 md:h-full grid items-center ">
             <div className="">
               <Avatar
@@ -73,16 +77,10 @@ const ProfesseurDetailsPage = () => {
               <Text ta="center" c="dimmed" fz="sm">
                 {professeur?.departement?.intituleDepartement}
               </Text>
+            
               <Text ta="center" c="dimmed" fz="sm">
-                {!professeur?.elements?.length ? (
-                  <p>il n'y a pas des elements</p>
-                ) : (
-                  <Badge className="m-2">
-                    {professeur?.elements?.length}
-                    {professeur?.elements?.length == 1
-                      ? " element"
-                      : " elements"}
-                  </Badge>
+                {professeur?.departement?.chefDepartement == id && (
+                  <Badge className="m-2">Chef de departement</Badge>
                 )}
               </Text>
             </div>
@@ -115,6 +113,15 @@ const ProfesseurDetailsPage = () => {
                       {professeur?.departement?.intituleDepartement}
                     </Text>
                   </Group>
+                  <Group className="">
+                    <Text className="font-bold" ta="left" c="dimmed" fz="sm">
+                      Sexe:
+                    </Text>
+                    <Text className="font-bold" ta="left" c="dark" fz="sm">
+                      { (professeur?.sexe == "M") ?("Masculin") : ("Feminin")}
+                    
+                    </Text>
+                  </Group>
 
                   <Group className="">
                     <Text className="font-bold" ta="left" c="dimmed" fz="sm">
@@ -124,6 +131,8 @@ const ProfesseurDetailsPage = () => {
                       {professeur?.telephone}
                     </Text>
                   </Group>
+
+                  
                 </div>
               </div>
               <div className="border-b-2 shadow-sm "></div>
@@ -192,20 +201,27 @@ const ProfesseurDetailsPage = () => {
                     <p> Les Elements du Professeur</p>
                   </div>
                 </Text>
+                
                 {professeur?.elements?.map((element) => (
-                      <div className="md:my-3 rounded-md border-2 border-gray-200 shadow-sm bg-blue-50 p-3 md:pl-5 ">
-                        <Text ta="left" c="dimmed" fz="sm">
-                  <div className="flex space-x-3">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-bookmarks-fill" viewBox="0 0 16 16">
-  <path d="M2 4a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v11.5a.5.5 0 0 1-.777.416L7 13.101l-4.223 2.815A.5.5 0 0 1 2 15.5V4z"/>
-  <path d="M4.268 1A2 2 0 0 1 6 0h6a2 2 0 0 1 2 2v11.5a.5.5 0 0 1-.777.416L13 13.768V2a1 1 0 0 0-1-1H4.268z"/>
-</svg>
-                    <p> {element.intituleElement}</p>
-                  </div>
-                </Text>
+                  <div className="md:my-3 rounded-md border-2 border-gray-200 shadow-sm bg-blue-50 p-3 md:pl-5 ">
+                    <Text ta="left" c="dimmed" fz="sm">
+                      <div className="flex space-x-3">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          fill="currentColor"
+                          className="bi bi-bookmarks-fill"
+                          viewBox="0 0 16 16"
+                        >
+                          <path d="M2 4a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v11.5a.5.5 0 0 1-.777.416L7 13.101l-4.223 2.815A.5.5 0 0 1 2 15.5V4z" />
+                          <path d="M4.268 1A2 2 0 0 1 6 0h6a2 2 0 0 1 2 2v11.5a.5.5 0 0 1-.777.416L13 13.768V2a1 1 0 0 0-1-1H4.268z" />
+                        </svg>
+                        <p> {element.intituleElement}</p>
                       </div>
-                    ))}
-
+                    </Text>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
