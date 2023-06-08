@@ -1,35 +1,15 @@
-
-export interface IEtudiant {
-  code: string,
-  cin: string,
-  cne: string,
-  nom: string,
-  prenom: string,
-  telephone: string,
-  adresse: string,
-  dateNaissance: Date,
-  ville: string,
-  pays: string,
-  photo: string
-}
-
-export interface IProfesseur {
-  code: string,
-  nom: string,
-  prenom: string,
-  telephone: string,
-  photo: string,
-  codeDepartement: string,
-  departement: IDepartement,
-  elements?: IElement[]
-}
-
 export interface IUtilisateur {
-  code: string,
-  nom: string,
-  prenom: string,
-  telephone: string,
-  photo?: string,
+  code?: string,
+  cin?: string,
+  cne?: string,
+  nom?: string,
+  prenom?: string,
+  telephone?: string,
+  adresse?: string,
+  dateNaissance?: Date,
+  ville?: string,
+  pays?: string,
+  photo?: string
   roles?: IRoleWithoutPermissions[]
 }
 
@@ -38,6 +18,17 @@ export interface IDepartement {
   intituleDepartement: string,
   codeChefDepartement: string
   chefDepartement?: IUtilisateur,
+  filieres?: IFiliere[]
+}
+
+export interface IFiliere {
+
+  codeFiliere: string,
+  intituleFiliere: string,
+  codeDepartement: string,
+  codeChefFiliere: string,
+  chefFiliere: IUtilisateur
+  semestres?: ISemestre[]
 }
 
 
@@ -45,13 +36,15 @@ export interface ISemestre {
   codeSemestre: string,
   codeFiliere: string,
   intituleSemestre: string
+  modules?: IModule[]
 }
 
 export interface IModule {
   codeModule: string,
   intituleModule: string,
   coefficientModule: number,
-  codeSemestre: string
+  codeSemestre: string,
+  elements: IElement[]
 }
 
 
@@ -61,6 +54,7 @@ export interface IElement {
   coefficientElement: number,
   codeModule: string,
   codeProfesseur: string
+  professeur?: IUtilisateur
 }
 
 

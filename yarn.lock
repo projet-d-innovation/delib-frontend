@@ -638,6 +638,37 @@
   resolved "https://registry.yarnpkg.com/@tabler/icons/-/icons-2.17.0.tgz#3b5ac3d41576894d3e18cd8014ba8ce33f3634be"
   integrity sha512-UeJaylOGNRhQKyDlgZfrQ3UPSGlfVQuXcmCsTYeXioKKepibW6VZ3H36Lo1jvBTBkQD2e9m+k2NxwkztOTXwrA==
 
+"@tanstack/match-sorter-utils@8.8.4":
+  version "8.8.4"
+  resolved "https://registry.yarnpkg.com/@tanstack/match-sorter-utils/-/match-sorter-utils-8.8.4.tgz#0b2864d8b7bac06a9f84cb903d405852cc40a457"
+  integrity sha512-rKH8LjZiszWEvmi01NR72QWZ8m4xmXre0OOwlRGnjU01Eqz/QnN+cqpty2PJ0efHblq09+KilvyR7lsbzmXVEw==
+  dependencies:
+    remove-accents "0.4.2"
+
+"@tanstack/react-table@8.9.1":
+  version "8.9.1"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-table/-/react-table-8.9.1.tgz#bfe1d286f549b9743d99bfbeb531f2582f9d698b"
+  integrity sha512-yHs2m6lk5J5RNcu2dNtsDGux66wNXZjEgzxos6MRCX8gL+nqxeW3ZglqP6eANN0bGElPnjvqiUHGQvdACOr3Cw==
+  dependencies:
+    "@tanstack/table-core" "8.9.1"
+
+"@tanstack/react-virtual@3.0.0-beta.54":
+  version "3.0.0-beta.54"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-virtual/-/react-virtual-3.0.0-beta.54.tgz#755979455adf13f2584937204a3f38703e446037"
+  integrity sha512-D1mDMf4UPbrtHRZZriCly5bXTBMhylslm4dhcHqTtDJ6brQcgGmk8YD9JdWBGWfGSWPKoh2x1H3e7eh+hgPXtQ==
+  dependencies:
+    "@tanstack/virtual-core" "3.0.0-beta.54"
+
+"@tanstack/table-core@8.9.1":
+  version "8.9.1"
+  resolved "https://registry.yarnpkg.com/@tanstack/table-core/-/table-core-8.9.1.tgz#869410ca1748c45d4e19ccfd4db7e36452611674"
+  integrity sha512-2+R83n8vMZND0q3W1lSiF7co9nFbeWbjAErFf27xwbeA9E0wtUu5ZDfgj+TZ6JzdAEQAgfxkk/QNFAKiS8E4MA==
+
+"@tanstack/virtual-core@3.0.0-beta.54":
+  version "3.0.0-beta.54"
+  resolved "https://registry.yarnpkg.com/@tanstack/virtual-core/-/virtual-core-3.0.0-beta.54.tgz#12259d007911ad9fce1388385c54a9141f4ecdc4"
+  integrity sha512-jtkwqdP2rY2iCCDVAFuaNBH3fiEi29aTn2RhtIoky8DTTiCdc48plpHHreLwmv1PICJ4AJUUESaq3xa8fZH8+g==
+
 "@types/json-schema@^7.0.9":
   version "7.0.11"
   resolved "https://registry.yarnpkg.com/@types/json-schema/-/json-schema-7.0.11.tgz#d421b6c527a3037f7c84433fd2c4229e016863d3"
@@ -1503,6 +1534,11 @@ has@^1.0.3:
   dependencies:
     function-bind "^1.1.1"
 
+highlight-words@1.2.2:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/highlight-words/-/highlight-words-1.2.2.tgz#9875b75d11814d7356b24f23feeb7d77761fa867"
+  integrity sha512-Mf4xfPXYm8Ay1wTibCrHpNWeR2nUMynMVFkXCi4mbl+TEgmNOe+I4hV7W3OCZcSvzGL6kupaqpfHOemliMTGxQ==
+
 hoist-non-react-statics@^3.3.1:
   version "3.3.2"
   resolved "https://registry.yarnpkg.com/hoist-non-react-statics/-/hoist-non-react-statics-3.3.2.tgz#ece0acaf71d62c2969c2ec59feff42a4b1a85b45"
@@ -1689,6 +1725,16 @@ lru-cache@^6.0.0:
   integrity sha512-Jo6dJ04CmSjuznwJSS3pUeWmd/H0ffTlkXXgwZi+eq1UCmqQwCh+eLsYOYCwY991i2Fah4h1BEMCx4qThGbsiA==
   dependencies:
     yallist "^4.0.0"
+
+mantine-react-table@^1.0.0-beta.8:
+  version "1.0.0-beta.8"
+  resolved "https://registry.yarnpkg.com/mantine-react-table/-/mantine-react-table-1.0.0-beta.8.tgz#728f73b68d86c2c71909b41496b25ebdc493b87d"
+  integrity sha512-um2yN96NXSh7IBYCOxCY4d+zbPiJDiD2u1jAVPOiaKuLysvR9tP2fw2CdlFhfyM2BQD8xjJv+IlTyL602yo2Hw==
+  dependencies:
+    "@tanstack/match-sorter-utils" "8.8.4"
+    "@tanstack/react-table" "8.9.1"
+    "@tanstack/react-virtual" "3.0.0-beta.54"
+    highlight-words "1.2.2"
 
 match-sorter@^6.0.2:
   version "6.3.1"
