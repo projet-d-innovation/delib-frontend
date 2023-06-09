@@ -1,31 +1,7 @@
-import axios from 'axios';
+import { api as AXIOS_INSTANCE } from '../api/axios';
 import { IDepartement, IPagination } from '../types/interfaces';
 
-
 export class DepartementService {
-
-  static readonly api = axios.create({
-    baseURL: "http://localhost:50000/api/v1",
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    paramsSerializer: (params) => {
-      const searchParams = new URLSearchParams();
-      for (const key in params) {
-        if (params.hasOwnProperty(key)) {
-          const param = params[key];
-          if (Array.isArray(param)) {
-            param.forEach((value) => {
-              searchParams.append(key, value);
-            });
-          } else {
-            searchParams.append(key, param);
-          }
-        }
-      }
-      return searchParams.toString();
-    }
-  });
 
   static async getDepartements({ search = "", page = 0, size = 10, includeFilieres = false, includeChefDepartement = false }: {
     search?: string,
@@ -34,7 +10,7 @@ export class DepartementService {
     includeFilieres?: boolean,
     includeChefDepartement?: boolean
   }): Promise<IPagination<IDepartement>> {
-    const response = await this.api.get("/departements", {
+    const response = await AXIOS_INSTANCE.get("/departements", {
       params: {
         search,
         page: page,
@@ -42,10 +18,20 @@ export class DepartementService {
         includeFilieres,
         includeChefDepartement
       }
-
     });
-
     return response.data;
+  }
+
+  static async deleteDepartement(id: String): Promise<void> {
+    await AXIOS_INSTANCE.delete(`/departements/${id}`);
+  }
+
+  static async deleteAllDepartements(ids: String[]): Promise<void> {
+    await AXIOS_INSTANCE.delete(`/departements/bulk`, {
+      params: {
+        codeDepartementList: ids
+      }
+    });
   }
 
 }

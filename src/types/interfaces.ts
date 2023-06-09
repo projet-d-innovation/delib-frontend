@@ -98,8 +98,18 @@ export interface IAuth {
 }
 
 
-export interface IBusinessException {
-  code: number;
-  status: string;
-  error: string;
+export interface IExceptionResponse {
+  code?: number
+  status?: string
+  message?: string
+  identifiers?: string[]
+  errors: IValidationError[]
+  error?: string
+  path?: string
+  timestamp?: string
+}
+
+export interface IValidationError {
+  field: string,
+  message: string
 }

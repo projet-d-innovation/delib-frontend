@@ -34,7 +34,8 @@ function App() {
   return (
     <Routes>
 
-      <Route path="/" element={<Home />} />
+      {/* <Route path="/" element={<Home />} /> */}
+      <Route path="/" element={<Navigate to='/admin' />} />
 
       <Route path="admin" element={
         <ProtectedRoute
