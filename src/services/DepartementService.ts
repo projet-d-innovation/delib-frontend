@@ -1,5 +1,6 @@
 import { api as AXIOS_INSTANCE } from '../api/axios';
-import { IDepartement, IPagination } from '../types/interfaces';
+import { ICreateDepartement, IDepartement, IUpdateDepartement } from '../types/departement.type';
+import { IPagination } from '../types/interfaces';
 
 export class DepartementService {
 
@@ -22,6 +23,16 @@ export class DepartementService {
     return response.data;
   }
 
+  static async createDepartement(departement: ICreateDepartement): Promise<IDepartement> {
+    const response = await AXIOS_INSTANCE.post(`/departements`, departement);
+    return response.data;
+  }
+
+  static async updateDepartement(id: String, departement: IUpdateDepartement): Promise<IDepartement> {
+    const response = await AXIOS_INSTANCE.patch(`/departements/${id}`, departement);
+    return response.data;
+  }
+
   static async deleteDepartement(id: String): Promise<void> {
     await AXIOS_INSTANCE.delete(`/departements/${id}`);
   }
@@ -33,5 +44,6 @@ export class DepartementService {
       }
     });
   }
+
 
 }

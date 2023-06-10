@@ -1,16 +1,21 @@
-import { useQuery, useMutation } from "react-query"
-import { DepartementService } from "../../../services/DepartementService";
-import { useMemo, useState } from "react";
-import { MRT_ColumnDef, MantineReactTable } from "mantine-react-table";
-import { IDepartement, IFiliere } from "../../../types/interfaces";
-import { Box, Title, Menu, Button, Text, ActionIcon, Tooltip, Group } from "@mantine/core";
-import { IconUserCircle, IconSend, IconEdit, IconTrash, IconChevronDown, IconDatabaseExport, IconDatabaseImport, IconSettings, IconTableExport, IconDirectionSign, IconPuzzle, IconError404, IconCheck } from "@tabler/icons-react";
-import { Link } from "react-router-dom";
+import { Button, Menu, Text } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
 import { modals } from "@mantine/modals";
-import TableErrorBanner from "../../../components/TableErrorBanner";
-import DepartementTableDetails from "../../../components/DepartementTableDetails";
 import { notifications } from "@mantine/notifications";
+import { IconCheck, IconEdit, IconTrash } from "@tabler/icons-react";
 import { AxiosError } from "axios";
+import { MRT_ColumnDef, MantineReactTable } from "mantine-react-table";
+import { useState, useMemo } from "react";
+import { useQuery, useMutation } from "react-query";
+import DepartementTableDetails from "../../../components/DepartementTableDetails";
+import DepartementUpdateModal from "../../../components/DepartementUpdateModal";
+import TableErrorBanner from "../../../components/TableErrorBanner";
+import { ROLES } from "../../../constants/roles";
+import { DepartementService } from "../../../services/DepartementService";
+import { UtilisateurService } from "../../../services/UtilisateurService";
+import { IDepartement } from "../../../types/departement.type";
+import { IFiliere } from "../../../types/interfaces";
+import DepartementCreateModal from "../../../components/DepartementCreateModal";
 
 const DepartementPage = () => {
 
@@ -18,6 +23,12 @@ const DepartementPage = () => {
     pageIndex: 0,
     pageSize: 10,
   });
+
+  const editModal = useDisclosure(false);
+
+  const createModal = useDisclosure(false);
+
+  const [toBeUpdatedDepartement, setToBeUpdateDepartement] = useState<IDepartement | null>(null);
 
   const { data, isLoading, isError, error, refetch, isFetching } = useQuery({
     queryKey: ['departements', pagination.pageIndex],
@@ -48,7 +59,7 @@ const DepartementPage = () => {
         refetch()
         notifications.update({
           id: "deleting-departement",
-          message: "Département supprimée avec success",
+          message: "Département supprimé avec success",
           icon: <IconCheck size="1rem" />,
           autoClose: 2000,
           color: 'teal',
@@ -66,8 +77,33 @@ const DepartementPage = () => {
   )
 
   const deleteAllDepartementsMutation = useMutation(DepartementService.deleteAllDepartements, {
+    onMutate: () => {
+      notifications.show({
+        id: 'deleting-departements',
+        message: 'Suppression en cours ...',
+        color: 'blue',
+        loading: true,
+        autoClose: false,
+        withCloseButton: false,
+      })
+    },
     onSuccess: () => {
       refetch()
+      notifications.update({
+        id: "deleting-departements",
+        message: "Départements supprimés avec success",
+        icon: <IconCheck size="1rem" />,
+        autoClose: 2000,
+        color: 'teal',
+      })
+    },
+    onError: (error) => {
+      notifications.update({
+        id: 'deleting-departements',
+        message: (error as Error).message,
+        color: 'red',
+        loading: false,
+      })
     }
   })
 
@@ -92,6 +128,16 @@ const DepartementPage = () => {
     [],
   );
 
+  const utilisateurQuery = useQuery({
+    queryKey: ['utilisateurs', ROLES.CHEF_DE_DEPARTEMENT],
+    queryFn: () => UtilisateurService.getUtilisateursByRoleUnpaginated(
+      {
+        size: 100,
+        role: ROLES.CHEF_DE_DEPARTEMENT,
+      }
+    ),
+    keepPreviousData: true,
+  })
 
   return (
     <main className=" h-screen py-2 w-full">
@@ -122,15 +168,22 @@ const DepartementPage = () => {
         renderTopToolbarCustomActions={({ table }) => {
           return (
             <div style={{ display: 'flex', gap: '8px' }}>
-              <Button className="bg-blue-400">
+              <Button
+                onClick={
+                  () => createModal[1].open()
+                }
+                className="bg-blue-400">
                 Nouveau
               </Button>
               <Button
-                hidden={!table.getIsSomeRowsSelected()}
-                variant="outline"
-                className="bg-red-600"
+                hidden={!(table.getIsSomeRowsSelected() || table.getIsAllRowsSelected())}
+                variant="outline" color="red"
 
-                onClick={() => console.log(table.getSelectedRowModel())}
+                onClick={() => deleteAllDepartementsMutation.mutate(
+                  table.getSelectedRowModel().rows.map((row) =>
+                    row.original.codeDepartement
+                  )
+                )}
               >
                 Supprimer sélection
               </Button>
@@ -142,6 +195,8 @@ const DepartementPage = () => {
             <Menu.Label>Single-Selection</Menu.Label>
             <Menu.Item
               onClick={() => {
+                setToBeUpdateDepartement(row.original)
+                editModal[1].open()
               }}
               icon={<IconEdit size={14} />}
             >
@@ -175,6 +230,33 @@ const DepartementPage = () => {
           </>
         )}
       />
+      <DepartementUpdateModal
+        opened={editModal[0]}
+        close={editModal[1].close}
+        departement={toBeUpdatedDepartement}
+        refetch={refetch}
+        administrateurs={
+          utilisateurQuery.data?.map((utilisateur) => ({
+            value: utilisateur.code,
+            label: utilisateur.nom + ' ' + utilisateur.prenom,
+            utilisateur
+          })) || []
+        }
+      />
+      <DepartementCreateModal
+        opened={createModal[0]}
+        close={createModal[1].close}
+        refetch={refetch}
+
+        administrateurs={
+          utilisateurQuery.data?.map((utilisateur) => ({
+            value: utilisateur.code,
+            label: utilisateur.nom + ' ' + utilisateur.prenom,
+            utilisateur
+          })) || []
+        }
+      />
+
     </main >
   )
 }
