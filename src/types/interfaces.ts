@@ -13,17 +13,49 @@ export interface IUtilisateur {
   roles?: IRole[]
 }
 
+export interface IDepartement {
+  codeDepartement: string
+  intituleDepartement: string
+  codeChefDepartement: string
+  chefDepartement?: IUtilisateur
+  filieres?: IFiliere[]
+}
+
+export interface IUpdateDepartement {
+  intituleDepartement: string
+  codeChefDepartement: string
+}
+
+export interface ICreateDepartement {
+  codeDepartement: string
+  intituleDepartement: string
+  codeChefDepartement: string
+}
 
 export interface IFiliere {
 
   codeFiliere: string
   intituleFiliere: string
   codeDepartement: string
-  codeChefFiliere: string
-  chefFiliere: IUtilisateur
+  codeChefFiliere: string | null
+  chefFiliere: IUtilisateur | null
   semestres?: ISemestre[]
+  departement?: IDepartement
 }
 
+
+export interface IUpdateFiliere {
+  intituleFiliere: string
+  codeChefFiliere: string | null
+  codeDepartement: string | null
+}
+
+export interface ICreateFiliere {
+  codeFiliere: string
+  intituleFiliere: string
+  codeChefFiliere?: string | null
+  codeDepartement: string
+}
 
 export interface ISemestre {
   codeSemestre: string
@@ -32,6 +64,18 @@ export interface ISemestre {
   modules?: IModule[]
 }
 
+export interface IUpdateSemestre {
+  intituleSemestre: string
+  codeFiliere: string | null
+}
+
+export interface ICreateSemestre {
+  codeSemestre: string
+  intituleSemestre: string
+  codeFiliere: string
+}
+
+
 export interface IModule {
   codeModule: string
   intituleModule: string
@@ -39,7 +83,6 @@ export interface IModule {
   codeSemestre: string
   elements: IElement[]
 }
-
 
 export interface IElement {
   codeElement: string

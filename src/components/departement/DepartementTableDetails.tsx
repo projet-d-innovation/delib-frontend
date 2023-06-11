@@ -1,4 +1,4 @@
-import { IDepartement } from "../types/interfaces"
+import { IDepartement } from "../../types/interfaces"
 import { Box, Text } from "@mantine/core"
 import { Link } from "react-router-dom";
 

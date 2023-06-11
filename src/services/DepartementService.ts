@@ -1,16 +1,19 @@
 import { api as AXIOS_INSTANCE } from '../api/axios';
-import { ICreateDepartement, IDepartement, IUpdateDepartement } from '../types/departement.type';
-import { IPagination } from '../types/interfaces';
+import { ICreateDepartement, IDepartement, IPagination, IUpdateDepartement } from '../types/interfaces';
+
+
+
+interface IGetDepartementParams {
+  search?: string,
+  page?: number,
+  size?: number,
+  includeFilieres?: boolean,
+  includeChefDepartement?: boolean
+}
 
 export class DepartementService {
 
-  static async getDepartements({ search = "", page = 0, size = 10, includeFilieres = false, includeChefDepartement = false }: {
-    search?: string,
-    page?: number,
-    size?: number,
-    includeFilieres?: boolean,
-    includeChefDepartement?: boolean
-  }): Promise<IPagination<IDepartement>> {
+  static async getDepartements({ search = "", page = 0, size = 10, includeFilieres = false, includeChefDepartement = false }: IGetDepartementParams): Promise<IPagination<IDepartement>> {
     const response = await AXIOS_INSTANCE.get("/departements", {
       params: {
         search,
@@ -21,6 +24,11 @@ export class DepartementService {
       }
     });
     return response.data;
+  }
+
+  static async getDepartementsUnpaginated(getDepartementParams: IGetDepartementParams): Promise<IDepartement[]> {
+    const response = this.getDepartements(getDepartementParams);
+    return (await response).records;
   }
 
   static async createDepartement(departement: ICreateDepartement): Promise<IDepartement> {

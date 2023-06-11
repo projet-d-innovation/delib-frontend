@@ -7,15 +7,14 @@ import { AxiosError } from "axios";
 import { MRT_ColumnDef, MantineReactTable } from "mantine-react-table";
 import { useState, useMemo } from "react";
 import { useQuery, useMutation } from "react-query";
-import DepartementTableDetails from "../../../components/DepartementTableDetails";
-import DepartementUpdateModal from "../../../components/DepartementUpdateModal";
+import DepartementTableDetails from "../../../components/departement/DepartementTableDetails";
+import DepartementUpdateModal from "../../../components/departement/DepartementUpdateModal";
 import TableErrorBanner from "../../../components/TableErrorBanner";
 import { ROLES } from "../../../constants/roles";
 import { DepartementService } from "../../../services/DepartementService";
 import { UtilisateurService } from "../../../services/UtilisateurService";
-import { IDepartement } from "../../../types/departement.type";
-import { IFiliere } from "../../../types/interfaces";
-import DepartementCreateModal from "../../../components/DepartementCreateModal";
+import { IDepartement, IFiliere } from "../../../types/interfaces";
+import DepartementCreateModal from "../../../components/departement/DepartementCreateModal";
 
 const DepartementPage = () => {
 
@@ -112,11 +111,11 @@ const DepartementPage = () => {
     () => [
       {
         accessorKey: 'codeDepartement',
-        header: 'Code',
+        header: 'CodeDépartement',
       },
       {
         accessorKey: 'intituleDepartement',
-        header: 'Intitulé',
+        header: 'IntituléDépartement',
       },
       {
         accessorFn: (row) => row.filieres as IFiliere[],
@@ -160,7 +159,9 @@ const DepartementPage = () => {
             : undefined
         }
         onPaginationChange={setPagination}
-        state={{ pagination, showProgressBars: isLoading || isFetching, showSkeletons: isLoading || isFetching, showAlertBanner: isError, }}
+        state={{
+          pagination, showProgressBars: isLoading || isFetching, showSkeletons: isLoading || isFetching, showAlertBanner: isError,
+        }}
         enableRowSelection
         positionToolbarAlertBanner="top"
         enableFullScreenToggle={false}

@@ -4,9 +4,9 @@ import { notifications } from "@mantine/notifications"
 import { IconCheck } from "@tabler/icons-react"
 import { useEffect } from "react"
 import { useMutation } from "react-query"
-import { DepartementService } from "../services/DepartementService"
-import { IDepartement } from "../types/departement.type"
-import { IUtilisateur } from "../types/interfaces"
+import { DepartementService } from "../../services/DepartementService"
+import { IUtilisateur, IDepartement } from "../../types/interfaces"
+
 
 interface ISelectUsers {
   value: string

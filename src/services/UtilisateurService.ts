@@ -2,7 +2,7 @@ import { api as AXIOS_INSTANCE } from '../api/axios';
 import { IPagination, IUtilisateur } from '../types/interfaces';
 
 
-interface IGetUtilisateurByGroup {
+interface IGetUtilisateurByGroupParams {
   group: string,
   search?: string,
   page?: number,
@@ -35,7 +35,7 @@ export class UtilisateurService {
     includePermissions = false,
     includeDepartement = false,
     includeElements = false
-  }: IGetUtilisateurByGroup): Promise<IPagination<IUtilisateur>> {
+  }: IGetUtilisateurByGroupParams): Promise<IPagination<IUtilisateur>> {
     const response = await AXIOS_INSTANCE.get(`/utilisateurs/group/${group}`, {
       params: {
         search, page, size, includeRoles, includePermissions, includeDepartement, includeElements
@@ -44,7 +44,7 @@ export class UtilisateurService {
     return response.data;
   }
 
-  static async getUtilisateursByGroupUnpaginated(getUtilisateurByGroup: IGetUtilisateurByGroup): Promise<IUtilisateur[]> {
+  static async getUtilisateursByGroupUnpaginated(getUtilisateurByGroup: IGetUtilisateurByGroupParams): Promise<IUtilisateur[]> {
     const response = this.getUtilisateursByGroup(getUtilisateurByGroup);
     return (await response).records;
   }

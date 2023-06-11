@@ -3,22 +3,20 @@ import { useForm } from "@mantine/form"
 import { notifications } from "@mantine/notifications"
 import { IconCheck } from "@tabler/icons-react"
 import { useMutation } from "react-query"
-import { DepartementService } from "../services/DepartementService"
-import { IDepartement } from "../types/departement.type"
-import { IUtilisateur } from "../types/interfaces"
+import { DepartementService } from "../../services/DepartementService"
+import { IDepartement } from "../../types/interfaces"
 
-interface ISelectUsers {
+interface ISelect {
   value: string
   label: string
   group?: string
-  utilisateur: IUtilisateur
 }
 
 
 const DepartementCreateModal = ({ opened, close, administrateurs, refetch }: {
   opened: boolean,
   close: () => void
-  administrateurs: ISelectUsers[],
+  administrateurs: ISelect[],
   refetch: () => void
 }) => {
 
