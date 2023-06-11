@@ -21,7 +21,7 @@ import GestionDedagogiquePage from "./admin/pedagoqiue/GestionDepagoqique"
 import DeliberationPage from "./admin/deliberation/DeliberationPage"
 import PermissionPage from "./admin/utilisateurs/PermissionPage"
 import AdministrateurDetailsPage from "./admin/utilisateurs/Administateurs/AdministrateurDetailsPage"
-import Home from "./student/Home"
+// import Home from "./student/Home"
 
 function App() {
   const authStore = useAuthStore()
