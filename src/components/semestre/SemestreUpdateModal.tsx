@@ -70,7 +70,7 @@ const FiliereUpdateModal = ({ opened, close, filiere, administrateurs, departeme
         id: "update-filiere",
         message: "Département à été modifié avec success",
         icon: <IconCheck size="1rem" />,
-        autoClose: 2000,
+        autoClose: 3500,
         color: 'teal',
       })
       close()

@@ -63,7 +63,7 @@ const FilierePage = () => {
           id: "deleting-filiere",
           message: "Filiére à été supprimé avec success",
           icon: <IconCheck size="1rem" />,
-          autoClose: 2000,
+          autoClose: 3500,
           color: 'teal',
         })
       },
@@ -95,7 +95,7 @@ const FilierePage = () => {
         id: "deleting-filieres",
         message: "Filiéres supprimés avec success",
         icon: <IconCheck size="1rem" />,
-        autoClose: 2000,
+        autoClose: 3500,
         color: 'teal',
       })
     },
@@ -224,7 +224,7 @@ const FilierePage = () => {
                 modals.openConfirmModal({
                   title: 'Suppression',
                   children: (
-                    <Text>Êtes-vous sûr de vouloir supprimer ce filiére ?</Text>
+                    <Text>Êtes-vous sûr de vouloir supprimer cette filiére ?</Text>
                   ),
                   centered: true,
                   size: 'md',

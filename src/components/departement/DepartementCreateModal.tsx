@@ -4,7 +4,8 @@ import { notifications } from "@mantine/notifications"
 import { IconCheck } from "@tabler/icons-react"
 import { useMutation } from "react-query"
 import { DepartementService } from "../../services/DepartementService"
-import { IDepartement } from "../../types/interfaces"
+import { IDepartement, IExceptionResponse } from "../../types/interfaces"
+import { Axios, AxiosError } from "axios"
 
 interface ISelect {
   value: string
@@ -54,15 +55,16 @@ const DepartementCreateModal = ({ opened, close, administrateurs, refetch }: {
         id: "create-departement",
         message: "Département à été crée avec success",
         icon: <IconCheck size="1rem" />,
-        autoClose: 2000,
+        autoClose: 3500,
         color: 'teal',
       })
+      form.reset()
       close()
     },
     onError: (error) => {
       notifications.update({
         id: 'create-departement',
-        message: (error as Error).message,
+        message: ((error as AxiosError).response?.data as IExceptionResponse).message || (error as Error).message,
         color: 'red',
         loading: false,
       })
@@ -82,7 +84,7 @@ const DepartementCreateModal = ({ opened, close, administrateurs, refetch }: {
 
     >
       <Box maw={320} mx="auto"
-        h={250}
+        h={300}
       >
         <Group mt="xl" spacing="lg">
           <Select
@@ -114,7 +116,7 @@ const DepartementCreateModal = ({ opened, close, administrateurs, refetch }: {
           variant="outline"
           onClick={() => {
             form.validate()
-            if (form.errors.intituleDepartement) return
+            if (!form.isValid()) return
             createDepartementMutation.mutate({
               codeDepartement: form.values.codeDepartement,
               intituleDepartement: form.values.intituleDepartement,

@@ -4,7 +4,8 @@ import { notifications } from "@mantine/notifications"
 import { IconCheck } from "@tabler/icons-react"
 import { useMutation } from "react-query"
 import { FiliereService } from "../../services/FiliereService"
-import { IFiliere } from "../../types/interfaces"
+import { IExceptionResponse, IFiliere } from "../../types/interfaces"
+import { AxiosError } from "axios"
 
 interface ISelect {
   value: string
@@ -57,15 +58,16 @@ const FiliereCreateModal = ({ opened, close, administrateurs, departements, refe
         id: "create-filiere",
         message: "Département à été crée avec success",
         icon: <IconCheck size="1rem" />,
-        autoClose: 2000,
+        autoClose: 3500,
         color: 'teal',
       })
+      form.reset()
       close()
     },
     onError: (error) => {
       notifications.update({
         id: 'create-filiere',
-        message: (error as Error).message,
+        message: ((error as AxiosError).response?.data as IExceptionResponse).message || (error as Error).message,
         color: 'red',
         loading: false,
       })
@@ -85,7 +87,7 @@ const FiliereCreateModal = ({ opened, close, administrateurs, departements, refe
 
     >
       <Box maw={320} mx="auto"
-        h={300}
+        h={340}
       >
         <Group mt="xl" spacing="lg">
           <Select
@@ -130,7 +132,7 @@ const FiliereCreateModal = ({ opened, close, administrateurs, departements, refe
           variant="outline"
           onClick={() => {
             form.validate()
-            if (form.errors.intituleFiliere) return
+            if (!form.isValid()) return
             createFiliereMutation.mutate({
               codeFiliere: form.values.codeFiliere,
               intituleFiliere: form.values.intituleFiliere,

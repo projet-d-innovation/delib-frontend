@@ -37,20 +37,29 @@ export class FiliereService {
   }
 
   static async createFiliere(filiere: ICreateFiliere): Promise<IFiliere> {
+    await new Promise(resolve => setTimeout(resolve, 4000));
+
     const response = await AXIOS_INSTANCE.post(`/filieres`, filiere);
     return response.data;
   }
 
   static async updateFiliere(id: String, filiere: IUpdateFiliere): Promise<IFiliere> {
+    await new Promise(resolve => setTimeout(resolve, 4000));
+
     const response = await AXIOS_INSTANCE.patch(`/filieres/${id}`, filiere);
     return response.data;
   }
 
   static async deleteFiliere(id: String): Promise<void> {
+    await new Promise(resolve => setTimeout(resolve, 4000));
+
     await AXIOS_INSTANCE.delete(`/filieres/${id}`);
+
   }
 
   static async deleteAllFilieres(ids: String[]): Promise<void> {
+    await new Promise(resolve => setTimeout(resolve, 4000));
+
     await AXIOS_INSTANCE.delete(`/filieres/bulk`, {
       params: {
         codeFiliere: ids

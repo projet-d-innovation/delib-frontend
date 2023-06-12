@@ -1,4 +1,4 @@
-import { Button, Menu, Text } from "@mantine/core";
+import { Button, Menu, Text, useMantineTheme } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
@@ -60,7 +60,7 @@ const DepartementPage = () => {
           id: "deleting-departement",
           message: "Département supprimé avec success",
           icon: <IconCheck size="1rem" />,
-          autoClose: 2000,
+          autoClose: 3500,
           color: 'teal',
         })
       },
@@ -92,7 +92,7 @@ const DepartementPage = () => {
         id: "deleting-departements",
         message: "Départements supprimés avec success",
         icon: <IconCheck size="1rem" />,
-        autoClose: 2000,
+        autoClose: 3500,
         color: 'teal',
       })
     },
@@ -137,6 +137,7 @@ const DepartementPage = () => {
     ),
     keepPreviousData: true,
   })
+  const theme = useMantineTheme();
 
   return (
     <main className=" h-screen py-2 w-full">
@@ -209,6 +210,13 @@ const DepartementPage = () => {
               icon={<IconTrash size={14} />}
               onClick={() => {
                 modals.openConfirmModal({
+                  overlayProps: {
+
+                    color: theme.colorScheme === 'dark' ? theme.colors.dark[9] : theme.colors.gray[2],
+                    opacity: 0.55,
+                    blur: 3,
+
+                  },
                   title: 'Suppression',
                   children: (
                     <Text>Êtes-vous sûr de vouloir supprimer ce département ?</Text>

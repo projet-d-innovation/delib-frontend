@@ -5,7 +5,8 @@ import { IconCheck } from "@tabler/icons-react"
 import { useEffect } from "react"
 import { useMutation } from "react-query"
 import { FiliereService } from "../../services/FiliereService"
-import { IFiliere } from "../../types/interfaces"
+import { IExceptionResponse, IFiliere } from "../../types/interfaces"
+import { AxiosError } from "axios"
 
 interface ISelect {
   value: string
@@ -68,17 +69,18 @@ const FiliereUpdateModal = ({ opened, close, filiere, administrateurs, departeme
       refetch()
       notifications.update({
         id: "update-filiere",
-        message: "Département à été modifié avec success",
+        message: "Filiére à été modifié avec success",
         icon: <IconCheck size="1rem" />,
-        autoClose: 2000,
+        autoClose: 3500,
         color: 'teal',
       })
+      form.reset()
       close()
     },
     onError: (error) => {
       notifications.update({
         id: 'update-filiere',
-        message: (error as Error).message,
+        message: ((error as AxiosError).response?.data as IExceptionResponse).message || (error as Error).message,
         color: 'red',
         loading: false,
       })
@@ -88,7 +90,7 @@ const FiliereUpdateModal = ({ opened, close, filiere, administrateurs, departeme
   const theme = useMantineTheme();
 
   return (
-    <Modal size="md" centered={true} opened={opened} onClose={close} title={`Modifier département (${filiere?.codeFiliere})`}
+    <Modal size="md" centered={true} opened={opened} onClose={close} title={`Modifier filiére (${filiere?.codeFiliere})`}
       overlayProps={{
         color: theme.colorScheme === 'dark' ? theme.colors.dark[9] : theme.colors.gray[2],
         opacity: 0.55,
@@ -98,19 +100,19 @@ const FiliereUpdateModal = ({ opened, close, filiere, administrateurs, departeme
     >
 
       <Box maw={320} mx="auto"
-        h={300}
+        h={340}
       >
 
         <Group mt="xl" spacing="lg">
           <Select
             className="w-full"
             disabled={departements.length === 0 || true}
-            label="Département"
-            placeholder="Département"
+            label="Filiére"
+            placeholder="Filiére"
             {...form.getInputProps('departement')}
             data={departements}
             clearable
-            nothingFound="Pas de départements trouvés"
+            nothingFound="Pas de filiéres trouvés"
             dropdownPosition="bottom"
             maxDropdownHeight={300}
             required
@@ -118,8 +120,8 @@ const FiliereUpdateModal = ({ opened, close, filiere, administrateurs, departeme
           <Select
             className="w-full"
             disabled={administrateurs.length === 0}
-            label="Chef de département"
-            placeholder="Chef de département"
+            label="Chef de filiére"
+            placeholder="Chef de filiére"
             {...form.getInputProps('chefDeFiliere')}
             data={administrateurs}
             clearable
@@ -130,7 +132,7 @@ const FiliereUpdateModal = ({ opened, close, filiere, administrateurs, departeme
           <TextInput
             className="w-full"
             required
-            label="Intitule Département" placeholder="Intitule Département" {...form.getInputProps('intituleFiliere')} />
+            label="Intitule Filiére" placeholder="Intitule Filiére" {...form.getInputProps('intituleFiliere')} />
 
         </Group>
 
@@ -140,7 +142,7 @@ const FiliereUpdateModal = ({ opened, close, filiere, administrateurs, departeme
           variant="outline"
           onClick={() => {
             form.validate()
-            if (form.errors.intituleFiliere) return
+            if (!form.isValid()) return
             updateFiliereMutation.mutate({
               codeFiliere: filiere?.codeFiliere,
               intituleFiliere: form.values.intituleFiliere,
