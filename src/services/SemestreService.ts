@@ -1,59 +1,53 @@
 import { api as AXIOS_INSTANCE } from '../api/axios';
-import { ICreateFiliere, IFiliere, IPagination, IUpdateFiliere } from '../types/interfaces';
+import { ICreateSemestre, ISemestre, IPagination, IUpdateSemestre } from '../types/interfaces';
 
 
-interface IGetFiliereParams {
+interface IGetSemestreParams {
   search?: string,
   page?: number,
   size?: number,
-  includeSemestre?: boolean,
-  includeRegleDeCalcule?: boolean
-  includeChefFiliere?: boolean
-  includeDepartement?: boolean
+  includeFiliere?: boolean
+  includeModules?: boolean
 }
 
-export class FiliereService {
+export class SemestreService {
 
-  static async getFilieres({ search = "", page = 0, size = 10, includeSemestre = false, includeRegleDeCalcule = false, includeChefFiliere = false, includeDepartement = false }: IGetFiliereParams): Promise<IPagination<IFiliere>> {
-    const response = await AXIOS_INSTANCE.get("/filieres", {
+  static async getSemestres({ page = 0, size = 10, includeFiliere = false, includeModules = false }: IGetSemestreParams): Promise<IPagination<ISemestre>> {
+    const response = await AXIOS_INSTANCE.get("/semestres", {
       params: {
-        searchByIntitute: search,
         page: page,
         size,
-        includeSemestre,
-        includeRegleDeCalcule,
-        includeChefFiliere,
-        includeDepartement
+        includeFiliere,
+        includeModules
       }
     });
 
-    console.log(response.data)
     return response.data;
   }
 
-  static async getFilieresUnpaginated(getFiliereParams: IGetFiliereParams): Promise<IFiliere[]> {
-    const response = this.getFilieres(getFiliereParams);
+  static async getSemestresUnpaginated(getSemestreParams: IGetSemestreParams): Promise<ISemestre[]> {
+    const response = this.getSemestres(getSemestreParams);
     return (await response).records;
   }
 
-  static async createFiliere(filiere: ICreateFiliere): Promise<IFiliere> {
-    const response = await AXIOS_INSTANCE.post(`/filieres`, filiere);
+  static async createSemestre(semestre: ICreateSemestre): Promise<ISemestre> {
+    const response = await AXIOS_INSTANCE.post(`/semestres`, semestre);
     return response.data;
   }
 
-  static async updateFiliere(id: String, filiere: IUpdateFiliere): Promise<IFiliere> {
-    const response = await AXIOS_INSTANCE.patch(`/filieres/${id}`, filiere);
+  static async updateSemestre(id: String, semestre: IUpdateSemestre): Promise<ISemestre> {
+    const response = await AXIOS_INSTANCE.patch(`/semestres/${id}`, semestre);
     return response.data;
   }
 
-  static async deleteFiliere(id: String): Promise<void> {
-    await AXIOS_INSTANCE.delete(`/filieres/${id}`);
+  static async deleteSemestre(id: String): Promise<void> {
+    await AXIOS_INSTANCE.delete(`/semestres/${id}`);
   }
 
-  static async deleteAllFilieres(ids: String[]): Promise<void> {
-    await AXIOS_INSTANCE.delete(`/filieres/bulk`, {
+  static async deleteAllSemestres(ids: String[]): Promise<void> {
+    await AXIOS_INSTANCE.delete(`/semestres/bulk`, {
       params: {
-        codeFiliere: ids
+        codesSemestre: ids
       }
     });
   }

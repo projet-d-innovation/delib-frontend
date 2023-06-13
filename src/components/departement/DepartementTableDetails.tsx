@@ -1,9 +1,11 @@
 import { IDepartement } from "../../types/interfaces"
-import { Box, Text } from "@mantine/core"
+import { Box, Image, HoverCard, Text, Group } from "@mantine/core"
 import { Link } from "react-router-dom";
+import UserHoverableLink from "../UserHoverableLink";
 
 
 const DepartementTableDetails = (departement: IDepartement) => {
+  console.log(departement.chefDepartement)
   return (
     <Box
       sx={{
@@ -17,9 +19,7 @@ const DepartementTableDetails = (departement: IDepartement) => {
       {
         departement.chefDepartement &&
         <Text fz="md" fw={500} >Chef de filiére :{" "}
-          <Link className="text-cyan-500 hover:text-cyan-800 hover:underline font-bold" to={`/admin/gestion-utilisateur/adminstrateurs/${departement.chefDepartement?.code}`}>
-            {`${departement.chefDepartement?.nom} ${departement.chefDepartement?.prenom}`}
-          </Link>
+          <UserHoverableLink utilisateur={departement.chefDepartement} customStyle="font-bold" />
         </Text>
       }
       <Text fz="md" fw={500} >Filiers ({departement.filieres?.length || 0}) {departement.filieres?.length != 0 && ":"} </Text>
@@ -42,9 +42,7 @@ const DepartementTableDetails = (departement: IDepartement) => {
               filiere.chefFiliere &&
               <span>
                 {" | "}
-                <Link className="text-cyan-500 hover:text-cyan-800 hover:underline" to={`/admin/gestion-utilisateur/adminstrateurs/${filiere.chefFiliere?.code}`}>
-                  {`${filiere.chefFiliere?.nom} ${filiere.chefFiliere?.prenom}`}
-                </Link>
+                <UserHoverableLink utilisateur={filiere.chefFiliere} customStyle="font-bold" />
               </span>
             }</Text>)
         }

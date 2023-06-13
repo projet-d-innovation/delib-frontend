@@ -8,16 +8,14 @@ import { MRT_ColumnDef, MantineReactTable } from "mantine-react-table";
 import { useState, useMemo, useEffect } from "react";
 import { useQuery, useMutation } from "react-query";
 import TableErrorBanner from "../../../components/TableErrorBanner";
-import { ROLES } from "../../../constants/roles";
+import { SemestreService } from "../../../services/SemestreService";
+import SemestreCreateModal from "../../../components/semestre/SemestreCreateModal";
+import SemestreTableDetails from "../../../components/semestre/SemestreTableDetails";
+import SemestreUpdateModal from "../../../components/semestre/SemestreUpdateModal";
+import { IDepartement, IFiliere, IModule, ISemestre } from "../../../types/interfaces";
 import { FiliereService } from "../../../services/FiliereService";
-import { UtilisateurService } from "../../../services/UtilisateurService";
-import FiliereCreateModal from "../../../components/filiere/FiliereCreateModal";
-import FiliereTableDetails from "../../../components/filiere/FiliereTableDetails";
-import FiliereUpdateModal from "../../../components/filiere/FiliereUpdateModal";
-import { IDepartement, IFiliere } from "../../../types/interfaces";
-import { DepartementService } from "../../../services/DepartementService";
 
-const FilierePage = () => {
+const SemestrePage = () => {
 
   const [pagination, setPagination] = useState({
     pageIndex: 0,
@@ -36,28 +34,26 @@ const FilierePage = () => {
 
   const createModal = useDisclosure(false);
 
-  const [toBeUpdatedFiliere, setToBeUpdateFiliere] = useState<IFiliere | null>(null);
+  const [toBeUpdatedSemestre, setToBeUpdateSemestre] = useState<ISemestre | null>(null);
 
   const { data, isLoading, isError, error, refetch, isFetching } = useQuery({
-    queryKey: ['filieres', pagination.pageIndex],
-    queryFn: () => FiliereService.getFilieres(
+    queryKey: ['semestres', pagination.pageIndex],
+    queryFn: () => SemestreService.getSemestres(
       {
         page: pagination.pageIndex,
         size: pagination.pageSize,
-        includeSemestre: true,
-        includeRegleDeCalcule: true,
-        includeChefFiliere: true,
-        includeDepartement: true
+        includeFiliere: true,
+        includeModules: true
       }
     ),
     keepPreviousData: true,
   })
 
-  const deleteFiliereMutation = useMutation(FiliereService.deleteFiliere,
+  const deleteSemestreMutation = useMutation(SemestreService.deleteSemestre,
     {
       onMutate: () => {
         notifications.show({
-          id: 'deleting-filiere',
+          id: 'deleting-semestre',
           message: 'Suppression en cours ...',
           color: 'blue',
           loading: true,
@@ -68,8 +64,8 @@ const FilierePage = () => {
       onSuccess: () => {
         refetch()
         notifications.update({
-          id: "deleting-filiere",
-          message: "Filiére à été supprimé avec success",
+          id: "deleting-semestre",
+          message: "Semestre à été supprimé avec success",
           icon: <IconCheck size="1rem" />,
           autoClose: 3500,
           color: 'teal',
@@ -77,7 +73,7 @@ const FilierePage = () => {
       },
       onError: (error) => {
         notifications.update({
-          id: 'deleting-filiere',
+          id: 'deleting-semestre',
           message: (error as Error).message,
           color: 'red',
           loading: false,
@@ -86,10 +82,10 @@ const FilierePage = () => {
     }
   )
 
-  const deleteAllFilieresMutation = useMutation(FiliereService.deleteAllFilieres, {
+  const deleteAllSemestresMutation = useMutation(SemestreService.deleteAllSemestres, {
     onMutate: () => {
       notifications.show({
-        id: 'deleting-filieres',
+        id: 'deleting-semestres',
         message: 'Suppression en cours ...',
         color: 'blue',
         loading: true,
@@ -100,8 +96,8 @@ const FilierePage = () => {
     onSuccess: () => {
       refetch()
       notifications.update({
-        id: "deleting-filieres",
-        message: "Filiéres supprimés avec success",
+        id: "deleting-semestres",
+        message: "Semestres supprimés avec success",
         icon: <IconCheck size="1rem" />,
         autoClose: 3500,
         color: 'teal',
@@ -109,7 +105,7 @@ const FilierePage = () => {
     },
     onError: (error) => {
       notifications.update({
-        id: 'deleting-filieres',
+        id: 'deleting-semestres',
         message: (error as Error).message,
         color: 'red',
         loading: false,
@@ -118,42 +114,36 @@ const FilierePage = () => {
   })
 
 
-  const columns = useMemo<MRT_ColumnDef<IFiliere>[]>(
+  const columns = useMemo<MRT_ColumnDef<ISemestre>[]>(
     () => [
       {
-        accessorFn: (row) => row.departement as IDepartement,
-        id: 'departement',
-        header: 'Département',
-        size: 300,
-        Cell: ({ cell }) => cell.getValue<IDepartement>()?.intituleDepartement || "-",
+        accessorKey: 'intituleSemestre',
+        header: 'Intitulé Semestre',
       },
       {
-        accessorKey: 'codeFiliere',
-        header: 'CodeFiliere',
+        accessorFn: (row) => row.filiere as IFiliere,
+        id: 'filiere',
+        header: 'Filière',
+        Cell: ({ cell }) => cell.getValue<IFiliere>()?.intituleFiliere || "-",
+        size: 350
       },
       {
-        accessorKey: 'intituleFiliere',
-        header: 'Intitulé Filière',
-        size: 350,
+        accessorKey: 'codeSemestre',
+        header: 'CodeSemestre',
+      },
+      {
+        accessorFn: (row) => row.modules as IModule[],
+        id: 'modules',
+        header: 'Nombre de modules',
+        Cell: ({ cell }) => cell.getValue<IModule[]>()?.length || 0,
       }
     ],
     [],
   );
 
-  const utilisateurQuery = useQuery({
-    queryKey: ['utilisateurs', ROLES.CHEF_DE_FILIERE],
-    queryFn: () => UtilisateurService.getUtilisateursByRoleUnpaginated(
-      {
-        size: 100,
-        role: ROLES.CHEF_DE_FILIERE,
-      }
-    ),
-    keepPreviousData: true,
-  })
-
-  const departementQuery = useQuery({
-    queryKey: ['departements'],
-    queryFn: () => DepartementService.getDepartementsUnpaginated(
+  const filiereQuery = useQuery({
+    queryKey: ['filieres'],
+    queryFn: () => FiliereService.getFilieresUnpaginated(
       {
         size: 100,
       }
@@ -182,11 +172,12 @@ const FilierePage = () => {
             : undefined
         }
         onPaginationChange={setPagination}
+        initialState={{ pagination }}
         state={{ pagination, showProgressBars: isLoading || isFetching, showSkeletons: isLoading || isFetching, showAlertBanner: isError, }}
         enableRowSelection
         positionToolbarAlertBanner="top"
         enableFullScreenToggle={false}
-        renderDetailPanel={({ row }) => <FiliereTableDetails {...row.original} />}
+        renderDetailPanel={({ row }) => <SemestreTableDetails {...row.original} />}
         renderTopToolbarCustomActions={({ table }) => {
           return (
             <div style={{ display: 'flex', gap: '8px' }}>
@@ -202,9 +193,9 @@ const FilierePage = () => {
                 variant="outline" color="red"
 
                 onClick={() => {
-                  deleteAllFilieresMutation.mutate(
+                  deleteAllSemestresMutation.mutate(
                     table.getSelectedRowModel().rows.map((row) =>
-                      row.original.codeFiliere
+                      row.original.codeSemestre
                     )
                   )
                   table.resetRowSelection()
@@ -221,7 +212,7 @@ const FilierePage = () => {
             <Menu.Label>Single-Selection</Menu.Label>
             <Menu.Item
               onClick={() => {
-                setToBeUpdateFiliere(row.original)
+                setToBeUpdateSemestre(row.original)
                 editModal[1].open()
               }}
               icon={<IconEdit size={14} />}
@@ -236,7 +227,7 @@ const FilierePage = () => {
                 modals.openConfirmModal({
                   title: 'Suppression',
                   children: (
-                    <Text>Êtes-vous sûr de vouloir supprimer cette filiére ?</Text>
+                    <Text>Êtes-vous sûr de vouloir supprimer cette semestre ?</Text>
                   ),
                   centered: true,
                   size: 'md',
@@ -246,7 +237,7 @@ const FilierePage = () => {
                   },
                   confirmProps: { color: 'red', variant: 'outline' },
                   onConfirm: () => {
-                    deleteFiliereMutation.mutate(row.original.codeFiliere)
+                    deleteSemestreMutation.mutate(row.original.codeSemestre)
                   }
                 })
               }}
@@ -256,39 +247,26 @@ const FilierePage = () => {
           </>
         )}
       />
-      <FiliereUpdateModal
+      <SemestreUpdateModal
         opened={editModal[0]}
         close={editModal[1].close}
-        filiere={toBeUpdatedFiliere}
+        semestre={toBeUpdatedSemestre}
         refetch={refetch}
-        administrateurs={
-          utilisateurQuery.data?.map((utilisateur) => ({
-            value: utilisateur.code,
-            label: utilisateur.nom + ' ' + utilisateur.prenom,
-            utilisateur
-          })) || []
-        }
-        departements={
-          departementQuery.data?.map((departement) => ({
-            value: departement.codeDepartement,
-            label: departement.intituleDepartement
+        filieres={
+          filiereQuery.data?.map((filiere) => ({
+            value: filiere.codeFiliere,
+            label: filiere.intituleFiliere
           })) || []
         }
       />
-      <FiliereCreateModal
+      <SemestreCreateModal
         opened={createModal[0]}
         close={createModal[1].close}
         refetch={refetch}
-        administrateurs={
-          utilisateurQuery.data?.map((utilisateur) => ({
-            value: utilisateur.code,
-            label: utilisateur.nom + ' ' + utilisateur.prenom
-          })) || []
-        }
-        departements={
-          departementQuery.data?.map((departement) => ({
-            value: departement.codeDepartement,
-            label: departement.intituleDepartement
+        filieres={
+          filiereQuery.data?.map((filiere) => ({
+            value: filiere.codeFiliere,
+            label: filiere.intituleFiliere
           })) || []
         }
       />
@@ -296,4 +274,4 @@ const FilierePage = () => {
     </main >
   )
 }
-export default FilierePage
+export default SemestrePage

@@ -27,7 +27,6 @@ export class FiliereService {
       }
     });
 
-    console.log(response.data)
     return response.data;
   }
 

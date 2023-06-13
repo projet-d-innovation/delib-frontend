@@ -56,7 +56,7 @@ const FiliereCreateModal = ({ opened, close, administrateurs, departements, refe
       refetch()
       notifications.update({
         id: "create-filiere",
-        message: "Département à été crée avec success",
+        message: "Filière à été crée avec success",
         icon: <IconCheck size="1rem" />,
         autoClose: 3500,
         color: 'teal',

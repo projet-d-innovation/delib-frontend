@@ -1,9 +1,9 @@
-import { IFiliere } from "../../types/interfaces"
+import { ISemestre } from "../../types/interfaces"
 import { Box, Text } from "@mantine/core"
 import { Link } from "react-router-dom";
 
 
-const FiliereTableDetails = (filiere: IFiliere) => {
+const SemestreTableDetails = (semestre: ISemestre) => {
   return (
     <Box
       sx={{
@@ -12,45 +12,27 @@ const FiliereTableDetails = (filiere: IFiliere) => {
         flexDirection: 'column',
       }}
     >
-
-      <Text fz="lg" fw={700} >Filiere : {filiere.intituleFiliere}</Text>
+      <Text fz="lg" fw={700} >{semestre.intituleSemestre}</Text>
       {
-        filiere.departement &&
-        <Text fz="md" fw={500} >Département :{" "}
-          <Link className="hover:underline" to={`/admin/gestion-pedagogique/departements/${filiere.departement?.codeDepartement}`}>
-            {`${filiere.departement.intituleDepartement}`}
+        semestre.filiere &&
+        <Text fz="md" fw={500} >Filière :{" "}
+          <Link className="hover:underline" to={`/admin/gestion-pedagogique/filieres/${semestre.filiere?.codeFiliere}`}>
+            {`${semestre.filiere.intituleFiliere}`}
           </Link>
         </Text>
       }
       {
-        filiere.chefFiliere &&
-        <Text fz="md" fw={500} >Chef de filiére :{" "}
-          <Link className="text-cyan-500 hover:text-cyan-800 hover:underline font-bold" to={`/admin/gestion-utilisateur/adminstrateurs/${filiere.chefFiliere?.code}`}>
-            {`${filiere.chefFiliere?.nom} ${filiere.chefFiliere?.prenom}`}
-          </Link>
-        </Text>
+        semestre.modules && <Text fz="md" fw={500} className="mb-2" >Module{semestre.modules != null && semestre.modules.length > 1 && "(s)"} {semestre.modules?.length != 0 && semestre.modules != null && ":"} </Text>
       }
-      <Text fz="md" fw={500} >Semestres ({filiere.semestres?.length || 0})  </Text>
-
-      {/* <Box
-        className="ml-7"
-        sx={{
-          display: 'flex',
-          justifyContent: 'space-around',
-          flexDirection: 'column',
-          gap: '8px',
-        }}
-      >
-        {
-          filiere.semestres?.map((semestre, index) => <Text key={index} fz="sm" >
-            <Link className="hover:underline" to={`/admin/gestion-pedagogique/semestres/${semestre.codeFiliere}`}>
-              {semestre.intituleSemestre}
-            </Link>
-          </Text>)
-        }
-      </Box> */}
+      {
+        semestre.modules?.map((module, index) => <Text className="ml-10" key={index} fz="sm" >{" - "}
+          <Link className="hover:underline" to={`/admin/gestion-pedagogique/modules/${module.codeModule}`}>
+            {module.intituleModule}
+          </Link>
+        </Text>)
+      }
     </Box>
   )
 }
 
-export default FiliereTableDetails
+export default SemestreTableDetails

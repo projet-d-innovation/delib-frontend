@@ -8,6 +8,7 @@ export interface IUtilisateur {
   adresse?: string
   dateNaissance?: Date
   ville?: string
+  sexe?: string
   pays?: string
   photo?: string
   roles?: IRole[]
@@ -62,6 +63,7 @@ export interface ISemestre {
   codeFiliere: string
   intituleSemestre: string
   modules?: IModule[]
+  filiere?: IFiliere
 }
 
 export interface IUpdateSemestre {

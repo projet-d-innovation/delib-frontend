@@ -5,7 +5,7 @@ import { notifications } from "@mantine/notifications";
 import { IconCheck, IconEdit, IconTrash } from "@tabler/icons-react";
 import { AxiosError } from "axios";
 import { MRT_ColumnDef, MantineReactTable } from "mantine-react-table";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useQuery, useMutation } from "react-query";
 import DepartementTableDetails from "../../../components/departement/DepartementTableDetails";
 import DepartementUpdateModal from "../../../components/departement/DepartementUpdateModal";
@@ -22,6 +22,14 @@ const DepartementPage = () => {
     pageIndex: 0,
     pageSize: 10,
   });
+
+  useEffect(() => {
+    async function prefetch() {
+      await new Promise((resolve) => setTimeout(resolve, 200))
+      refetch()
+    }
+    prefetch()
+  }, [pagination.pageIndex, pagination.pageSize])
 
   const editModal = useDisclosure(false);
 
@@ -181,11 +189,15 @@ const DepartementPage = () => {
                 hidden={!(table.getIsSomeRowsSelected() || table.getIsAllRowsSelected())}
                 variant="outline" color="red"
 
-                onClick={() => deleteAllDepartementsMutation.mutate(
-                  table.getSelectedRowModel().rows.map((row) =>
-                    row.original.codeDepartement
+                onClick={() => {
+                  deleteAllDepartementsMutation.mutate(
+                    table.getSelectedRowModel().rows.map((row) =>
+                      row.original.codeDepartement
+                    )
                   )
-                )}
+                  table.resetRowSelection()
+                }
+                }
               >
                 Supprimer sélection
               </Button>

@@ -4,8 +4,9 @@ import { notifications } from "@mantine/notifications"
 import { IconCheck } from "@tabler/icons-react"
 import { useEffect } from "react"
 import { useMutation } from "react-query"
-import { FiliereService } from "../../services/FiliereService"
-import { IFiliere } from "../../types/interfaces"
+import { SemestreService } from "../../services/SemestreService"
+import { IExceptionResponse, ISemestre } from "../../types/interfaces"
+import { AxiosError } from "axios"
 
 interface ISelect {
   value: string
@@ -13,50 +14,45 @@ interface ISelect {
   group?: string
 }
 
-const FiliereUpdateModal = ({ opened, close, filiere, administrateurs, departements, refetch }: {
+const SemestreUpdateModal = ({ opened, close, semestre, filieres, refetch }: {
   opened: boolean,
   close: () => void
-  filiere: IFiliere | null
-  administrateurs: ISelect[],
-  departements: ISelect[],
+  semestre: ISemestre | null
+  filieres: ISelect[],
   refetch: () => void
 }) => {
-  if (!filiere) return null
+  if (!semestre) return null
 
   useEffect(() => {
     form.setValues({
-      intituleFiliere: filiere?.intituleFiliere,
-      chefDeFiliere: filiere?.codeChefFiliere,
-      departement: filiere?.codeDepartement!,
+      intituleSemestre: semestre?.intituleSemestre,
+      filiere: semestre?.filiere,
     })
-  }, [filiere])
+  }, [semestre])
 
   const form = useForm({
     initialValues: {
-      intituleFiliere: filiere?.intituleFiliere,
-      chefDeFiliere: filiere?.codeChefFiliere,
-      departement: filiere?.codeDepartement,
+      intituleSemestre: semestre?.intituleSemestre,
+      filiere: semestre?.filiere,
     },
     validate: {
-      intituleFiliere: (value) => (value.length < 5 ? 'Intitulé doit etre supérieur à 5' : null),
+      intituleSemestre: (value) => (value.length < 5 ? 'Intitulé doit etre supérieur à 5' : null),
     },
   });
 
-  const stillSameFiliere = () => {
-    return filiere?.intituleFiliere === form.values.intituleFiliere
-      && filiere?.codeChefFiliere === form.values.chefDeFiliere
-      && filiere?.codeDepartement === form.values.departement
+  const stillSameSemestre = () => {
+    return semestre?.intituleSemestre === form.values.intituleSemestre
+      && semestre?.filiere === form.values.filiere
   }
 
-  const updateFiliereMutation = useMutation({
-    mutationFn: (updatedFiliere: Partial<IFiliere>) => FiliereService.updateFiliere(updatedFiliere.codeFiliere!, {
-      intituleFiliere: updatedFiliere.intituleFiliere!,
-      codeChefFiliere: updatedFiliere.codeChefFiliere!,
-      codeDepartement: updatedFiliere.codeDepartement!,
+  const updateSemestreMutation = useMutation({
+    mutationFn: (updatedSemestre: Partial<ISemestre>) => SemestreService.updateSemestre(updatedSemestre.codeSemestre!, {
+      intituleSemestre: updatedSemestre.intituleSemestre!,
+      codeFiliere: updatedSemestre.codeFiliere!,
     }),
     onMutate: () => {
       notifications.show({
-        id: 'update-filiere',
+        id: 'update-semestre',
         message: 'Modification en cours ...',
         color: 'blue',
         loading: true,
@@ -67,18 +63,19 @@ const FiliereUpdateModal = ({ opened, close, filiere, administrateurs, departeme
     onSuccess: () => {
       refetch()
       notifications.update({
-        id: "update-filiere",
-        message: "Département à été modifié avec success",
+        id: "update-semestre",
+        message: "Semestre à été modifié avec success",
         icon: <IconCheck size="1rem" />,
         autoClose: 3500,
         color: 'teal',
       })
+      form.reset()
       close()
     },
     onError: (error) => {
       notifications.update({
-        id: 'update-filiere',
-        message: (error as Error).message,
+        id: 'update-semestre',
+        message: ((error as AxiosError).response?.data as IExceptionResponse).message || (error as Error).message,
         color: 'red',
         loading: false,
       })
@@ -88,7 +85,7 @@ const FiliereUpdateModal = ({ opened, close, filiere, administrateurs, departeme
   const theme = useMantineTheme();
 
   return (
-    <Modal size="md" centered={true} opened={opened} onClose={close} title={`Modifier département (${filiere?.codeFiliere})`}
+    <Modal size="md" centered={true} opened={opened} onClose={close} title={`Modifier filiére (${semestre?.codeSemestre})`}
       overlayProps={{
         color: theme.colorScheme === 'dark' ? theme.colors.dark[9] : theme.colors.gray[2],
         opacity: 0.55,
@@ -98,39 +95,28 @@ const FiliereUpdateModal = ({ opened, close, filiere, administrateurs, departeme
     >
 
       <Box maw={320} mx="auto"
-        h={300}
+        h={340}
       >
 
         <Group mt="xl" spacing="lg">
           <Select
             className="w-full"
-            disabled={departements.length === 0 || true}
-            label="Département"
-            placeholder="Département"
-            {...form.getInputProps('departement')}
-            data={departements}
+            disabled={filieres.length === 0 || true}
+            label="Filiére"
+            placeholder="Filiére"
+            {...form.getInputProps('filiere')}
+            data={filieres}
             clearable
-            nothingFound="Pas de départements trouvés"
+            nothingFound="Pas de filiéres trouvés"
             dropdownPosition="bottom"
             maxDropdownHeight={300}
             required
           />
-          <Select
-            className="w-full"
-            disabled={administrateurs.length === 0}
-            label="Chef de département"
-            placeholder="Chef de département"
-            {...form.getInputProps('chefDeFiliere')}
-            data={administrateurs}
-            clearable
-            nothingFound="Pas d'utilisateurs trouvés"
-            dropdownPosition="bottom"
-            maxDropdownHeight={300}
-          />
+
           <TextInput
             className="w-full"
             required
-            label="Intitule Département" placeholder="Intitule Département" {...form.getInputProps('intituleFiliere')} />
+            label="Intitule Semestre" placeholder="Intitule Semestre" {...form.getInputProps('intituleSemestre')} />
 
         </Group>
 
@@ -140,16 +126,15 @@ const FiliereUpdateModal = ({ opened, close, filiere, administrateurs, departeme
           variant="outline"
           onClick={() => {
             form.validate()
-            if (form.errors.intituleFiliere) return
-            updateFiliereMutation.mutate({
-              codeFiliere: filiere?.codeFiliere,
-              intituleFiliere: form.values.intituleFiliere,
-              codeChefFiliere: form.values.chefDeFiliere || null,
-              codeDepartement: form.values.departement,
+            if (!form.isValid()) return
+            updateSemestreMutation.mutate({
+              codeSemestre: semestre?.codeSemestre,
+              intituleSemestre: form.values.intituleSemestre,
+              filiere: form.values.filiere,
             })
           }
           }
-          disabled={stillSameFiliere()}
+          disabled={stillSameSemestre()}
         >
           Modifier
         </Button>
@@ -164,4 +149,4 @@ const FiliereUpdateModal = ({ opened, close, filiere, administrateurs, departeme
   )
 }
 
-export default FiliereUpdateModal
+export default SemestreUpdateModal

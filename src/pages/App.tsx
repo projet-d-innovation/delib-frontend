@@ -21,6 +21,7 @@ import GestionDedagogiquePage from "./admin/pedagoqiue/GestionDepagoqique"
 import DeliberationPage from "./admin/deliberation/DeliberationPage"
 import PermissionPage from "./admin/utilisateurs/PermissionPage"
 import AdministrateurDetailsPage from "./admin/utilisateurs/Administateurs/AdministrateurDetailsPage"
+import SemestrePage from "./admin/pedagoqiue/SemestrePage"
 // import Home from "./student/Home"
 
 function App() {
@@ -66,6 +67,7 @@ function App() {
         <Route path="gestion-pedagogique" element={<GestionDedagogiquePage />} />
         <Route path="gestion-pedagogique/departements" element={<DepartementPage />} />
         <Route path="gestion-pedagogique/filieres" element={<FilierePage />} />
+        <Route path="gestion-pedagogique/semestres" element={<SemestrePage />} />
         <Route path="gestion-pedagogique/modules" element={<ModulePage />} />
         <Route path="gestion-pedagogique/elements" element={<ElementPage />} />
 
