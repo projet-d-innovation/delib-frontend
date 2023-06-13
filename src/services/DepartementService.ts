@@ -26,6 +26,18 @@ export class DepartementService {
     return response.data;
   }
 
+  static async getDepartementCount(): Promise<number> {
+    const response = await AXIOS_INSTANCE.get("/departements", {
+      params: {
+        page: 0,
+        size: 1,
+        includeFilieres: false,
+        includeChefDepartement: false
+      }
+    });
+    return response.data.totalElements;
+  }
+
   static async getDepartementsUnpaginated(getDepartementParams: IGetDepartementParams): Promise<IDepartement[]> {
     const response = this.getDepartements(getDepartementParams);
     return (await response).records;

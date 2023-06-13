@@ -1,36 +1,41 @@
-import { HoverCard, Group, Image, Text } from "@mantine/core"
+import { HoverCard, Group, Image, Text, Avatar } from "@mantine/core"
 import { Link } from "react-router-dom"
 import { IUtilisateur } from "../types/interfaces"
 import { concatClassNames as cn } from "../helpers/ConcatClassNames"
+import { IconAt, IconPhoneCall } from "@tabler/icons-react"
 
 const UserHoverableLink = ({ utilisateur, customStyle }: {
   customStyle?: string,
   utilisateur: IUtilisateur
 }) => {
 
+  const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1).toLocaleLowerCase();
+
   return (
     <HoverCard width={280} shadow="md">
       <HoverCard.Target>
-        <Link className={cn("text-cyan-500 hover:text-cyan-800 hover:underline", customStyle)} to={`/admin/gestion-utilisateur/adminstrateurs/${utilisateur?.code}`}>
-          {`${utilisateur?.nom} ${utilisateur?.prenom}`}
+        <Link className={cn("text-primary hover:text-cyan-800 hover:underline", customStyle)} to={`/admin/gestion-utilisateur/adminstrateurs/${utilisateur?.code}`}>
+          {`${capitalize(utilisateur?.prenom)} ${utilisateur?.nom.toUpperCase()} `}
         </Link>
       </HoverCard.Target>
       <HoverCard.Dropdown>
-        <Group align="start">
-          <Image
-            maw={100}
-            radius="md"
-            src={utilisateur.photo}
-            alt={`${utilisateur?.nom} ${utilisateur?.prenom} photo`}
-            withPlaceholder
-          />
+        <Group noWrap>
+          <Avatar src={utilisateur.photo} size={94} radius="md" />
           <div>
-            <Text size="md" fw={500}>
-              {` ${utilisateur?.nom} ${utilisateur?.prenom}`}
+            <Text fz="xs" tt="uppercase" fw={700} c="dimmed">
+              {utilisateur?.roles?.map((role, index) => index === 0 ? role.roleName : `, ${role.roleName}`)}
             </Text>
-            <Text size="sm">
-              {utilisateur?.telephone}
+
+            <Text fz="lg" fw={500} >
+              {`${capitalize(utilisateur?.prenom)} ${utilisateur?.nom.toUpperCase()} `}
             </Text>
+
+            <Group noWrap spacing={10} mt={5}>
+              <IconPhoneCall stroke={1.5} size="1rem" />
+              <Text fz="xs" c="dimmed">
+                {utilisateur.telephone}
+              </Text>
+            </Group>
           </div>
         </Group>
       </HoverCard.Dropdown>

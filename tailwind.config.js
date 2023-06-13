@@ -6,7 +6,11 @@ export default {
     "./src/layouts/**/*.{js,jsx,ts,tsx}"
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        'primary': '#004c83',
+      }
+    },
   },
   plugins: [],
 }
