@@ -5,7 +5,7 @@ import { notifications } from "@mantine/notifications";
 import { IconCheck, IconEdit, IconTrash } from "@tabler/icons-react";
 import { AxiosError } from "axios";
 import { MRT_ColumnDef, MantineReactTable } from "mantine-react-table";
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import { useQuery, useMutation } from "react-query";
 import DepartementTableDetails from "../../../components/departement/DepartementTableDetails";
 import DepartementUpdateModal from "../../../components/departement/DepartementUpdateModal";
@@ -13,23 +13,26 @@ import TableErrorBanner from "../../../components/TableErrorBanner";
 import { ROLES } from "../../../constants/roles";
 import { DepartementService } from "../../../services/DepartementService";
 import { UtilisateurService } from "../../../services/UtilisateurService";
-import { IDepartement, IFiliere } from "../../../types/interfaces";
+import { IDepartement, IFiliere, IPaging } from "../../../types/interfaces";
 import DepartementCreateModal from "../../../components/departement/DepartementCreateModal";
+import usePaginationState from "../../../store/usePaginationState";
 
 const DepartementPage = () => {
 
-  const [pagination, setPagination] = useState({
-    pageIndex: 0,
-    pageSize: 10,
-  });
+  const paginationState = usePaginationState()
+  const [pagination, setPagination] = useState<IPaging>(
+    paginationState.getPagination('departements') ||
+    {
+      pageIndex: 0,
+      pageSize: 10,
+      totalItems: 0,
+      totalPages: 0,
+    });
 
-  useEffect(() => {
-    async function prefetch() {
-      await new Promise((resolve) => setTimeout(resolve, 200))
-      refetch()
-    }
-    prefetch()
-  }, [pagination.pageIndex, pagination.pageSize])
+  const [mantinePaging, onPaginationChange] = useState({
+    pageIndex: pagination.pageIndex,
+    pageSize: pagination.pageSize,
+  })
 
   const editModal = useDisclosure(false);
 
@@ -48,6 +51,20 @@ const DepartementPage = () => {
       }
     ),
     keepPreviousData: true,
+    onSuccess: (data) => {
+      const paging = {
+        pageIndex: data.page,
+        pageSize: data.size,
+        totalItems: data.totalElements,
+        totalPages: data.totalPages,
+      }
+      onPaginationChange({
+        pageIndex: data.page,
+        pageSize: data.size,
+      })
+      setPagination(paging)
+      paginationState.setPagination("departements", paging)
+    }
   })
 
   const deleteDepartementMutation = useMutation(DepartementService.deleteDepartement,
@@ -167,9 +184,11 @@ const DepartementPage = () => {
             }
             : undefined
         }
-        onPaginationChange={setPagination}
+        rowCount={pagination.totalItems}
+        onPaginationChange={onPaginationChange}
+        initialState={{ pagination: mantinePaging }}
         state={{
-          pagination, showProgressBars: isLoading || isFetching, showSkeletons: isLoading || isFetching, showAlertBanner: isError,
+          pagination: mantinePaging, showProgressBars: isLoading || isFetching, showSkeletons: isLoading || isFetching, showAlertBanner: isError,
         }}
         enableRowSelection
         positionToolbarAlertBanner="top"

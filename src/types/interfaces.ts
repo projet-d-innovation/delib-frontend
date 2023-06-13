@@ -84,6 +84,21 @@ export interface IModule {
   coefficientModule: number
   codeSemestre: string
   elements: IElement[]
+  semestre: ISemestre
+}
+
+
+export interface IUpdateModule {
+  intituleModule: string
+  codeSemestre: string | null
+  coefficientModule: number
+}
+
+export interface ICreateModule {
+  codeModule: string
+  intituleModule: string
+  codeSemestre: string
+  coefficientModule: number
 }
 
 export interface IElement {
@@ -104,6 +119,13 @@ export interface IPagination<Item> {
   totalPages: number
   totalElements: number
   records: Item[]
+}
+
+export interface IPaging {
+  pageIndex: number,
+  pageSize: number,
+  totalItems: number,
+  totalPages: number,
 }
 
 export interface IRole {

@@ -82,8 +82,8 @@ const useAuthStore = create<AuthState>((set, get) => ({
   getPermissions: () => {
     const user = get().user
     if (!user) return []
-    const permissions = user.role.map(role => role.permissions.map(permission => permission.permissionId))
-    return permissions.flat()
+    const permissions = user.role.map(role => role?.permissions?.map(permission => permission.permissionId))
+    return permissions.flat() as string[] ?? []
   }
 }))
 
