@@ -22,7 +22,7 @@ export const adminNavs: ILinksGroupProps[] = [
         link: "/admin/gestion-utilisateur/adminstrateurs",
         permission: "ACCESS_DASHBOARD",
       },
-     
+
       {
         label: "Etudiants",
         link: "/admin/gestion-utilisateur/etudiants",
@@ -62,6 +62,12 @@ export const adminNavs: ILinksGroupProps[] = [
       {
         label: "Filières",
         link: "/admin/gestion-pedagogique/filieres",
+        permission: "ACCESS_DASHBOARD",
+
+      },
+      {
+        label: "Semestres",
+        link: "/admin/gestion-pedagogique/semestres",
         permission: "ACCESS_DASHBOARD",
 
       },

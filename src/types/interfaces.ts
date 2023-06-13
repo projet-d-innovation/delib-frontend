@@ -1,66 +1,98 @@
-
-export interface IEtudiant {
-  code: string,
-  cin: string,
-  cne: string,
-  nom: string,
-  prenom: string,
-  telephone: string,
-  adresse: string,
-  dateNaissance: Date,
-  ville: string,
-  pays: string,
-  photo: string
-}
-
-export interface IProfesseur {
-  code: string,
-  nom: string,
-  prenom: string,
-  telephone: string,
-  photo: string,
-  codeDepartement: string,
-  departement: IDepartement,
-  elements?: IElement[]
-}
-
 export interface IUtilisateur {
-  code: string,
-  nom: string,
-  prenom: string,
-  telephone: string,
-  photo?: string,
-  roles?: IRoleWithoutPermissions[]
+  code: string
+  cin?: string
+  cne?: string
+  nom: string
+  prenom: string
+  telephone?: string
+  adresse?: string
+  dateNaissance?: Date
+  ville?: string
+  sexe?: string
+  pays?: string
+  photo?: string
+  roles?: IRole[]
 }
 
 export interface IDepartement {
-  codeDepartement: string,
-  intituleDepartement: string,
+  codeDepartement: string
+  intituleDepartement: string
   codeChefDepartement: string
-  chefDepartement?: IUtilisateur,
+  chefDepartement?: IUtilisateur
+  filieres?: IFiliere[]
 }
 
+export interface IUpdateDepartement {
+  intituleDepartement: string
+  codeChefDepartement: string
+}
+
+export interface ICreateDepartement {
+  codeDepartement: string
+  intituleDepartement: string
+  codeChefDepartement: string
+}
+
+export interface IFiliere {
+
+  codeFiliere: string
+  intituleFiliere: string
+  codeDepartement: string
+  codeChefFiliere: string | null
+  chefFiliere: IUtilisateur | null
+  semestres?: ISemestre[]
+  departement?: IDepartement
+}
+
+
+export interface IUpdateFiliere {
+  intituleFiliere: string
+  codeChefFiliere: string | null
+  codeDepartement: string | null
+}
+
+export interface ICreateFiliere {
+  codeFiliere: string
+  intituleFiliere: string
+  codeChefFiliere?: string | null
+  codeDepartement: string
+}
 
 export interface ISemestre {
-  codeSemestre: string,
-  codeFiliere: string,
+  codeSemestre: string
+  codeFiliere: string
   intituleSemestre: string
+  modules?: IModule[]
+  filiere?: IFiliere
 }
+
+export interface IUpdateSemestre {
+  intituleSemestre: string
+  codeFiliere: string | null
+}
+
+export interface ICreateSemestre {
+  codeSemestre: string
+  intituleSemestre: string
+  codeFiliere: string
+}
+
 
 export interface IModule {
-  codeModule: string,
-  intituleModule: string,
-  coefficientModule: number,
+  codeModule: string
+  intituleModule: string
+  coefficientModule: number
   codeSemestre: string
+  elements: IElement[]
 }
 
-
 export interface IElement {
-  codeElement: string,
-  intituleElement: string,
-  coefficientElement: number,
-  codeModule: string,
+  codeElement: string
+  intituleElement: string
+  coefficientElement: number
+  codeModule: string
   codeProfesseur: string
+  professeur?: IUtilisateur
 }
 
 
@@ -74,23 +106,19 @@ export interface IPagination<Item> {
   records: Item[]
 }
 
-export interface IPermission {
-  permissionId: string,
-  permissionName: string,
-  path: string
-}
-
 export interface IRole {
-  roleId: string,
-  roleName: string,
-  permissions: IPermission[]
+  roleId: string
+  roleName: string
+  permissions?: IPermission[]
+  groupe?: string
 }
-
-export interface IRoleWithoutPermissions {
-  roleId: string,
-  roleName: string,
+export interface IPermission {
+  permissionId: string
+  permissionName: string
+  path?: string
+  method?: string
+  groupe?: string
 }
-
 
 export interface IUser {
   id: string;
@@ -104,8 +132,18 @@ export interface IAuth {
 }
 
 
-export interface IBusinessException {
-  code: number;
-  status: string;
-  error: string;
+export interface IExceptionResponse {
+  code?: number
+  status?: string
+  message?: string
+  identifiers?: string[]
+  errors: IValidationError[]
+  error?: string
+  path?: string
+  timestamp?: string
+}
+
+export interface IValidationError {
+  field: string
+  message: string
 }

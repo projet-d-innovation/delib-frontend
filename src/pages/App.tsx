@@ -21,7 +21,8 @@ import GestionDedagogiquePage from "./admin/pedagoqiue/GestionDepagoqique"
 import DeliberationPage from "./admin/deliberation/DeliberationPage"
 import PermissionPage from "./admin/utilisateurs/PermissionPage"
 import AdministrateurDetailsPage from "./admin/utilisateurs/Administateurs/AdministrateurDetailsPage"
-import Home from "./student/Home"
+import SemestrePage from "./admin/pedagoqiue/SemestrePage"
+// import Home from "./student/Home"
 
 function App() {
   const authStore = useAuthStore()
@@ -34,7 +35,8 @@ function App() {
   return (
     <Routes>
 
-      <Route path="/" element={<Home />} />
+      {/* <Route path="/" element={<Home />} /> */}
+      <Route path="/" element={<Navigate to='/admin' />} />
 
       <Route path="admin" element={
         <ProtectedRoute
@@ -65,6 +67,7 @@ function App() {
         <Route path="gestion-pedagogique" element={<GestionDedagogiquePage />} />
         <Route path="gestion-pedagogique/departements" element={<DepartementPage />} />
         <Route path="gestion-pedagogique/filieres" element={<FilierePage />} />
+        <Route path="gestion-pedagogique/semestres" element={<SemestrePage />} />
         <Route path="gestion-pedagogique/modules" element={<ModulePage />} />
         <Route path="gestion-pedagogique/elements" element={<ElementPage />} />
 
