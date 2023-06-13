@@ -5,30 +5,34 @@ import { notifications } from "@mantine/notifications";
 import { IconCheck, IconEdit, IconTrash } from "@tabler/icons-react";
 import { AxiosError } from "axios";
 import { MRT_ColumnDef, MantineReactTable } from "mantine-react-table";
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import { useQuery, useMutation } from "react-query";
 import TableErrorBanner from "../../../components/TableErrorBanner";
 import { SemestreService } from "../../../services/SemestreService";
 import SemestreCreateModal from "../../../components/semestre/SemestreCreateModal";
 import SemestreTableDetails from "../../../components/semestre/SemestreTableDetails";
 import SemestreUpdateModal from "../../../components/semestre/SemestreUpdateModal";
-import { IDepartement, IFiliere, IModule, ISemestre } from "../../../types/interfaces";
+import { IFiliere, IModule, IPaging, ISemestre } from "../../../types/interfaces";
 import { FiliereService } from "../../../services/FiliereService";
+import usePaginationState from "../../../store/usePaginationState";
 
 const SemestrePage = () => {
 
-  const [pagination, setPagination] = useState({
-    pageIndex: 0,
-    pageSize: 10,
-  });
+  const paginationState = usePaginationState()
 
-  useEffect(() => {
-    async function prefetch() {
-      await new Promise((resolve) => setTimeout(resolve, 200))
-      refetch()
-    }
-    prefetch()
-  }, [pagination.pageIndex, pagination.pageSize])
+  const [pagination, setPagination] = useState<IPaging>(
+    paginationState.getPagination('semestres') ||
+    {
+      pageIndex: 0,
+      pageSize: 10,
+      totalItems: 0,
+      totalPages: 0,
+    });
+
+  const [mantinePaging, onPaginationChange] = useState({
+    pageIndex: pagination.pageIndex,
+    pageSize: pagination.pageSize,
+  })
 
   const editModal = useDisclosure(false);
 
@@ -47,6 +51,20 @@ const SemestrePage = () => {
       }
     ),
     keepPreviousData: true,
+    onSuccess: (data) => {
+      const paging = {
+        pageIndex: data.page,
+        pageSize: data.size,
+        totalItems: data.totalElements,
+        totalPages: data.totalPages,
+      }
+      onPaginationChange({
+        pageIndex: data.page,
+        pageSize: data.size,
+      })
+      setPagination(paging)
+      paginationState.setPagination("semestres", paging)
+    }
   })
 
   const deleteSemestreMutation = useMutation(SemestreService.deleteSemestre,
@@ -125,6 +143,9 @@ const SemestrePage = () => {
         id: 'filiere',
         header: 'Filière',
         Cell: ({ cell }) => cell.getValue<IFiliere>()?.intituleFiliere || "-",
+        filterFn: (rows, id, filterValue) => {
+          return rows.original.filiere?.intituleFiliere?.toLowerCase().includes(filterValue.toLowerCase()) || false
+        },
         size: 350
       },
       {
@@ -171,9 +192,10 @@ const SemestrePage = () => {
             }
             : undefined
         }
-        onPaginationChange={setPagination}
-        initialState={{ pagination }}
-        state={{ pagination, showProgressBars: isLoading || isFetching, showSkeletons: isLoading || isFetching, showAlertBanner: isError, }}
+        rowCount={pagination.totalItems}
+        onPaginationChange={onPaginationChange}
+        initialState={{ pagination: mantinePaging }}
+        state={{ pagination: mantinePaging, showProgressBars: isLoading || isFetching, showSkeletons: isLoading || isFetching, showAlertBanner: isError, }}
         enableRowSelection
         positionToolbarAlertBanner="top"
         enableFullScreenToggle={false}

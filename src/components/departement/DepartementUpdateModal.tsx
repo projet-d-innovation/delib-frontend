@@ -25,7 +25,6 @@ const DepartementUpdateModal = ({ opened, close, departement, administrateurs, r
   refetch: () => void
 }) => {
   if (!departement) return null
-  console.log(administrateurs)
 
   useEffect(() => {
     form.setValues({

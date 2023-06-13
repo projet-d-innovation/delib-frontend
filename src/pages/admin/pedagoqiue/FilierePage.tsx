@@ -5,7 +5,7 @@ import { notifications } from "@mantine/notifications";
 import { IconCheck, IconEdit, IconTrash } from "@tabler/icons-react";
 import { AxiosError } from "axios";
 import { MRT_ColumnDef, MantineReactTable } from "mantine-react-table";
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import { useQuery, useMutation } from "react-query";
 import TableErrorBanner from "../../../components/TableErrorBanner";
 import { ROLES } from "../../../constants/roles";
@@ -14,23 +14,27 @@ import { UtilisateurService } from "../../../services/UtilisateurService";
 import FiliereCreateModal from "../../../components/filiere/FiliereCreateModal";
 import FiliereTableDetails from "../../../components/filiere/FiliereTableDetails";
 import FiliereUpdateModal from "../../../components/filiere/FiliereUpdateModal";
-import { IDepartement, IFiliere } from "../../../types/interfaces";
+import { IDepartement, IFiliere, IPaging } from "../../../types/interfaces";
 import { DepartementService } from "../../../services/DepartementService";
+import usePaginationState from "../../../store/usePaginationState";
 
 const FilierePage = () => {
 
-  const [pagination, setPagination] = useState({
-    pageIndex: 0,
-    pageSize: 10,
-  });
+  const paginationState = usePaginationState()
 
-  useEffect(() => {
-    async function prefetch() {
-      await new Promise((resolve) => setTimeout(resolve, 200))
-      refetch()
-    }
-    prefetch()
-  }, [pagination.pageIndex, pagination.pageSize])
+  const [pagination, setPagination] = useState<IPaging>(
+    paginationState.getPagination('filieres') ||
+    {
+      pageIndex: 0,
+      pageSize: 10,
+      totalItems: 0,
+      totalPages: 0,
+    });
+
+  const [mantinePaging, onPaginationChange] = useState({
+    pageIndex: pagination.pageIndex,
+    pageSize: pagination.pageSize,
+  })
 
   const editModal = useDisclosure(false);
 
@@ -51,6 +55,20 @@ const FilierePage = () => {
       }
     ),
     keepPreviousData: true,
+    onSuccess: (data) => {
+      const paging = {
+        pageIndex: data.page,
+        pageSize: data.size,
+        totalItems: data.totalElements,
+        totalPages: data.totalPages,
+      }
+      onPaginationChange({
+        pageIndex: data.page,
+        pageSize: data.size,
+      })
+      setPagination(paging)
+      paginationState.setPagination("filieres", paging)
+    }
   })
 
   const deleteFiliereMutation = useMutation(FiliereService.deleteFiliere,
@@ -181,8 +199,10 @@ const FilierePage = () => {
             }
             : undefined
         }
-        onPaginationChange={setPagination}
-        state={{ pagination, showProgressBars: isLoading || isFetching, showSkeletons: isLoading || isFetching, showAlertBanner: isError, }}
+        rowCount={pagination.totalItems}
+        onPaginationChange={onPaginationChange}
+        initialState={{ pagination: mantinePaging }}
+        state={{ pagination: mantinePaging, showProgressBars: isLoading || isFetching, showSkeletons: isLoading || isFetching, showAlertBanner: isError, }}
         enableRowSelection
         positionToolbarAlertBanner="top"
         enableFullScreenToggle={false}
