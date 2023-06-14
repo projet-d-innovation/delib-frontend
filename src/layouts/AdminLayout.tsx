@@ -5,6 +5,7 @@ import {
   Header,
   MediaQuery,
   Text,
+  Image
 } from "@mantine/core";
 import { AdminNavbar } from "../components/AdminNavbar";
 
@@ -25,7 +26,7 @@ const AdminLayout = () => {
       navbar={<AdminNavbar hidden={!navStore.opened} />}
       header={
         <Header height={{ base: 60 }} p="md">
-          <div className="flex items-center h-full">
+          <div className="flex items-center h-full ">
             <MediaQuery largerThan="sm" styles={{ display: "none" }}>
               <Burger
                 opened={navStore.opened}
@@ -35,10 +36,9 @@ const AdminLayout = () => {
               />
             </MediaQuery>
             <Link to="/admin" className="flex items-center">
-              <Avatar color="blue" radius="sm" className="mx-2">
-                <IconStar size="1rem" />
-              </Avatar>
-              <Text className="font-bold">ERP-ENSET</Text>
+              {/* <Avatar color="blue" radius="sm" > */}
+              <Image src="/enset.svg" alt="enset logo" mx="auto" height={50} />
+              {/* </Avatar> */}
             </Link>
           </div>
         </Header>

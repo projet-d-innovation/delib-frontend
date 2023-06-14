@@ -201,7 +201,7 @@ const DepartementPage = () => {
                 onClick={
                   () => createModal[1].open()
                 }
-                className="bg-blue-400">
+                className="bg-primary ">
                 Nouveau
               </Button>
               <Button
@@ -252,6 +252,7 @@ const DepartementPage = () => {
                   children: (
                     <Text>Êtes-vous sûr de vouloir supprimer ce département ?</Text>
                   ),
+
                   centered: true,
                   size: 'md',
                   labels: {

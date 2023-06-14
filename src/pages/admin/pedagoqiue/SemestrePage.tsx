@@ -207,7 +207,7 @@ const SemestrePage = () => {
                 onClick={
                   () => createModal[1].open()
                 }
-                className="bg-blue-400">
+                className="bg-primary">
                 Nouveau
               </Button>
               <Button

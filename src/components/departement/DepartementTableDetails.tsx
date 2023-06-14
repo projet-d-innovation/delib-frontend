@@ -5,7 +5,6 @@ import UserHoverableLink from "../UserHoverableLink";
 
 
 const DepartementTableDetails = (departement: IDepartement) => {
-  console.log(departement.chefDepartement)
   return (
     <Box
       sx={{
