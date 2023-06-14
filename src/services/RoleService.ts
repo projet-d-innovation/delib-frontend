@@ -24,7 +24,6 @@ export class RoleService {
         page, size, includePermissions
       }
     });
-    console.log(response.data);
     return response.data;
   }
 
@@ -43,7 +42,6 @@ export class RoleService {
   }
 
   static async updateRole(id: string, role: IUpdateRole): Promise<IRole> {
-    console.log(role, id)
     const response = await AXIOS_INSTANCE.patch(`/roles/${id}`, role);
     return response.data;
   }

@@ -14,11 +14,12 @@ interface ISelect {
   group?: string
 }
 
-const ModuleUpdateModal = ({ opened, close, module, semestres, refetch }: {
+const ModuleUpdateModal = ({ opened, close, module, semestres, filieres, refetch }: {
   opened: boolean,
   close: () => void
   module: IModule | null
   semestres: ISelect[],
+  filieres: ISelect[],
   refetch: () => void
 }) => {
   if (!module) return null
@@ -29,6 +30,7 @@ const ModuleUpdateModal = ({ opened, close, module, semestres, refetch }: {
       coefficientModule: module?.coefficientModule,
       codeModule: module?.codeModule,
       semestre: module?.codeSemestre,
+      filiere: module?.semestre.codeFiliere,
     })
   }, [module])
 
@@ -38,6 +40,7 @@ const ModuleUpdateModal = ({ opened, close, module, semestres, refetch }: {
       coefficientModule: module?.coefficientModule,
       codeModule: module?.codeModule,
       semestre: module?.codeSemestre,
+      filiere: module?.semestre.codeFiliere,
     },
     validate: {
       intituleModule: (value) => (value.length < 5 ? 'Intitulé doit etre supérieur à 5' : null),
@@ -106,17 +109,32 @@ const ModuleUpdateModal = ({ opened, close, module, semestres, refetch }: {
       >
 
         <Group mt="xl" spacing="lg">
+
+          <Select
+            className="w-full"
+            disabled={semestres.length === 0 || true}
+            label="Filiere"
+            placeholder="Filiere"
+            {...form.getInputProps('filiere')}
+            data={filieres}
+            clearable
+            nothingFound="Pas de filieres trouvés"
+            dropdownPosition="bottom"
+            maxDropdownHeight={200}
+
+            required
+          />
           <Select
             className="w-full"
             disabled={semestres.length === 0 || true}
             label="Semestres"
             placeholder="Semestres"
             {...form.getInputProps('semestre')}
-            data={semestres}
+            data={semestres.filter((semestre) => semestre.group === form.values.filiere)}
             clearable
             nothingFound="Pas de semestres trouvés"
             dropdownPosition="bottom"
-            maxDropdownHeight={300}
+            maxDropdownHeight={200}
             required
           />
 
@@ -132,7 +150,9 @@ const ModuleUpdateModal = ({ opened, close, module, semestres, refetch }: {
             max={1}
             min={0}
             step={0.1}
-            label="Coéfficient" placeholder="Coéfficient" {...form.getInputProps('coefficientModule')} />
+            label="Coéfficient" placeholder="Coéfficient"
+            {...form.getInputProps('coefficientModule')}
+          />
 
         </Group>
 
