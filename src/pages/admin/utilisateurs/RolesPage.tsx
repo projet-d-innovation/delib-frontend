@@ -1,71 +1,71 @@
-// import { useQuery } from "react-query"
-// import { Alert, Skeleton, Table, Text } from "@mantine/core"
-// import { IconAlertCircle } from "@tabler/icons-react"
-// import { randomId, usePagination } from "@mantine/hooks"
-// import { useState } from "react"
-// import { getRoles } from "../../../api/roleApi"
-// import { IRole } from "../../../types/interfaces"
-// import { Link } from "react-router-dom"
-// import classNames from "classnames"
-// import Pagination from "../../../components/Pagination"
-// import LoadingError from "../../../components/LoadingError"
-// import Fetching from "../../../components/Fetching"
+import { useQuery } from "react-query"
+import { Alert, Skeleton, Table, Text } from "@mantine/core"
+import { IconAlertCircle } from "@tabler/icons-react"
+import { randomId, usePagination } from "@mantine/hooks"
+import { useState } from "react"
+import { IRole } from "../../../types/interfaces"
+import { Link } from "react-router-dom"
+import classNames from "classnames"
+import Pagination from "../../../components/Pagination"
+import LoadingError from "../../../components/LoadingError"
+import Fetching from "../../../components/Fetching"
+import { RoleService } from "../../../services/RoleService"
 
 const RolePage = () => {
 
-  // const [page, onChange] = useState(1);
-  // const pagination = usePagination({ total: 10, page, onChange });
+  const [page, onChange] = useState(0);
+  const pagination = usePagination({ total: 10, page, onChange });
 
-  // const { data, isLoading, isError, refetch, isFetching } = useQuery({
-  //   queryKey: ['roles', page],
-  //   queryFn: () => getRoles({ page: pagination.active, size: 10 }),
-  //   keepPreviousData: true,
-  // })
+  const { data, isLoading, isError, refetch, isFetching } = useQuery({
+    queryKey: ['roles', page],
+    queryFn: () => RoleService.getRoles({ page: pagination.active, size: 10, includePermissions: true }),
+    keepPreviousData: true,
+  })
 
-  // const onPaginationChange = (page: number) => {
-  //   onChange(page);
-  // };
+  const onPaginationChange = (page: number) => {
+    onChange(page);
+  };
 
 
-  // const rows = data?.records?.map((item: IRole) => {
-  //   return (
-  //     <tr key={randomId()}
-  //       className='hover:bg-blue-200'
-  //     >
-  //       <td >
-  //         <Text size="sm" weight={500}>
-  //           {item.roleId}
-  //         </Text>
-  //       </td>
-  //       <td >
-  //         <Text size="sm" >
-  //           {item.roleName}
-  //         </Text>
-  //       </td>
-  //       <td >
-  //         <Text size="sm" >
-  //           {item.permissions?.length ?? 0} permission{item.permissions?.length > 1 ? 's' : ''}
-  //         </Text>
-  //       </td>
-  //       <td className="flex justify-end">
-  //         <Link
-  //           to={item.roleId} className="px-4  hover:text-blue-600">
-  //           Voir permissions
-  //         </Link>
-  //       </td>
-  //     </tr>
-  //   );
-  // });
+  const rows = data?.records?.map((item: IRole) => {
+    return (
+      <tr key={randomId()}
+        className='hover:bg-blue-200'
+      >
+        <td >
+          <Text size="sm" weight={500}>
+            {item.roleId}
+          </Text>
+        </td>
+        <td >
+          <Text size="sm" >
+            {item.roleName}
+          </Text>
+        </td>
+        <td >
+          <Text size="sm" >
+            {item.permissions?.length ?? 0} permission{item.permissions && item.permissions?.length > 1 ? 's' : ''}
+          </Text>
+        </td>
+        <td className="flex justify-end">
+          <Link
+            to={item.roleId} className="px-4  hover:text-blue-600">
+            Voir permissions
+          </Link>
+        </td>
+      </tr>
+    );
+  });
 
-  // if (isLoading) return <Skeleton className="mt-3 min-h-screen" />
+  if (isLoading) return <Skeleton className="mt-3 min-h-screen" />
 
-  // if (isError) return <LoadingError refetch={refetch} />
+  if (isError) return <LoadingError refetch={refetch} />
 
 
   return (
     <main className=" min-h-screen py-2">
       <h1 className="text-3xl font-bold mb-3  p-2">Roles et permissions</h1>
-      {/* {isFetching && <Fetching />}
+      {isFetching && <Fetching />}
 
       {
         data?.records == null || data?.records?.length === 0 ?
@@ -74,15 +74,16 @@ const RolePage = () => {
           </Alert>
           :
           <div className="relative">
-            <Table className={
-              classNames("border-gray-100 border-2 ", {
-                'blur-sm': isFetching
-              })
-            } verticalSpacing="sm">
-              <thead className="bg-[#e7f5ff] ">
-                <tr>
-                  <th>Role id</th>
-                  <th>Role name</th>
+            <Table
+              className={
+                classNames("border-cyan-100 border-2 ", {
+                  'blur-sm': isFetching
+                })
+              } verticalSpacing="sm">
+              <thead className="bg-primary ">
+                <tr >
+                  <th><Text color="white">Role id</Text></th>
+                  <th><Text color="white">Role name</Text></th>
                   <th></th>
                   <th></th>
                 </tr>
@@ -96,7 +97,7 @@ const RolePage = () => {
               onPaginationChange={onPaginationChange}
             />
           </div>
-      } */}
+      }
     </main>
   )
 }

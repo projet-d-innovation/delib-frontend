@@ -1,4 +1,4 @@
-import { Modal, Box, TextInput, Select, Group, Button, useMantineTheme } from "@mantine/core"
+import { Modal, Box, TextInput, Select, Group, Button, useMantineTheme, NumberInput, ActionIcon, NumberInputHandlers } from "@mantine/core"
 import { useForm } from "@mantine/form"
 import { notifications } from "@mantine/notifications"
 import { IconCheck } from "@tabler/icons-react"
@@ -6,6 +6,7 @@ import { useMutation } from "react-query"
 import { IExceptionResponse, IModule } from "../../types/interfaces"
 import { AxiosError } from "axios"
 import { ModuleService } from "../../services/ModuleService"
+import { useEffect, useRef } from "react"
 
 interface ISelect {
   value: string
@@ -14,10 +15,11 @@ interface ISelect {
 }
 
 
-const ModuleCreateModal = ({ opened, close, semestres, refetch }: {
+const ModuleCreateModal = ({ opened, close, semestres, filieres, refetch }: {
   opened: boolean,
   close: () => void
   semestres: ISelect[],
+  filieres: ISelect[],
   refetch: () => void
 }) => {
 
@@ -26,8 +28,8 @@ const ModuleCreateModal = ({ opened, close, semestres, refetch }: {
       codeModule: "",
       intituleModule: "",
       semestre: "",
+      filiere: "",
       coefficientModule: 0,
-
     },
     validate: {
       semestre: (value) => (value.length === 0 ? 'Semestre est obligatoire' : null),
@@ -36,6 +38,15 @@ const ModuleCreateModal = ({ opened, close, semestres, refetch }: {
       coefficientModule: (value) => ((value < 0 || value > 1) ? "Coefficent doit etre entre 0 et 1" : null),
     },
   });
+
+  useEffect(() => {
+    if (!form.values.filiere || form.values.filiere?.length === 0) {
+      form.setValues({
+        ...form.values,
+        semestre: "",
+      })
+    }
+  }, [form.values.filiere])
 
   const createModuleMutation = useMutation({
     mutationFn: (createdModule: Partial<IModule>) => ModuleService.createModule({
@@ -77,7 +88,6 @@ const ModuleCreateModal = ({ opened, close, semestres, refetch }: {
   })
 
   const theme = useMantineTheme();
-
   return (
     <Modal size="md" centered={true} opened={opened} onClose={close} title="Creation du module"
       closeOnClickOutside={false}
@@ -89,20 +99,33 @@ const ModuleCreateModal = ({ opened, close, semestres, refetch }: {
 
     >
       <Box maw={320} mx="auto"
-        h={340}
+        h={420}
       >
-        <Group mt="xl" spacing="lg">
+        <Group mt="xl" spacing="xs">
+          <Select
+            className="w-full"
+            disabled={semestres.length === 0}
+            label="Filiere"
+            placeholder="Filiere"
+            {...form.getInputProps('filiere')}
+            data={filieres}
+            clearable
+            nothingFound="Pas de filieres trouvés"
+            dropdownPosition="bottom"
+            maxDropdownHeight={200}
+            required
+          />
           <Select
             className="w-full"
             disabled={semestres.length === 0}
             label="Semestres"
             placeholder="Semestres"
             {...form.getInputProps('semestre')}
-            data={semestres}
+            data={semestres.filter((semestre) => semestre.group === form.values.filiere)}
             clearable
             nothingFound="Pas de semestres trouvés"
             dropdownPosition="bottom"
-            maxDropdownHeight={300}
+            maxDropdownHeight={200}
             required
           />
 
@@ -122,7 +145,9 @@ const ModuleCreateModal = ({ opened, close, semestres, refetch }: {
             max={1}
             min={0}
             step={0.1}
-            label="Coéfficient" placeholder="Coéfficient" {...form.getInputProps('coefficientModule')} />
+            label="Coéfficient" placeholder="Coéfficient"
+            {...form.getInputProps('coefficientModule')}
+          />
 
         </Group>
 

@@ -26,7 +26,7 @@ export class DepartementService {
     return response.data;
   }
 
-  static async getDepartementCount(): Promise<number> {
+  static async count(): Promise<number> {
     const response = await AXIOS_INSTANCE.get("/departements", {
       params: {
         page: 0,

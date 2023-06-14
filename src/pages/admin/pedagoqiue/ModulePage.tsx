@@ -15,6 +15,7 @@ import ModuleUpdateModal from "../../../components/module/ModuleUpdateModal";
 import { IElement, IFiliere, IModule, IPaging, ISemestre } from "../../../types/interfaces";
 import { SemestreService } from "../../../services/SemestreService";
 import usePaginationState from "../../../store/usePaginationState";
+import { FiliereService } from "../../../services/FiliereService";
 
 const ModulePage = () => {
 
@@ -180,6 +181,17 @@ const ModulePage = () => {
     keepPreviousData: true,
   })
 
+  const filiereQuery = useQuery({
+    queryKey: ['filieres'],
+    queryFn: () => FiliereService.getFilieresUnpaginated(
+      {
+        size: 100,
+      }
+    ),
+    keepPreviousData: true,
+  })
+
+
   return (
     <main className=" h-screen py-2 w-full">
       <MantineReactTable
@@ -286,7 +298,14 @@ const ModulePage = () => {
         semestres={
           semestreQuery.data?.map((semestre) => ({
             value: semestre.codeSemestre,
-            label: semestre.intituleSemestre
+            label: semestre.intituleSemestre,
+            group: semestre.codeFiliere
+          })) || []
+        }
+        filieres={
+          filiereQuery.data?.map((filiere) => ({
+            value: filiere.codeFiliere,
+            label: filiere.intituleFiliere
           })) || []
         }
       />
@@ -297,7 +316,14 @@ const ModulePage = () => {
         semestres={
           semestreQuery.data?.map((semestre) => ({
             value: semestre.codeSemestre,
-            label: semestre.intituleSemestre
+            label: semestre.intituleSemestre,
+            group: semestre.codeFiliere
+          })) || []
+        }
+        filieres={
+          filiereQuery.data?.map((filiere) => ({
+            value: filiere.codeFiliere,
+            label: filiere.intituleFiliere
           })) || []
         }
       />
