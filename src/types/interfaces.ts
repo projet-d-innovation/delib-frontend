@@ -134,6 +134,14 @@ export interface IRole {
   permissions?: IPermission[]
   groupe?: string
 }
+
+export interface IUpdateRole {
+  roleId?: string
+  permissions?: number[]
+  groupe?: string
+  roleName?: string
+}
+
 export interface IPermission {
   permissionId: string
   permissionName: string
