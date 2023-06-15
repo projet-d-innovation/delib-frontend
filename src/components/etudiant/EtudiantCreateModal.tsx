@@ -2,46 +2,34 @@ import {
   Modal,
   Box,
   TextInput,
-  Select,
   Group,
   Button,
   useMantineTheme,
   Radio,
-  MultiSelect,
   FileInput,
   rem,
-  Header,
 } from "@mantine/core";
 import { hasLength, isNotEmpty, useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 import { IconCheck, IconUpload } from "@tabler/icons-react";
-import { useMutation, useQuery } from "react-query";
-import { DepartementService } from "../../services/DepartementService";
+import { useMutation } from "react-query";
 import { DateInput } from '@mantine/dates';
 import {
-  ICreateUtilisateur,
-  IDepartement,
   IExceptionResponse,
-  IRole,
   IUtilisateur,
 } from "../../types/interfaces";
-import { Axios, AxiosError } from "axios";
+import { AxiosError } from "axios";
 import { UtilisateurService } from "../../services/UtilisateurService";
-import { RoleService } from "../../services/RoleService";
 import { ROLES } from "../../constants/roles";
 
 const EtudiantCreateModal = ({
   opened,
   close,
   refetch,
-  roles,
-  departements,
 }: {
   opened: boolean;
   close: () => void;
   refetch: () => void;
-  roles: IRole[];
-  departements: IDepartement[];
 }) => {
   const form = useForm({
     initialValues: {
@@ -73,11 +61,11 @@ const EtudiantCreateModal = ({
         "must be a valid telephone number"
       ),
       adresse: hasLength(
-        { min: 3, max: 20 },
+        { min: 3, max: 50 },
         "adresse must be 3-20 characters long"
       ),
       ville: hasLength(
-        { min: 2, max: 10 },
+        { min: 2, max: 20 },
         "ville must be 2-10 characters long"
       ),
       pay: hasLength({ min: 2, max: 10 }, "pay must be 2-10 characters long"),
@@ -86,15 +74,6 @@ const EtudiantCreateModal = ({
     },
   });
 
-  function getDepartmentNames(departements: any[]): string[] {
-    const departmentNames = departements.map((departement) => {
-      return departement.intituleDepartement;
-    }) as string[];
-
-    return departmentNames;
-  }
-
-  const departementNames = getDepartmentNames(departements);
 
   const createUtilisateurMutation = useMutation({
     mutationFn: (createdUtilisateur: Partial<IUtilisateur>) =>
@@ -112,7 +91,6 @@ const EtudiantCreateModal = ({
         pays: createdUtilisateur.pays,
         sexe: createdUtilisateur.sexe,
         roles: [ROLES.ETUDIANT],
-        codeDepartement: createdUtilisateur.departement?.codeDepartement || "",
       }),
     onMutate: () => {
       notifications.show({
@@ -262,21 +240,6 @@ const EtudiantCreateModal = ({
           </Group>
         </Radio.Group>
 
-        <Select
-            className="pt-4 pb-3"
-            label="Departement"
-            placeholder="choisir un departement"
-            data={departementNames}
-            withAsterisk
-            transitionProps={{
-              transition: "pop-top-left",
-              duration: 80,
-              timingFunction: "ease",
-            }}
-            {...form.getInputProps("departement")}
-            withinPortal
-          />
-          
         <FileInput
           label="image"
           placeholder="Entrez votre image"
@@ -307,11 +270,7 @@ const EtudiantCreateModal = ({
                 adresse: form.values.adresse,
                 ville: form.values.ville,
                 pays: form.values.pay,
-                sexe: form.values.sexe,
-                departement: departements.findLast(
-                  (departement) =>
-                    departement.intituleDepartement === form.values.departement
-                ),
+                sexe: form.values.sexe
               });
             }}
           >

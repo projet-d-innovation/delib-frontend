@@ -1,33 +1,26 @@
 import {
   Modal,
   Box,
-  TextInput,
   Select,
   Group,
   Button,
   useMantineTheme,
-  Radio,
   MultiSelect,
-  FileInput,
-  rem,
   Avatar,
   Text,
 } from "@mantine/core";
-import { hasLength, isNotEmpty, useForm } from "@mantine/form";
+import { isNotEmpty, useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
-import { IconCheck, IconUpload } from "@tabler/icons-react";
-import { useMutation, useQuery } from "react-query";
-import { DepartementService } from "../../services/DepartementService";
+import { IconCheck } from "@tabler/icons-react";
+import { useMutation } from "react-query";
 import {
-  ICreateUtilisateur,
   IDepartement,
   IExceptionResponse,
   IRole,
   IUtilisateur,
 } from "../../types/interfaces";
-import { Axios, AxiosError } from "axios";
+import { AxiosError } from "axios";
 import { UtilisateurService } from "../../services/UtilisateurService";
-import { RoleService } from "../../services/RoleService";
 import { forwardRef } from "react";
 import { ROLES } from "../../constants/roles";
 
@@ -64,13 +57,6 @@ const AdministrateurByProfesseurCreateModal = ({
     },
   });
 
-  // function getDepartmentNames(departements: any[]): string[] {
-  //   const departmentNames = departements.map((departement) => {
-  //     return departement.intituleDepartement;
-  //   }) as string[];
-
-  //   return departmentNames;
-  // }
 
   function getRoleNames(roles: any[]): { value: string; label: string }[] {
     const roleNames =
@@ -190,8 +176,8 @@ const AdministrateurByProfesseurCreateModal = ({
         blur: 3,
       }}
     >
-      <Box maw={350} mx="auto" 
-      className="my-24"
+      <Box maw={350} mx="auto"
+        className="my-24"
       >
         <Select
           label="choisi un professeur"
@@ -201,7 +187,7 @@ const AdministrateurByProfesseurCreateModal = ({
           searchable
           maxDropdownHeight={400}
           nothingFound="Nobody here"
-          filter={(value, item:any) =>
+          filter={(value, item: any) =>
             item.label.toLowerCase().includes(value.toLowerCase().trim()) ||
             item.description.toLowerCase().includes(value.toLowerCase().trim())
           }
@@ -228,8 +214,7 @@ const AdministrateurByProfesseurCreateModal = ({
             const professeur = professeurs.find(
               (professeur) => professeur.code === form.values.professeur
             );
-            console.log(professeur);
-            
+
             if (!professeur) return;
             updateUtilisateurMutation.mutate({
               code: professeur?.code,

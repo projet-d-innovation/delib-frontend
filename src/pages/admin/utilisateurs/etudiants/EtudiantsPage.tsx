@@ -40,6 +40,7 @@ import EtudiantUpdateModal from "../../../../components/etudiant/EtudiantUpdateM
 import EtudiantCreateModal from "../../../../components/etudiant/EtudiantCreateModal";
 import { Link } from "react-router-dom";
 import { IconDatabaseImport } from "@tabler/icons-react";
+import { SexeFormatter } from "../../../../helpers/SexeFormatter";
 
 const EtudiantPage = () => {
   const paginationState = usePaginationState();
@@ -276,7 +277,6 @@ const EtudiantPage = () => {
             codeDepartement: item.DEPARTEMENT,
           };
         });
-        console.log(data);
 
         if (data.length === 0) return;
         mutationSave.mutate(data);
@@ -371,8 +371,7 @@ const EtudiantPage = () => {
         header: "CNE",
       },
       {
-        accessorFn: (row: IUtilisateur) =>
-          `${row.sexe === "M" ? "Homme" : "Femme"}`,
+        accessorFn: (row: IUtilisateur) => SexeFormatter(row?.sexe),
         accessorKey: "sexe",
         header: "Sexe",
       },
@@ -441,21 +440,21 @@ const EtudiantPage = () => {
         }}
         mantinePaperProps={{
           radius: "md",
-       
+
         }}
         enableRowActions
         mantineToolbarAlertBannerProps={
           isError
             ? {
-                variant: "filled",
-                color: "red",
-                children: (
-                  <TableErrorBanner
-                    error={error as AxiosError}
-                    refresh={refetch}
-                  />
-                ),
-              }
+              variant: "filled",
+              color: "red",
+              children: (
+                <TableErrorBanner
+                  error={error as AxiosError}
+                  refresh={refetch}
+                />
+              ),
+            }
             : undefined
         }
         rowCount={pagination.totalItems}
@@ -617,15 +616,12 @@ const EtudiantPage = () => {
         close={editModal[1].close}
         etudiant={toBeUpdatedEtudiant}
         refetch={refetch}
-        // roles={roles.data?.records || []}
         departements={departement.data?.records || []}
       />
       <EtudiantCreateModal
         opened={createModal[0]}
         close={createModal[1].close}
         refetch={refetch}
-        roles={roles.data?.records || []}
-        departements={departement.data?.records || []}
       />
     </main>
   );

@@ -1,13 +1,8 @@
-import { IDepartement, IRole, IUtilisateur } from "../../types/interfaces";
+import { IUtilisateur } from "../../types/interfaces";
 import {
   Box,
-  Image,
-  HoverCard,
   Text,
-  Group,
-  Avatar,
-  TypographyStylesProvider,
-  Badge,
+  Image,
 } from "@mantine/core";
 
 
@@ -16,67 +11,36 @@ const EtudiantTableDetails = (utilisatur: IUtilisateur) => {
     <Box
       sx={{
         display: "flex",
-        justifyContent: "space-around",
-        justifyItems: "center",
+        justifyItems: "left",
         alignItems: "start",
       }}
     >
-      <Avatar
-        className="rounded-full my-auto w-36 h-36 "
-        radius="xl"
-        // size="xl"
+      <Image
+        className="rounded-full my-auto"
+        radius="md"
+        width={200}
+        withPlaceholder
         src={utilisatur.photo}
       />
-      <Box sx={{ textAlign: "center" }}>
-        <TypographyStylesProvider variant="h4">
-          {" "}
-          <Text className="font-bold" ta="center" c="dimmed" fz="md">
-            <p>
-              {" "}
-              {utilisatur.nom} {utilisatur.prenom}
-            </p>
-          </Text>
-        </TypographyStylesProvider>
-        <TypographyStylesProvider variant="h1">
-          <Text className="font-bold" ta="center" c="dimmed" fz="md">
-            <p>
-              {" "}
-              CIN {utilisatur.cin} / CNE{utilisatur.cne}
-            </p>
-          </Text>
-        </TypographyStylesProvider>
-        <TypographyStylesProvider variant="h1">
-          <Text className="font-bold" ta="center" c="dimmed" fz="md">
-            <p>
-              {" "}
-              Date de naissance{" "}
-              {(utilisatur.dateNaissance + "").substring(0, 10)}
-            </p>
-          </Text>
-        </TypographyStylesProvider>
-        <TypographyStylesProvider variant="h1">
-          <Text className="font-bold" ta="center" c="dimmed" fz="md">
-            <p> Adresse {utilisatur.adresse}</p>
-          </Text>
-        </TypographyStylesProvider>
-        <TypographyStylesProvider variant="h1">
-          <TypographyStylesProvider variant="h1">
-            <Text className="font-bold" ta="center" c="dimmed" fz="md">
-              <p> Pays {utilisatur.pays}</p>
-            </Text>
-          </TypographyStylesProvider>
-          <TypographyStylesProvider variant="h1">
-            <Text className="font-bold" ta="center" c="dimmed" fz="md">
-              <p>
-                {" "}
-                Pays {utilisatur.pays} / Ville {utilisatur.ville}
-              </p>
-            </Text>
-          </TypographyStylesProvider>
-          <Text className="font-bold" ta="center" c="dimmed" fz="md">
-            <p> Number {utilisatur.telephone}</p>
-          </Text>
-        </TypographyStylesProvider>
+      <Box className="m-5" sx={{ textAlign: "left" }}>
+        <Text className="font-bold" ta="left" c="dimmed" fz="md">
+          <p>
+            {`${utilisatur.nom} ${utilisatur.prenom} | ${utilisatur.cin} | ${utilisatur.cne}`}
+          </p>
+        </Text>
+
+        <Text className="font-bold" ta="left" c="dimmed" fz="md">
+          <p>
+            {`Date de naissance : ${(utilisatur.dateNaissance + "").substring(0, 10)}`}
+          </p>
+        </Text>
+
+        <Text className="font-bold" ta="left" c="dimmed" fz="md">
+          {`${utilisatur.pays} | ${utilisatur.ville}`}
+        </Text>
+        <Text className="font-bold" ta="left" c="dimmed" fz="md">
+          <p>{utilisatur.telephone}</p>
+        </Text>
       </Box>
       <div className=""></div>
     </Box>

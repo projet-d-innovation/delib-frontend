@@ -275,7 +275,6 @@ const ProfesseurPage = () => {
             codeDepartement: item.DEPARTEMENT,
           };
         });
-        console.log(data);
 
         if (data.length === 0) return;
         mutationSave.mutate(data);
@@ -429,15 +428,15 @@ const ProfesseurPage = () => {
         mantineToolbarAlertBannerProps={
           isError
             ? {
-                variant: "filled",
-                color: "red",
-                children: (
-                  <TableErrorBanner
-                    error={error as AxiosError}
-                    refresh={refetch}
-                  />
-                ),
-              }
+              variant: "filled",
+              color: "red",
+              children: (
+                <TableErrorBanner
+                  error={error as AxiosError}
+                  refresh={refetch}
+                />
+              ),
+            }
             : undefined
         }
         rowCount={pagination.totalItems}

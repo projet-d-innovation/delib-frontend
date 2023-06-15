@@ -28,22 +28,18 @@ import { DepartementService } from "../../../../services/DepartementService";
 import { UtilisateurService } from "../../../../services/UtilisateurService";
 import {
   ICreateUtilisateur,
-  IDepartement,
-  IFiliere,
   IPaging,
 } from "../../../../types/interfaces";
 
 import { IRole, IUtilisateur } from "../../../../types/interfaces";
 import usePaginationState from "../../../../store/usePaginationState";
 import TableErrorBanner from "../../../../components/TableErrorBanner";
-import DepartementTableDetails from "../../../../components/departement/DepartementTableDetails";
 import AdministrateurTableDetails from "../../../../components/administrateur/AdministrateurTableDetails";
 import AdministrateurUpdateModal from "../../../../components/administrateur/AdministrateurUpdateModal";
 import AdministrateurCreateModal from "../../../../components/administrateur/AdministrateurCreateModal";
 import { RoleService } from "../../../../services/RoleService";
 import { ROLES, UTILISATEUR_GROUPES } from "../../../../constants/roles";
 import { Link } from "react-router-dom";
-import { GROUP_POSITIONS } from "@mantine/core/lib/Group/Group.styles";
 import { IconDatabaseImport } from "@tabler/icons-react";
 import AdministrateurByProfesseurCreateModal from "../../../../components/administrateur/AdministrateurByProfesseurCreateModal";
 
@@ -284,7 +280,6 @@ const AdministrateurPage = () => {
             codeDepartement: item.DEPARTEMENT,
           };
         });
-        console.log(data);
 
         if (data.length === 0) return;
         mutationSave.mutate(data);
@@ -357,7 +352,7 @@ const AdministrateurPage = () => {
           >
             <Avatar
               className="rounded-full "
-              radius="xl"
+              radius="md"
               size="sm"
               src={row.original.photo}
             />
@@ -434,15 +429,15 @@ const AdministrateurPage = () => {
         mantineToolbarAlertBannerProps={
           isError
             ? {
-                variant: "filled",
-                color: "red",
-                children: (
-                  <TableErrorBanner
-                    error={error as AxiosError}
-                    refresh={refetch}
-                  />
-                ),
-              }
+              variant: "filled",
+              color: "red",
+              children: (
+                <TableErrorBanner
+                  error={error as AxiosError}
+                  refresh={refetch}
+                />
+              ),
+            }
             : undefined
         }
         rowCount={pagination.totalItems}

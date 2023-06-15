@@ -1,5 +1,5 @@
 export enum EtatInscription {
   EN_COURS = "EN_COURS",
-  VALIDEE = "VALIDEE",
-  NON_VALIDEE = "NON_VALIDEE",
+  VALIDE = "VALIDE",
+  NON_VALIDE = "NON_VALIDE",
 }

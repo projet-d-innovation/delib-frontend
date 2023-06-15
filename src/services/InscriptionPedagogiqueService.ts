@@ -3,7 +3,7 @@ import { IUtilisateur } from "../types/interfaces";
 
 export class InscriptionPedagogiqueService {
   static async getEtudiant(id: string): Promise<IUtilisateur> {
-    const response = await AXIOS_INSTANCE.get(`/etudiants/`+id+"");
+    const response = await AXIOS_INSTANCE.get(`/etudiants/${id}`);
     return response.data;
   }
 }

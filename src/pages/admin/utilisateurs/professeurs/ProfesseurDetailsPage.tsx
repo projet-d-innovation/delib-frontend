@@ -1,27 +1,19 @@
 import {
   Avatar,
   Badge,
-  Button,
   Group,
-  List,
   Paper,
   Progress,
   Skeleton,
   Text,
-  ThemeIcon,
-  createStyles,
-  rem,
 } from "@mantine/core";
-import { IconCircleCheck } from "@tabler/icons-react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useQuery } from "react-query";
 import LoadingError from "../../../../components/LoadingError";
 import { UtilisateurService } from "../../../../services/UtilisateurService";
+import { SexeFormatter } from "../../../../helpers/SexeFormatter";
 
 const ProfesseurDetailsPage = () => {
-  const avatar =
-    "https://static-cse.canva.com/blob/1058528/1600w-EW4cggXkgbc.jpg";
-  const name = "Professeur 1";
 
   const { id } = useParams();
 
@@ -30,7 +22,6 @@ const ProfesseurDetailsPage = () => {
     isLoading,
     isError,
     refetch,
-    isFetching,
   } = useQuery({
     queryKey: ["professeur", id],
     queryFn: () => UtilisateurService.getUtilisateur({
@@ -77,7 +68,7 @@ const ProfesseurDetailsPage = () => {
               <Text ta="center" c="dimmed" fz="sm">
                 {professeur?.departement?.intituleDepartement}
               </Text>
-            
+
               <Text ta="center" c="dimmed" fz="sm">
                 {professeur?.departement?.chefDepartement == id && (
                   <Badge className="m-2">Chef de departement</Badge>
@@ -118,8 +109,7 @@ const ProfesseurDetailsPage = () => {
                       Sexe:
                     </Text>
                     <Text className="font-bold" ta="left" c="dark" fz="sm">
-                      { (professeur?.sexe == "M") ?("Masculin") : ("Feminin")}
-                    
+                      {SexeFormatter(professeur?.sexe)}
                     </Text>
                   </Group>
 
@@ -132,7 +122,7 @@ const ProfesseurDetailsPage = () => {
                     </Text>
                   </Group>
 
-                  
+
                 </div>
               </div>
               <div className="border-b-2 shadow-sm "></div>
@@ -149,7 +139,7 @@ const ProfesseurDetailsPage = () => {
                     >
                       <path d="M11.46.146A.5.5 0 0 0 11.107 0H4.893a.5.5 0 0 0-.353.146L.146 4.54A.5.5 0 0 0 0 4.893v6.214a.5.5 0 0 0 .146.353l4.394 4.394a.5.5 0 0 0 .353.146h6.214a.5.5 0 0 0 .353-.146l4.394-4.394a.5.5 0 0 0 .146-.353V4.893a.5.5 0 0 0-.146-.353L11.46.146zm-6.106 4.5L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 1 1 .708-.708z" />
                     </svg>
-                    <p> Abssance de l'enseignant</p>
+                    <p> Absence de l'enseignant</p>
                   </div>
                 </Text>
                 {/* <div className="w-1/4"> */}
@@ -201,7 +191,7 @@ const ProfesseurDetailsPage = () => {
                     <p> Les Elements du Professeur</p>
                   </div>
                 </Text>
-                
+
                 {professeur?.elements?.map((element) => (
                   <div className="md:my-3 rounded-md border-2 border-gray-200 shadow-sm bg-blue-50 p-3 md:pl-5 ">
                     <Text ta="left" c="dimmed" fz="sm">

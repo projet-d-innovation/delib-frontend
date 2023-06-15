@@ -5,11 +5,9 @@ import {
   Paper,
   Progress,
   Skeleton,
- 
   Text,
-
 } from "@mantine/core";
-import {  useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useQuery } from "react-query";
 import LoadingError from "../../../../components/LoadingError";
 import { InscriptionPedagogiqueService } from "../../../../services/InscriptionPedagogiqueService";
@@ -18,6 +16,8 @@ import {
 
 } from "@tabler/icons-react";
 import { EtatInscription } from "../../../../enums/enums";
+import { SexeFormatter } from "../../../../helpers/SexeFormatter";
+import { concatClassNames as cn } from "../../../../helpers/ConcatClassNames";
 
 const EtudiantDetailsPage = () => {
   const { id } = useParams();
@@ -27,10 +27,9 @@ const EtudiantDetailsPage = () => {
     isLoading,
     isError,
     refetch,
-    isFetching,
   } = useQuery({
     queryKey: ["etudiants", id],
-    queryFn: () => InscriptionPedagogiqueService.getEtudiant(id+""),
+    queryFn: () => InscriptionPedagogiqueService.getEtudiant(id + ""),
   });
 
 
@@ -39,6 +38,13 @@ const EtudiantDetailsPage = () => {
 
   if (isLoading) return <Skeleton className="mt-3 min-h-screen" />;
   if (isError) return <LoadingError refetch={refetch} />;
+
+
+  const getResultColor = (result: string) => {
+    if (result === EtatInscription.VALIDE) return "green"
+    if (result === EtatInscription.NON_VALIDE) return "red"
+    return "blue"
+  }
 
   return (
     <>
@@ -120,7 +126,7 @@ const EtudiantDetailsPage = () => {
                       Sexe:
                     </Text>
                     <Text className="font-bold" ta="left" c="dark" fz="sm">
-                      {etudiant?.sexe?.toLowerCase() == "m" ? "Homme" : "Femme"}
+                      {SexeFormatter(etudiant?.sexe)}
                     </Text>
                   </Group>
                   <Group className="">
@@ -187,7 +193,7 @@ const EtudiantDetailsPage = () => {
                     >
                       <path d="M11.46.146A.5.5 0 0 0 11.107 0H4.893a.5.5 0 0 0-.353.146L.146 4.54A.5.5 0 0 0 0 4.893v6.214a.5.5 0 0 0 .146.353l4.394 4.394a.5.5 0 0 0 .353.146h6.214a.5.5 0 0 0 .353-.146l4.394-4.394a.5.5 0 0 0 .146-.353V4.893a.5.5 0 0 0-.146-.353L11.46.146zm-6.106 4.5L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 1 1 .708-.708z" />
                     </svg>
-                    <p> Abssance de l'etudiant</p>
+                    <p> Absence de l'etudiant</p>
                   </div>
                 </Text>
                 <div className="grid md:grid-cols-3 pt-3 gap-6">
@@ -217,57 +223,56 @@ const EtudiantDetailsPage = () => {
         </div>
       </Paper>
 
-      {etudiant?.inscriptions?.map((anneeUniversitaire) => {
-        let MoyenneAnneePaperTheam =
-          anneeUniversitaire.etat == EtatInscription.VALIDEE
-            ? `bg-green-50`
-            : anneeUniversitaire.etat == EtatInscription.NON_VALIDEE
-            ? `bg-red-50`
-            : "bg-slate-50";
-
-        let resultAnneeTheam =
-          anneeUniversitaire.etat == EtatInscription.VALIDEE
-            ? `text-green-400`
-            : anneeUniversitaire.etat == EtatInscription.NON_VALIDEE
-            ? `text-red-400`
-            : "text-blue-400";
-
-        return (
-          <Paper
-            className={`mt-3 shadow-sm pt-12 ${MoyenneAnneePaperTheam}`}
-            radius="md"
-            withBorder
-            p="lg"
-            sx={(theme) => ({
-              backgroundColor:
-                theme.colorScheme === "dark"
-                  ? theme.colors.dark[8]
-                  : theme.white,
-            })}
-          >
-            <div className="grid md:grid-flow-col md:space-x-10 space-y-5 items-center md:px-5 ">
-              <div className="md:col-span-3 ">
-                <div className="grid space-y-10 ">
-                  <div className="pb-3">
-                    <Text className="mb-2" ta="left" c="dimmed" fz="sm">
-                      <div className="flex space-x-3 text-center items-center content-center">
-                        <IconBook2 />
-                        <p>
-                          <b>
-                            {" "}
-                            La Résultat{" "}
-                            {anneeUniversitaire.annee === 1
-                              ? "1ère"
-                              : anneeUniversitaire.annee + "eme"}{" "}
-                            année -{" "}
-                            {"( " +
-                              anneeUniversitaire.codeSessionUniversitaire +
-                              " )"}{" "}
-                          </b>
-                        </p>
-                      </div>
-                    </Text>
-                    <div className="grid md:grid-cols-3 pt-3 gap-6">
+      {etudiant?.inscriptions?.map((anneeUniversitaire) => (
+        <Paper
+          className={cn('mt-3 shadow-sm pt-12', `bg-${getResultColor(anneeUniversitaire.etat)}-50`)}
+          radius="md"
+          withBorder
+          p="lg"
+          sx={(theme) => ({
+            backgroundColor:
+              theme.colorScheme === "dark"
+                ? theme.colors.dark[8]
+                : theme.white,
+          })}
+        >
+          <div className="grid md:grid-flow-col md:space-x-10 space-y-5 items-center md:px-5 ">
+            <div className="md:col-span-3 ">
+              <div className="grid space-y-10 ">
+                <div className="pb-3">
+                  <Text className="mb-2" ta="left" c="dimmed" fz="sm">
+                    <div className="flex space-x-3 text-center items-center content-center">
+                      <IconBook2 />
+                      <p>
+                        <b>
+                          {" "}
+                          La Résultat{" "}
+                          {anneeUniversitaire.annee === 1
+                            ? "1ère"
+                            : anneeUniversitaire.annee + "eme"}{" "}
+                          année -{" "}
+                          {"( " +
+                            anneeUniversitaire.codeSessionUniversitaire +
+                            " )"}{" "}
+                        </b>
+                      </p>
+                    </div>
+                  </Text>
+                  <div className="grid md:grid-cols-3 pt-3 gap-6">
+                    <Group className="md:border-r-2 ">
+                      <Text
+                        className="font-bold"
+                        ta="left"
+                        c="dimmed"
+                        fz="sm"
+                      >
+                        Filiere:
+                      </Text>
+                      <Text className="font-bold" ta="left" c="dark" fz="sm">
+                        {anneeUniversitaire.codeFiliere}
+                      </Text>
+                    </Group>
+                    {anneeUniversitaire.note != 0 && (
                       <Group className="md:border-r-2 ">
                         <Text
                           className="font-bold"
@@ -275,60 +280,46 @@ const EtudiantDetailsPage = () => {
                           c="dimmed"
                           fz="sm"
                         >
-                          Filiere:
-                        </Text>
-                        <Text className="font-bold" ta="left" c="dark" fz="sm">
-                          {anneeUniversitaire.codeFiliere}
-                        </Text>
-                      </Group>
-                      {anneeUniversitaire.note != 0 && (
-                        <Group className="md:border-r-2 ">
-                          <Text
-                            className="font-bold"
-                            ta="left"
-                            c="dimmed"
-                            fz="sm"
-                          >
-                            Moyenne de l'annee:
-                          </Text>
-                          <Text
-                            className="font-bold"
-                            ta="left"
-                            c="dark"
-                            fz="sm"
-                          >
-                            {anneeUniversitaire.etat !=
-                              EtatInscription.EN_COURS &&
-                              anneeUniversitaire.note}
-                          </Text>
-                        </Group>
-                      )}
-                      <Group>
-                        <Text
-                          className="font-bold"
-                          ta="left"
-                          c="dimmed"
-                          fz="sm"
-                        >
-                          État de l'annee:
+                          Moyenne de l'annee:
                         </Text>
                         <Text
-                          className={`font-bold ${resultAnneeTheam}`}
+                          className={cn('font-bold', `text-${getResultColor(anneeUniversitaire.etat)}-400`)}
                           ta="left"
                           c="dark"
                           fz="sm"
                         >
-                          {anneeUniversitaire.etat}
+                          {anneeUniversitaire.etat !=
+                            EtatInscription.EN_COURS &&
+                            anneeUniversitaire.note}
+
                         </Text>
                       </Group>
-                    </div>
+                    )}
+                    <Group>
+                      <Text
+                        className="font-bold"
+                        ta="left"
+                        c="dimmed"
+                        fz="sm"
+                      >
+                        État de l'annee:
+                      </Text>
+                      <Text
+                        className={cn('font-bold', `text-${getResultColor(anneeUniversitaire.etat)}-400`)}
+                        ta="left"
+                        c="dark"
+                        fz="sm"
+                      >
+                        {anneeUniversitaire.etat}
+                      </Text>
+                    </Group>
                   </div>
                 </div>
               </div>
             </div>
-          </Paper>
-        );
-      })}
+          </div>
+        </Paper>
+      ))}
     </>
   );
 };
