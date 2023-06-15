@@ -177,3 +177,103 @@ export interface IValidationError {
   field: string
   message: string
 }
+
+
+/* ************************************************************************************************************ 
+  the below part concerns notes dtos 
+*/
+
+export interface AcademicRecord {
+  idSession: string;
+  idInscription: string;
+  codeSemestre: string;
+  sessionType: string;
+  note: number;
+  sessionResult: null | string;
+  notes: Note[];
+  inscription: Inscription;
+}
+
+interface Note {
+  codeModule: string;
+  sessionId: string;
+  note: number;
+  redoublant: boolean;
+  module: Module;
+  notesElement: ElementRecord[];
+}
+
+interface Module {
+  codeModule: string;
+  intituleModule: string;
+  coefficientModule: number;
+  codeSemestre: string;
+}
+
+interface ElementRecord {
+  codeElement: string;
+  sessionId: string;
+  note: number;
+  redoublant: boolean;
+  element: Element;
+}
+
+interface Element {
+  codeElement: string;
+  intituleElement: string;
+  coefficientElement: number;
+  codeModule: string;
+  codeProfesseur: string | null;
+}
+
+interface Inscription {
+  id: string;
+  etudiant: Etudiant;
+  codeFiliere: string;
+  codeSessionUniversitaire: string;
+  annee: number;
+  etat: string;
+  note: number;
+}
+
+interface Etudiant {
+  code: string;
+  cne: string;
+  nom: string;
+  prenom: string;
+  cin: string;
+  telephone: string;
+  adresse: string;
+  dateNaissance: string;
+  ville: string;
+  pays: string;
+  photo: string;
+}
+
+
+export interface DeliberationData {
+  numero: string;
+  nom: string;
+  prenom: string;
+  naissance: string;
+  sessionType: string;
+  modules: Array<Array<ModuleData>>;
+}
+
+export interface ModuleData 
+{
+  code: string;
+  nom: string;
+  note: number;
+  bareme: number;
+}
+
+
+export interface SessionUniv {
+  id: string;
+  startDate: string;
+  endDate: string;
+  etat: string
+}
+
+
