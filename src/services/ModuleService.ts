@@ -29,13 +29,13 @@ export class ModuleService {
     return (await response).records;
   }
 
-  static async createModule(semestre: ICreateModule): Promise<IModule> {
-    const response = await AXIOS_INSTANCE.post(`/modules`, semestre);
+  static async createModule(module: ICreateModule): Promise<IModule> {
+    const response = await AXIOS_INSTANCE.post(`/modules`, module);
     return response.data;
   }
 
-  static async updateModule(id: String, semestre: IUpdateModule): Promise<IModule> {
-    const response = await AXIOS_INSTANCE.patch(`/modules/${id}`, semestre);
+  static async updateModule(id: String, module: IUpdateModule): Promise<IModule> {
+    const response = await AXIOS_INSTANCE.patch(`/modules/${id}`, module);
     return response.data;
   }
 

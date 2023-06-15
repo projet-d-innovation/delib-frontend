@@ -110,8 +110,20 @@ export interface IElement {
   professeur?: IUtilisateur
 }
 
+export interface IUpdateElement {
+  intituleElement: string
+  codeModule: string | null
+  coefficientElement: number
+  codeProfesseur?: string
+}
 
-
+export interface ICreateElement {
+  codeElement: string
+  intituleElement: string
+  codeModule: string
+  coefficientElement: number
+  codeProfesseur?: string
+}
 
 export interface IPagination<Item> {
   page: number
