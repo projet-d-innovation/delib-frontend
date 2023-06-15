@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 
 
 const ModuleTableDetails = (module: IModule) => {
-  console.log(module)
   return (
     <Box
       sx={{

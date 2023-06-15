@@ -1,5 +1,6 @@
 import {
   Avatar,
+  Badge,
   Box,
   Button,
   FileButton,
@@ -13,11 +14,13 @@ import { notifications } from "@mantine/notifications";
 import {
   IconAdFilled,
   IconCheck,
+  IconDatabaseExport,
+  IconDatabaseImport,
   IconDetails,
   IconEdit,
   IconTrash,
 } from "@tabler/icons-react";
-//@ts-ignore
+// @ts-ignore
 import Papa from "papaparse";
 import { AxiosError } from "axios";
 import { MRT_ColumnDef, MantineReactTable } from "mantine-react-table";
@@ -26,27 +29,23 @@ import { useQuery, useMutation } from "react-query";
 
 import { DepartementService } from "../../../../services/DepartementService";
 import { UtilisateurService } from "../../../../services/UtilisateurService";
-import {
-  ICreateUtilisateur,
-  IPaging,
-} from "../../../../types/interfaces";
+import { ICreateUtilisateur, IPaging } from "../../../../types/interfaces";
 
-import { IRole, IUtilisateur } from "../../../../types/interfaces";
+import { IUtilisateur } from "../../../../types/interfaces";
 import usePaginationState from "../../../../store/usePaginationState";
 import TableErrorBanner from "../../../../components/TableErrorBanner";
-import AdministrateurTableDetails from "../../../../components/administrateur/AdministrateurTableDetails";
-import AdministrateurUpdateModal from "../../../../components/administrateur/AdministrateurUpdateModal";
-import AdministrateurCreateModal from "../../../../components/administrateur/AdministrateurCreateModal";
-import { RoleService } from "../../../../services/RoleService";
-import { ROLES, UTILISATEUR_GROUPES } from "../../../../constants/roles";
-import { Link } from "react-router-dom";
-import { IconDatabaseImport } from "@tabler/icons-react";
-import AdministrateurByProfesseurCreateModal from "../../../../components/administrateur/AdministrateurByProfesseurCreateModal";
 
-const AdministrateurPage = () => {
+import { RoleService } from "../../../../services/RoleService";
+import { ROLES } from "../../../../constants/roles";
+import ProfesseurUpdateModal from "../../../../components/professeurs/ProfesseurUpdateModal";
+import ProfesseurCreateModal from "../../../../components/professeurs/ProfesseurCreateModal";
+import ProfesseurTableDetails from "../../../../components/professeurs/ProfesseurTableDetails";
+import { Link } from "react-router-dom";
+
+const ProfesseurPage = () => {
   const paginationState = usePaginationState();
   const [pagination, setPagination] = useState<IPaging>(
-    paginationState.getPagination("utilisateurs") || {
+    paginationState.getPagination("professeurs") || {
       pageIndex: 0,
       pageSize: 10,
       totalItems: 0,
@@ -62,21 +61,19 @@ const AdministrateurPage = () => {
   const editModal = useDisclosure(false);
 
   const createModal = useDisclosure(false);
-  const createModalByProfesseur = useDisclosure(false);
 
-  const [toBeUpdatedAdministrateur, setToBeUpdateAdministrateur] =
+  const [toBeUpdatedProfesseur, setToBeUpdateProfesseur] =
     useState<IUtilisateur | null>(null);
 
   const { data, isLoading, isError, error, refetch, isFetching } = useQuery({
-    queryKey: ["utilisateurs", pagination.pageIndex],
+    queryKey: ["professeur", pagination.pageIndex],
     queryFn: () =>
-      UtilisateurService.getUtilisateursByGroup({
-        group: UTILISATEUR_GROUPES.ADMIN,
+      UtilisateurService.getUtilisateursByRole({
+        role: ROLES.PROFESSEUR,
         page: pagination.pageIndex,
         size: pagination.pageSize,
-        includeRoles: true,
-        includePermissions: true,
         includeDepartement: true,
+        includeElements: true,
       }),
     keepPreviousData: true,
     onSuccess: (data) => {
@@ -91,7 +88,7 @@ const AdministrateurPage = () => {
         pageSize: data.size,
       });
       setPagination(paging);
-      paginationState.setPagination("utilisateurs", paging);
+      paginationState.setPagination("professeurs", paging);
     },
   });
 
@@ -100,7 +97,7 @@ const AdministrateurPage = () => {
     {
       onMutate: () => {
         notifications.show({
-          id: "deleting-adminstrateur",
+          id: "deleting-professeur",
           message: "Suppression en cours ...",
           color: "blue",
           loading: true,
@@ -111,8 +108,8 @@ const AdministrateurPage = () => {
       onSuccess: () => {
         refetch();
         notifications.update({
-          id: "deleting-adminstrateur",
-          message: "adminstrateur supprimé avec success",
+          id: "deleting-professeur",
+          message: "Professeur supprimé avec success",
           icon: <IconCheck size="1rem" />,
           autoClose: 3500,
           color: "teal",
@@ -120,7 +117,7 @@ const AdministrateurPage = () => {
       },
       onError: (error) => {
         notifications.update({
-          id: "deleting-adminstrateur",
+          id: "deleting-professeurs",
           message: (error as Error).message,
           color: "red",
           loading: false,
@@ -134,7 +131,7 @@ const AdministrateurPage = () => {
     {
       onMutate: () => {
         notifications.show({
-          id: "deleting-adminstrateurs",
+          id: "deleting-professeurs",
           message: "Suppression en cours ...",
           color: "blue",
           loading: true,
@@ -145,8 +142,8 @@ const AdministrateurPage = () => {
       onSuccess: () => {
         refetch();
         notifications.update({
-          id: "deleting-adminstrateurs",
-          message: "Départements supprimés avec success",
+          id: "deleting-professeurs",
+          message: "professeurs supprimés avec success",
           icon: <IconCheck size="1rem" />,
           autoClose: 3500,
           color: "teal",
@@ -154,7 +151,7 @@ const AdministrateurPage = () => {
       },
       onError: (error) => {
         notifications.update({
-          id: "deleting-adminstrateurs",
+          id: "deleting-professeurs",
           message: (error as Error).message,
           color: "red",
           loading: false,
@@ -162,13 +159,12 @@ const AdministrateurPage = () => {
       },
     }
   );
-
   const exportSelectedUtilisateursMutation = useMutation(
     UtilisateurService.exportSelectedUtilisateur,
     {
       onMutate: () => {
         notifications.show({
-          id: "exporting-adminstrateurs",
+          id: "exporting-professeur",
           message: "exportation en cours ...",
           color: "blue",
           loading: true,
@@ -180,12 +176,12 @@ const AdministrateurPage = () => {
         const url = window.URL.createObjectURL(new Blob([res.data]));
         const link = document.createElement("a");
         link.href = url;
-        link.setAttribute("download", "administrateurs.xlsx");
+        link.setAttribute("download", "professeurs.xlsx");
         document.body.appendChild(link);
         link.click();
         notifications.update({
-          id: "exporting-adminstrateurs",
-          message: "les administrateurs sont exporte avec success",
+          id: "exporting-professeur",
+          message: "les professeurs sont exporte avec success",
           icon: <IconCheck size="1rem" />,
           autoClose: 3500,
           color: "teal",
@@ -193,7 +189,7 @@ const AdministrateurPage = () => {
       },
       onError: (error) => {
         notifications.update({
-          id: "exporting-adminstrateurs",
+          id: "exporting-professeur",
           message: (error as Error).message,
           color: "red",
           loading: false,
@@ -201,7 +197,6 @@ const AdministrateurPage = () => {
       },
     }
   );
-
   const handleExportData = () => {
     notifications.show({
       id: "download-user",
@@ -212,10 +207,10 @@ const AdministrateurPage = () => {
       autoClose: false,
       withCloseButton: false,
     });
-    UtilisateurService.getUtilisateursByGroup({
+    UtilisateurService.getUtilisateursByRole({
       page: 0,
       size: pagination.totalItems * pagination.totalPages,
-      group: UTILISATEUR_GROUPES.ADMIN,
+      role: ROLES.PROFESSEUR,
       includeDepartement: true,
       includeRoles: true,
     })
@@ -226,7 +221,7 @@ const AdministrateurPage = () => {
             const url = window.URL.createObjectURL(new Blob([res.data]));
             const link = document.createElement("a");
             link.href = url;
-            link.setAttribute("download", "administrateurs.xlsx");
+            link.setAttribute("download", "professeurs.xlsx");
             document.body.appendChild(link);
             link.click();
             notifications.update({
@@ -329,7 +324,6 @@ const AdministrateurPage = () => {
       {
         accessorKey: "code",
         header: "Code",
-        enableHiding: true,
       },
       {
         accessorFn: (row: IUtilisateur) => `${row.nom}`, //accessorFn used to join multiple data into a single cell
@@ -352,7 +346,7 @@ const AdministrateurPage = () => {
           >
             <Avatar
               className="rounded-full "
-              radius="md"
+              radius="xl"
               size="sm"
               src={row.original.photo}
             />
@@ -370,11 +364,25 @@ const AdministrateurPage = () => {
         header: "Telephone",
       },
       {
-        // accessorFn: (row) => {row.roles.map((role: IRole) => role.roleName).join(",")},
-        accessorKey: "roles",
-        header: "Roles",
-        accessorFn: (row) =>
-          row?.roles?.map((role: IRole) => role.roleName).join("/ "),
+        accessorKey: "departement.intituleDepartement",
+        header: "Departement",
+      },
+
+      {
+        accessorKey: "elements",
+        header: "Elements",
+        Cell: ({
+          renderedCellValue,
+          row,
+        }: {
+          renderedCellValue: any;
+          row: any;
+        }) => (
+          <Badge className="text-xs text-gray-500 text-center ">
+            {row.elements?.lenght || 0}
+            {" elements"}
+          </Badge>
+        ),
       },
     ],
     []
@@ -397,16 +405,7 @@ const AdministrateurPage = () => {
       }),
     keepPreviousData: true,
   });
-  const professeurs = useQuery({
-    queryKey: ["professeurs"],
-    queryFn: () =>
-      UtilisateurService.getUtilisateursByRole({
-        size: 100,
-        role: ROLES.PROFESSEUR,
-        includeDepartement: true,
-      }),
-    keepPreviousData: true,
-  });
+
   const theme = useMantineTheme();
 
   return (
@@ -453,7 +452,7 @@ const AdministrateurPage = () => {
         positionToolbarAlertBanner="top"
         enableFullScreenToggle={false}
         renderDetailPanel={({ row }) => (
-          <AdministrateurTableDetails {...row.original} />
+          <ProfesseurTableDetails {...row.original} />
         )}
         renderTopToolbarCustomActions={({ table }) => {
           return (
@@ -463,12 +462,6 @@ const AdministrateurPage = () => {
                 className="bg-primary "
               >
                 Nouveau
-              </Button>
-              <Button
-                onClick={() => createModalByProfesseur[1].open()}
-                className="bg-primary "
-              >
-                Nouveau par professeur
               </Button>
               <FileButton
                 onChange={(file) => {
@@ -496,6 +489,7 @@ const AdministrateurPage = () => {
                 className="bg-green-500"
                 variant="filled"
                 color="green"
+                leftIcon={<IconDatabaseExport size={14} />}
               >
                 Export
               </Button>
@@ -547,7 +541,7 @@ const AdministrateurPage = () => {
             <Menu.Label>Single-Selection</Menu.Label>
             <Menu.Item
               onClick={() => {
-                setToBeUpdateAdministrateur(row.original);
+                setToBeUpdateProfesseur(row.original);
                 editModal[1].open();
               }}
               icon={<IconEdit size={14} />}
@@ -555,15 +549,9 @@ const AdministrateurPage = () => {
               Modifier
             </Menu.Item>
             <Link
-              to={`/admin/gestion-utilisateur/adminstrateurs/${row.original.code}`}
+              to={`/admin/gestion-utilisateur/professeurs/${row.original.code}`}
             >
-              <Menu.Item
-                onClick={() => {
-                  setToBeUpdateAdministrateur(row.original);
-                  editModal[1].open();
-                }}
-                icon={<IconDetails size={14} />}
-              >
+              <Menu.Item icon={<IconDetails size={14} />}>
                 Page de détails
               </Menu.Item>
             </Link>
@@ -584,7 +572,7 @@ const AdministrateurPage = () => {
                   title: "Suppression",
                   children: (
                     <Text>
-                      Êtes-vous sûr de vouloir supprimer ce administrateur ?
+                      Êtes-vous sûr de vouloir supprimer ce professeur ?
                     </Text>
                   ),
 
@@ -606,30 +594,22 @@ const AdministrateurPage = () => {
           </>
         )}
       />
-      <AdministrateurUpdateModal
+      <ProfesseurUpdateModal
         opened={editModal[0]}
         close={editModal[1].close}
-        administrateur={toBeUpdatedAdministrateur}
+        professeur={toBeUpdatedProfesseur}
         refetch={refetch}
         roles={roles.data?.records || []}
         departements={departement.data?.records || []}
       />
-      <AdministrateurCreateModal
+      <ProfesseurCreateModal
         opened={createModal[0]}
         close={createModal[1].close}
         refetch={refetch}
         roles={roles.data?.records || []}
         departements={departement.data?.records || []}
       />
-      <AdministrateurByProfesseurCreateModal
-        opened={createModalByProfesseur[0]}
-        close={createModalByProfesseur[1].close}
-        refetch={refetch}
-        roles={roles.data?.records || []}
-        departements={departement.data?.records || []}
-        professeurs={professeurs.data?.records || []}
-      />
     </main>
   );
 };
-export default AdministrateurPage;
+export default ProfesseurPage;

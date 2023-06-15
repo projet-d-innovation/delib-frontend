@@ -1,5 +1,6 @@
 import {
   Avatar,
+  Badge,
   Box,
   Button,
   FileButton,
@@ -26,27 +27,25 @@ import { useQuery, useMutation } from "react-query";
 
 import { DepartementService } from "../../../../services/DepartementService";
 import { UtilisateurService } from "../../../../services/UtilisateurService";
-import {
-  ICreateUtilisateur,
-  IPaging,
-} from "../../../../types/interfaces";
+import { ICreateUtilisateur, IPaging } from "../../../../types/interfaces";
 
-import { IRole, IUtilisateur } from "../../../../types/interfaces";
+import { IUtilisateur } from "../../../../types/interfaces";
 import usePaginationState from "../../../../store/usePaginationState";
 import TableErrorBanner from "../../../../components/TableErrorBanner";
-import AdministrateurTableDetails from "../../../../components/administrateur/AdministrateurTableDetails";
-import AdministrateurUpdateModal from "../../../../components/administrateur/AdministrateurUpdateModal";
-import AdministrateurCreateModal from "../../../../components/administrateur/AdministrateurCreateModal";
+
 import { RoleService } from "../../../../services/RoleService";
-import { ROLES, UTILISATEUR_GROUPES } from "../../../../constants/roles";
+import { ROLES } from "../../../../constants/roles";
+import EtudiantTableDetails from "../../../../components/etudiant/EtudiantTableDetails";
+import EtudiantUpdateModal from "../../../../components/etudiant/EtudiantUpdateModal";
+import EtudiantCreateModal from "../../../../components/etudiant/EtudiantCreateModal";
 import { Link } from "react-router-dom";
 import { IconDatabaseImport } from "@tabler/icons-react";
-import AdministrateurByProfesseurCreateModal from "../../../../components/administrateur/AdministrateurByProfesseurCreateModal";
+import { SexeFormatter } from "../../../../helpers/SexeFormatter";
 
-const AdministrateurPage = () => {
+const EtudiantPage = () => {
   const paginationState = usePaginationState();
   const [pagination, setPagination] = useState<IPaging>(
-    paginationState.getPagination("utilisateurs") || {
+    paginationState.getPagination("etudiants") || {
       pageIndex: 0,
       pageSize: 10,
       totalItems: 0,
@@ -62,20 +61,17 @@ const AdministrateurPage = () => {
   const editModal = useDisclosure(false);
 
   const createModal = useDisclosure(false);
-  const createModalByProfesseur = useDisclosure(false);
 
-  const [toBeUpdatedAdministrateur, setToBeUpdateAdministrateur] =
+  const [toBeUpdatedEtudiant, setToBeUpdateEtudiant] =
     useState<IUtilisateur | null>(null);
 
   const { data, isLoading, isError, error, refetch, isFetching } = useQuery({
-    queryKey: ["utilisateurs", pagination.pageIndex],
+    queryKey: ["etudiants", pagination.pageIndex],
     queryFn: () =>
-      UtilisateurService.getUtilisateursByGroup({
-        group: UTILISATEUR_GROUPES.ADMIN,
+      UtilisateurService.getUtilisateursByRole({
+        role: ROLES.ETUDIANT,
         page: pagination.pageIndex,
         size: pagination.pageSize,
-        includeRoles: true,
-        includePermissions: true,
         includeDepartement: true,
       }),
     keepPreviousData: true,
@@ -91,7 +87,7 @@ const AdministrateurPage = () => {
         pageSize: data.size,
       });
       setPagination(paging);
-      paginationState.setPagination("utilisateurs", paging);
+      paginationState.setPagination("etudiants", paging);
     },
   });
 
@@ -100,7 +96,7 @@ const AdministrateurPage = () => {
     {
       onMutate: () => {
         notifications.show({
-          id: "deleting-adminstrateur",
+          id: "deleting-etudiant",
           message: "Suppression en cours ...",
           color: "blue",
           loading: true,
@@ -111,8 +107,8 @@ const AdministrateurPage = () => {
       onSuccess: () => {
         refetch();
         notifications.update({
-          id: "deleting-adminstrateur",
-          message: "adminstrateur supprimé avec success",
+          id: "deleting-etudiant",
+          message: "Etudiant supprimé avec success",
           icon: <IconCheck size="1rem" />,
           autoClose: 3500,
           color: "teal",
@@ -120,7 +116,7 @@ const AdministrateurPage = () => {
       },
       onError: (error) => {
         notifications.update({
-          id: "deleting-adminstrateur",
+          id: "deleting-etudiant",
           message: (error as Error).message,
           color: "red",
           loading: false,
@@ -134,7 +130,7 @@ const AdministrateurPage = () => {
     {
       onMutate: () => {
         notifications.show({
-          id: "deleting-adminstrateurs",
+          id: "deleting-etudiant",
           message: "Suppression en cours ...",
           color: "blue",
           loading: true,
@@ -145,8 +141,8 @@ const AdministrateurPage = () => {
       onSuccess: () => {
         refetch();
         notifications.update({
-          id: "deleting-adminstrateurs",
-          message: "Départements supprimés avec success",
+          id: "deleting-etudiant",
+          message: "etudiants supprimés avec success",
           icon: <IconCheck size="1rem" />,
           autoClose: 3500,
           color: "teal",
@@ -154,46 +150,7 @@ const AdministrateurPage = () => {
       },
       onError: (error) => {
         notifications.update({
-          id: "deleting-adminstrateurs",
-          message: (error as Error).message,
-          color: "red",
-          loading: false,
-        });
-      },
-    }
-  );
-
-  const exportSelectedUtilisateursMutation = useMutation(
-    UtilisateurService.exportSelectedUtilisateur,
-    {
-      onMutate: () => {
-        notifications.show({
-          id: "exporting-adminstrateurs",
-          message: "exportation en cours ...",
-          color: "blue",
-          loading: true,
-          autoClose: false,
-          withCloseButton: false,
-        });
-      },
-      onSuccess: (res) => {
-        const url = window.URL.createObjectURL(new Blob([res.data]));
-        const link = document.createElement("a");
-        link.href = url;
-        link.setAttribute("download", "administrateurs.xlsx");
-        document.body.appendChild(link);
-        link.click();
-        notifications.update({
-          id: "exporting-adminstrateurs",
-          message: "les administrateurs sont exporte avec success",
-          icon: <IconCheck size="1rem" />,
-          autoClose: 3500,
-          color: "teal",
-        });
-      },
-      onError: (error) => {
-        notifications.update({
-          id: "exporting-adminstrateurs",
+          id: "deleting-etudiant",
           message: (error as Error).message,
           color: "red",
           loading: false,
@@ -212,10 +169,10 @@ const AdministrateurPage = () => {
       autoClose: false,
       withCloseButton: false,
     });
-    UtilisateurService.getUtilisateursByGroup({
+    UtilisateurService.getUtilisateursByRole({
       page: 0,
       size: pagination.totalItems * pagination.totalPages,
-      group: UTILISATEUR_GROUPES.ADMIN,
+      role: ROLES.ETUDIANT,
       includeDepartement: true,
       includeRoles: true,
     })
@@ -226,7 +183,7 @@ const AdministrateurPage = () => {
             const url = window.URL.createObjectURL(new Blob([res.data]));
             const link = document.createElement("a");
             link.href = url;
-            link.setAttribute("download", "administrateurs.xlsx");
+            link.setAttribute("download", "etudiants.xlsx");
             document.body.appendChild(link);
             link.click();
             notifications.update({
@@ -257,6 +214,45 @@ const AdministrateurPage = () => {
       });
   };
 
+  const exportSelectedUtilisateursMutation = useMutation(
+    UtilisateurService.exportSelectedUtilisateur,
+    {
+      onMutate: () => {
+        notifications.show({
+          id: "exporting-etudiant",
+          message: "exportation en cours ...",
+          color: "blue",
+          loading: true,
+          autoClose: false,
+          withCloseButton: false,
+        });
+      },
+      onSuccess: (res) => {
+        const url = window.URL.createObjectURL(new Blob([res.data]));
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", "etudiants.xlsx");
+        document.body.appendChild(link);
+        link.click();
+        notifications.update({
+          id: "exporting-etudiant",
+          message: "les etudiants sont exporte avec success",
+          icon: <IconCheck size="1rem" />,
+          autoClose: 3500,
+          color: "teal",
+        });
+      },
+      onError: (error) => {
+        notifications.update({
+          id: "exporting-etudiant",
+          message: (error as Error).message,
+          color: "red",
+          loading: false,
+        });
+      },
+    }
+  );
+
   const handleFileUpload = (file: File) => {
     if (!file) return;
     Papa.parse(file, {
@@ -271,7 +267,8 @@ const AdministrateurPage = () => {
             nom: item.NOM,
             prenom: item.PRENOM,
             telephone: item.TELEPHONE,
-            dateNaissance: null,
+            dateNaissance:
+              item.DATE_NAISSANCE == "" ? null : new Date(item.DATE_NAISSANCE),
             adresse: item.ADRESSE,
             ville: item.VILLE,
             pays: item.PAYS,
@@ -329,7 +326,6 @@ const AdministrateurPage = () => {
       {
         accessorKey: "code",
         header: "Code",
-        enableHiding: true,
       },
       {
         accessorFn: (row: IUtilisateur) => `${row.nom}`, //accessorFn used to join multiple data into a single cell
@@ -352,7 +348,7 @@ const AdministrateurPage = () => {
           >
             <Avatar
               className="rounded-full "
-              radius="md"
+              radius="xl"
               size="sm"
               src={row.original.photo}
             />
@@ -365,16 +361,41 @@ const AdministrateurPage = () => {
         accessorKey: "prenom",
         header: "Prenom",
       },
+
+      {
+        accessorKey: "cin",
+        header: "CIN",
+      },
+      {
+        accessorKey: "cne",
+        header: "CNE",
+      },
+      {
+        accessorFn: (row: IUtilisateur) => SexeFormatter(row?.sexe),
+        accessorKey: "sexe",
+        header: "Sexe",
+      },
+      {
+        accessorFn: (row: IUtilisateur) =>
+          `${(row.dateNaissance + "").substring(0, 10)}`,
+        accessorKey: "dateNaissance",
+        header: "DateDeNaissance",
+      },
       {
         accessorKey: "telephone",
         header: "Telephone",
       },
       {
-        // accessorFn: (row) => {row.roles.map((role: IRole) => role.roleName).join(",")},
-        accessorKey: "roles",
-        header: "Roles",
-        accessorFn: (row) =>
-          row?.roles?.map((role: IRole) => role.roleName).join("/ "),
+        accessorKey: "adresse",
+        header: "Adresse",
+      },
+      {
+        accessorKey: "ville",
+        header: "Ville",
+      },
+      {
+        accessorKey: "pays",
+        header: "Pays",
       },
     ],
     []
@@ -397,16 +418,7 @@ const AdministrateurPage = () => {
       }),
     keepPreviousData: true,
   });
-  const professeurs = useQuery({
-    queryKey: ["professeurs"],
-    queryFn: () =>
-      UtilisateurService.getUtilisateursByRole({
-        size: 100,
-        role: ROLES.PROFESSEUR,
-        includeDepartement: true,
-      }),
-    keepPreviousData: true,
-  });
+
   const theme = useMantineTheme();
 
   return (
@@ -418,12 +430,17 @@ const AdministrateurPage = () => {
         enableColumnOrdering
         enableGrouping
         enablePinning
-        mantineProgressProps={{ color: "blue", variant: "striped", size: "xs" }}
+        mantineProgressProps={{
+          color: "blue",
+          variant: "striped",
+          size: "xs",
+        }}
         mantineBottomToolbarProps={{
           className: "bg-gray-50 p-5",
         }}
         mantinePaperProps={{
           radius: "md",
+
         }}
         enableRowActions
         mantineToolbarAlertBannerProps={
@@ -453,7 +470,7 @@ const AdministrateurPage = () => {
         positionToolbarAlertBanner="top"
         enableFullScreenToggle={false}
         renderDetailPanel={({ row }) => (
-          <AdministrateurTableDetails {...row.original} />
+          <EtudiantTableDetails {...row.original} />
         )}
         renderTopToolbarCustomActions={({ table }) => {
           return (
@@ -463,12 +480,6 @@ const AdministrateurPage = () => {
                 className="bg-primary "
               >
                 Nouveau
-              </Button>
-              <Button
-                onClick={() => createModalByProfesseur[1].open()}
-                className="bg-primary "
-              >
-                Nouveau par professeur
               </Button>
               <FileButton
                 onChange={(file) => {
@@ -547,7 +558,7 @@ const AdministrateurPage = () => {
             <Menu.Label>Single-Selection</Menu.Label>
             <Menu.Item
               onClick={() => {
-                setToBeUpdateAdministrateur(row.original);
+                setToBeUpdateEtudiant(row.original);
                 editModal[1].open();
               }}
               icon={<IconEdit size={14} />}
@@ -555,16 +566,10 @@ const AdministrateurPage = () => {
               Modifier
             </Menu.Item>
             <Link
-              to={`/admin/gestion-utilisateur/adminstrateurs/${row.original.code}`}
+              to={`/admin/gestion-utilisateur/etudiants/${row.original.code}`}
             >
-              <Menu.Item
-                onClick={() => {
-                  setToBeUpdateAdministrateur(row.original);
-                  editModal[1].open();
-                }}
-                icon={<IconDetails size={14} />}
-              >
-                Page de détails
+              <Menu.Item icon={<IconDetails size={14} />}>
+                page de details
               </Menu.Item>
             </Link>
             <Menu.Divider />
@@ -584,7 +589,7 @@ const AdministrateurPage = () => {
                   title: "Suppression",
                   children: (
                     <Text>
-                      Êtes-vous sûr de vouloir supprimer ce administrateur ?
+                      Êtes-vous sûr de vouloir supprimer ce etudiant ?
                     </Text>
                   ),
 
@@ -606,30 +611,19 @@ const AdministrateurPage = () => {
           </>
         )}
       />
-      <AdministrateurUpdateModal
+      <EtudiantUpdateModal
         opened={editModal[0]}
         close={editModal[1].close}
-        administrateur={toBeUpdatedAdministrateur}
+        etudiant={toBeUpdatedEtudiant}
         refetch={refetch}
-        roles={roles.data?.records || []}
         departements={departement.data?.records || []}
       />
-      <AdministrateurCreateModal
+      <EtudiantCreateModal
         opened={createModal[0]}
         close={createModal[1].close}
         refetch={refetch}
-        roles={roles.data?.records || []}
-        departements={departement.data?.records || []}
-      />
-      <AdministrateurByProfesseurCreateModal
-        opened={createModalByProfesseur[0]}
-        close={createModalByProfesseur[1].close}
-        refetch={refetch}
-        roles={roles.data?.records || []}
-        departements={departement.data?.records || []}
-        professeurs={professeurs.data?.records || []}
       />
     </main>
   );
 };
-export default AdministrateurPage;
+export default EtudiantPage;
