@@ -91,7 +91,7 @@ const NotePage = () => {
           placeholder="code Filiere"
           value={codeFiliere}
           onChange={setcodeFiliere}
-          data={filiereQuery.data?.records.map(f => f.codeFiliere) ?? []}
+          data={filiereQuery.data?.records?.map(f => f.codeFiliere) ?? []}
           nothingFound="Pas de filieres trouvés"
           dropdownPosition="bottom"
           maxDropdownHeight={300}
@@ -102,7 +102,7 @@ const NotePage = () => {
           placeholder="code semestre"
           value={codeSemester}
           onChange={setCodeSemester}
-          data={semestreQuery.data?.records.map(s => s.codeSemestre) ?? []}
+          data={semestreQuery.data?.records?.map(s => s.codeSemestre) ?? []}
           nothingFound="Pas de semestres trouvés"
           dropdownPosition="bottom"
           maxDropdownHeight={300}
@@ -113,7 +113,7 @@ const NotePage = () => {
           placeholder="code session universitaire"
           value={codeSessionUniversitaire}
           onChange={setCodeSessionUniversitaire}
-          data={setCodeSessionUniversitaireQuery.data?.records.map(su => su.id) ?? []}
+          data={setCodeSessionUniversitaireQuery.data?.records?.map(su => su.id) ?? []}
           nothingFound="Pas de sessions univ trouvés"
           dropdownPosition="bottom"
           maxDropdownHeight={300}
